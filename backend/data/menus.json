@@ -1,0 +1,298 @@
+[
+  {
+    "id": "8b70b87d-45f6-4684-81f7-7c5b7faa4313",
+    "weekStart": "2026-05-03T00:00:00.000Z",
+    "days": [
+      {
+        "date": "2026-05-03T00:00:00.000Z",
+        "dayName": "Lunes",
+        "meals": {
+          "comida": {
+            "recipeId": "a1b2c3d4-e5f6-7890-abcd-ef1234567801",
+            "recipeName": "Gazpacho andaluz",
+            "prepTime": 15,
+            "cookTime": 0,
+            "totalTime": 15
+          },
+          "cena": {
+            "recipeId": "d004",
+            "recipeName": "Wok de ternera",
+            "prepTime": 10,
+            "cookTime": 10,
+            "totalTime": 20
+          }
+        }
+      },
+      {
+        "date": "2026-05-04T00:00:00.000Z",
+        "dayName": "Martes",
+        "meals": {
+          "comida": {
+            "recipeId": "a1b2c3d4-e5f6-7890-abcd-ef1234567814",
+            "recipeName": "Bacalao al pil-pil",
+            "prepTime": 20,
+            "cookTime": 25,
+            "totalTime": 45
+          },
+          "cena": {
+            "recipeId": "a1b2c3d4-e5f6-7890-abcd-ef1234567808",
+            "recipeName": "Fabada asturiana",
+            "prepTime": 20,
+            "cookTime": 150,
+            "totalTime": 170
+          }
+        }
+      },
+      {
+        "date": "2026-05-05T00:00:00.000Z",
+        "dayName": "Miércoles",
+        "meals": {
+          "comida": {
+            "recipeId": "a1b2c3d4-e5f6-7890-abcd-ef1234567803",
+            "recipeName": "Paella valenciana",
+            "prepTime": 20,
+            "cookTime": 50,
+            "totalTime": 70
+          },
+          "cena": {
+            "recipeId": "a1b2c3d4-e5f6-7890-abcd-ef1234567814",
+            "recipeName": "Bacalao al pil-pil",
+            "prepTime": 20,
+            "cookTime": 25,
+            "totalTime": 45
+          }
+        }
+      },
+      {
+        "date": "2026-05-06T00:00:00.000Z",
+        "dayName": "Jueves",
+        "meals": {
+          "comida": {
+            "recipeId": "a1b2c3d4-e5f6-7890-abcd-ef1234567803",
+            "recipeName": "Paella valenciana",
+            "prepTime": 20,
+            "cookTime": 50,
+            "totalTime": 70
+          },
+          "cena": {
+            "recipeId": "a1b2c3d4-e5f6-7890-abcd-ef1234567801",
+            "recipeName": "Gazpacho andaluz",
+            "prepTime": 15,
+            "cookTime": 0,
+            "totalTime": 15
+          }
+        }
+      },
+      {
+        "date": "2026-05-07T00:00:00.000Z",
+        "dayName": "Viernes",
+        "meals": {
+          "comida": {
+            "recipeId": "l002",
+            "recipeName": "Bowl de arroz con pollo teriyaki",
+            "prepTime": 10,
+            "cookTime": 15,
+            "totalTime": 25
+          },
+          "cena": {
+            "recipeId": "a1b2c3d4-e5f6-7890-abcd-ef1234567814",
+            "recipeName": "Bacalao al pil-pil",
+            "prepTime": 20,
+            "cookTime": 25,
+            "totalTime": 45
+          }
+        }
+      },
+      {
+        "date": "2026-05-08T00:00:00.000Z",
+        "dayName": "Sábado",
+        "meals": {
+          "comida": {
+            "recipeId": "a1b2c3d4-e5f6-7890-abcd-ef1234567807",
+            "recipeName": "Pulpo a la gallega",
+            "prepTime": 15,
+            "cookTime": 60,
+            "totalTime": 75
+          },
+          "cena": {
+            "recipeId": "d050",
+            "recipeName": "Huevos rotos saludables",
+            "prepTime": 10,
+            "cookTime": 15,
+            "totalTime": 25
+          }
+        }
+      },
+      {
+        "date": "2026-05-09T00:00:00.000Z",
+        "dayName": "Domingo",
+        "meals": {
+          "comida": {
+            "recipeId": "l002",
+            "recipeName": "Bowl de arroz con pollo teriyaki",
+            "prepTime": 10,
+            "cookTime": 15,
+            "totalTime": 25
+          },
+          "cena": {
+            "recipeId": "d001",
+            "recipeName": "Salmón en air fryer",
+            "prepTime": 5,
+            "cookTime": 10,
+            "totalTime": 15
+          }
+        }
+      }
+    ],
+    "name": "Menu Prueba SEH",
+    "updatedAt": "2026-05-03T23:53:47.093Z"
+  },
+  {
+    "id": "af150167-11ba-48ad-abdf-9099f5e47731",
+    "name": "Menú generado 1",
+    "weekStart": "2026-05-03T00:00:00.000Z",
+    "days": [
+      {
+        "date": "2026-05-03T00:00:00.000Z",
+        "dayName": "Lunes",
+        "meals": {
+          "comida": {
+            "recipeId": "l004",
+            "recipeName": "Tacos de pollo",
+            "prepTime": 10,
+            "cookTime": 10,
+            "totalTime": 20
+          },
+          "cena": {
+            "recipeId": "a1b2c3d4-e5f6-7890-abcd-ef1234567804",
+            "recipeName": "Cocido madrileño",
+            "prepTime": 30,
+            "cookTime": 120,
+            "totalTime": 150
+          }
+        }
+      },
+      {
+        "date": "2026-05-04T00:00:00.000Z",
+        "dayName": "Martes",
+        "meals": {
+          "comida": {
+            "recipeId": "a1b2c3d4-e5f6-7890-abcd-ef1234567811",
+            "recipeName": "Pisto manchego",
+            "prepTime": 20,
+            "cookTime": 45,
+            "totalTime": 65
+          },
+          "cena": {
+            "recipeId": "a1b2c3d4-e5f6-7890-abcd-ef1234567814",
+            "recipeName": "Bacalao al pil-pil",
+            "prepTime": 20,
+            "cookTime": 25,
+            "totalTime": 45
+          }
+        }
+      },
+      {
+        "date": "2026-05-05T00:00:00.000Z",
+        "dayName": "Miércoles",
+        "meals": {
+          "comida": {
+            "recipeId": "l004",
+            "recipeName": "Tacos de pollo",
+            "prepTime": 10,
+            "cookTime": 10,
+            "totalTime": 20
+          },
+          "cena": {
+            "recipeId": "d004",
+            "recipeName": "Wok de ternera",
+            "prepTime": 10,
+            "cookTime": 10,
+            "totalTime": 20
+          }
+        }
+      },
+      {
+        "date": "2026-05-06T00:00:00.000Z",
+        "dayName": "Jueves",
+        "meals": {
+          "comida": {
+            "recipeId": "l003",
+            "recipeName": "Pasta con tomate y burrata",
+            "prepTime": 5,
+            "cookTime": 12,
+            "totalTime": 17
+          },
+          "cena": {
+            "recipeId": "d002",
+            "recipeName": "Tortilla francesa con espinacas",
+            "prepTime": 5,
+            "cookTime": 5,
+            "totalTime": 10
+          }
+        }
+      },
+      {
+        "date": "2026-05-07T00:00:00.000Z",
+        "dayName": "Viernes",
+        "meals": {
+          "comida": {
+            "recipeId": "l002",
+            "recipeName": "Bowl de arroz con pollo teriyaki",
+            "prepTime": 10,
+            "cookTime": 15,
+            "totalTime": 25
+          },
+          "cena": {
+            "recipeId": "a1b2c3d4-e5f6-7890-abcd-ef1234567814",
+            "recipeName": "Bacalao al pil-pil",
+            "prepTime": 20,
+            "cookTime": 25,
+            "totalTime": 45
+          }
+        }
+      },
+      {
+        "date": "2026-05-08T00:00:00.000Z",
+        "dayName": "Sábado",
+        "meals": {
+          "comida": {
+            "recipeId": "l003",
+            "recipeName": "Pasta con tomate y burrata",
+            "prepTime": 5,
+            "cookTime": 12,
+            "totalTime": 17
+          },
+          "cena": {
+            "recipeId": "a1b2c3d4-e5f6-7890-abcd-ef1234567807",
+            "recipeName": "Pulpo a la gallega",
+            "prepTime": 15,
+            "cookTime": 60,
+            "totalTime": 75
+          }
+        }
+      },
+      {
+        "date": "2026-05-09T00:00:00.000Z",
+        "dayName": "Domingo",
+        "meals": {
+          "comida": {
+            "recipeId": "l002",
+            "recipeName": "Bowl de arroz con pollo teriyaki",
+            "prepTime": 10,
+            "cookTime": 15,
+            "totalTime": 25
+          },
+          "cena": {
+            "recipeId": "a1b2c3d4-e5f6-7890-abcd-ef1234567808",
+            "recipeName": "Fabada asturiana",
+            "prepTime": 20,
+            "cookTime": 150,
+            "totalTime": 170
+          }
+        }
+      }
+    ],
+    "updatedAt": "2026-05-03T23:07:38.178Z"
+  }
+]

@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Gestor de Recetas y Menús</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .mobile-friendly {
+            max-width: 100%;
+            overflow-x: hidden;
+        }
+        .card {
+            transition: transform 0.2s;
+        }
+        .card:hover {
+            transform: translateY(-2px);
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        .mobile-menu {
+            transform: translateX(-100%);
+            transition: transform 0.3s ease-in-out;
+        }
+        .mobile-menu.open {
+            transform: translateX(0);
+        }
+        .view-toggle-btn {
+            padding: 0.5rem 1rem;
+            border: 1px solid #e5e7eb;
+            background: white;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .view-toggle-btn.active {
+            background: #3b82f6;
+            color: white;
+            border-color: #3b82f6;
+        }
+        .view-toggle-btn:first-child {
+            border-radius: 0.375rem 0 0 0.375rem;
+        }
+        .view-toggle-btn:last-child {
+            border-radius: 0 0.375rem 0.375rem 0;
+        }
+        .recipes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1rem;
+        }
+        .recipes-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+        .recipe-list-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem;
+            border: 1px solid #e5e7eb;
+            border-radius: 0.5rem;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+        }
+        .recipe-list-item .recipe-info {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            min-width: 200px;
+        }
+        .recipe-list-item .recipe-actions {
+            display: flex;
+            gap: 0.5rem;
+            flex-shrink: 0;
+        }
+        /* Responsive button styling */
+        button[title] {
+            white-space: nowrap;
+        }
+        @media (max-width: 640px) {
+            .recipe-list-item {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .recipe-list-item .recipe-info {
+                width: 100%;
+                min-width: auto;
+            }
+            .recipe-list-item .recipe-actions {
+                width: 100%;
+                justify-content: space-between;
+            }
+        }
+        .highlight-recipe {
+            animation: highlight-pulse 2s ease-in-out;
+            border: 2px solid #3b82f6 !important;
+            box-shadow: 0 0 15px rgba(59, 130, 246, 0.5);
+        }
+        @keyframes highlight-pulse {
+            0% { background-color: rgba(59, 130, 246, 0.1); }
+            50% { background-color: rgba(59, 130, 246, 0.3); }
+            100% { background-color: transparent; }
+        }
+        /* Modal Styling */
+        #recipeModal > div,
+        #editRecipeModal > div {
+            border: 2px solid #d1d5db;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+            transition: all 0.2s ease;
+        }
+        #recipeModal > div:hover,
+        #editRecipeModal > div:hover {
+            border-color: #3b82f6;
+            box-shadow: 0 20px 25px -5px rgba(59, 130, 246, 0.2);
+        }
+        #recipeModal .p-6,
+        #editRecipeModal .p-6 {
+            background: white;
+        }
+        /* Modal header styling */
+        #recipeModal h3,
+        #editRecipeModal h3 {
+            color: #111827;
+        }
+        /* Content sections styling to match card appearance */
+        #modalRecipeContent > div {
+            border-radius: 0.5rem;
+            transition: all 0.2s ease;
+        }
+        #modalRecipeContent > div.bg-gray-50,
+        #modalRecipeContent > div.bg-blue-50,
+        #modalRecipeContent > div.bg-orange-50,
+        #modalRecipeContent > div.bg-green-50 {
+            border: 1px solid;
+        }
+        /* Category Filter Buttons */
+        .category-filter-btn {
+            opacity: 0.5;
+            transform: scale(0.95);
+        }
+        .category-filter-btn.active {
+            opacity: 1;
+            transform: scale(1);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body class="bg-gray-100 mobile-friendly">
+    <div id="app" class="min-h-screen">
+        <!-- Header -->
+        <header class="bg-blue-600 text-white p-4 shadow-lg">
+            <div class="container mx-auto flex justify-between items-center">
+                <h1 class="text-2xl font-bold flex items-center">
+                    <i class="fas fa-utensils mr-2"></i>
+                    Gestor de Recetas
+                </h1>
+                <button id="mobileMenuBtn" class="md:hidden p-2 hover:bg-blue-600 rounded transition-colors">
+                    <i class="fas fa-bars text-2xl"></i>
+                </button>
+            </div>
+        </header>
+
+        <!-- Mobile Menu -->
+        <div id="mobileMenu" class="mobile-menu fixed top-0 left-0 w-64 h-full bg-white shadow-lg z-50 md:hidden">
+            <div class="p-4">
+                <button id="closeMobileMenu" class="text-gray-600 mb-4">
+                    <i class="fas fa-times text-2xl"></i>
+                </button>
+                <nav class="space-y-2">
+                    <button onclick="showTab('recipes')" class="w-full text-left p-3 rounded hover:bg-gray-100 tab-btn">
+                        <i class="fas fa-book mr-2"></i> Recetas
+                    </button>
+                    <button onclick="showTab('menus')" class="w-full text-left p-3 rounded hover:bg-gray-100 tab-btn">
+                        <i class="fas fa-calendar-week mr-2"></i> Menús
+                    </button>
+                </nav>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <main class="container mx-auto p-4">
+            <!-- Desktop Navigation -->
+            <div class="hidden md:flex mb-6 space-x-4">
+                <button onclick="showTab('recipes')" class="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 tab-btn">
+                    <i class="fas fa-book mr-2"></i> Recetas
+                </button>
+                <button onclick="showTab('menus')" class="px-6 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 tab-btn">
+                    <i class="fas fa-calendar-week mr-2"></i> Menús
+                </button>
+            </div>
+
+            <!-- Recipes Tab -->
+            <div id="recipes-tab" class="tab-content active">
+                <!-- Collapsible Add Recipe Form -->
+                <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+                    <div class="flex justify-between items-center cursor-pointer hover:bg-gray-50 p-2 rounded-lg transition-colors" onclick="toggleRecipeForm()">
+                        <h2 class="text-xl font-bold text-green-700">
+                            <i class="fas fa-plus-circle mr-2"></i>
+                            Añadir Nueva Receta
+                        </h2>
+                        <i id="recipeFormChevron" class="fas fa-chevron-down text-gray-400"></i>
+                    </div>
+                    <form id="recipeForm" class="space-y-4 hidden mt-4">
+                        <input type="hidden" id="recipeId">
+                        <div class="grid md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium mb-1">Nombre *</label>
+                                <input type="text" id="recipeName" required 
+                                    class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium mb-1">Categoría</label>
+                                <select id="recipeCategory" 
+                                    class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500">
+                                    <option value="general">General</option>
+                                    <option value="desayuno">Desayuno</option>
+                                    <option value="comida">Comida</option>
+                                    <option value="cena">Cena</option>
+                                    <option value="picoteo">Picoteo</option>
+                                    <option value="dulce">Dulce</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium mb-1">Descripción</label>
+                            <textarea id="recipeDescription" rows="2" 
+                                class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500"></textarea>
+                        </div>
+                        <div class="grid md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium mb-1">Tiempo de preparación (min)</label>
+                                <input type="number" id="recipePrepTime" min="0" 
+                                    class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium mb-1">Tiempo de cocción (min)</label>
+                                <input type="number" id="recipeCookTime" min="0" 
+                                    class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium mb-1">Ingredientes *</label>
+                            <textarea id="recipeIngredients" required rows="3" 
+                                placeholder="Un ingrediente por línea"
+                                class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500"></textarea>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium mb-1">Instrucciones *</label>
+                            <textarea id="recipeInstructions" required rows="4" 
+                                placeholder="Paso a paso de la preparación"
+                                class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500"></textarea>
+                        </div>
+                        <div class="flex space-x-2">
+                            <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">
+                                <i class="fas fa-save mr-2"></i>Guardar
+                            </button>
+                            <button type="button" onclick="resetRecipeForm()" 
+                                class="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600">
+                                <i class="fas fa-undo mr-2"></i>Cancelar
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <h2 class="text-xl font-bold mb-4">
+                        <i class="fas fa-list mr-2"></i> Lista de Recetas
+                    </h2>
+                    <div class="mb-4">
+                        <input type="text" id="recipeSearch" placeholder="Buscar recetas (nombre, categoría o tiempo máximo en min)..."
+                            class="w-full p-3 border-2 border-gray-400 rounded-lg bg-gray-50 text-gray-900 placeholder-gray-500 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:bg-white transition-all">
+                    </div>
+                    <div class="mb-4">
+                        <div class="flex flex-wrap gap-2">
+                            <button id="filter-desayuno" onclick="toggleCategoryFilter('desayuno')" class="category-filter-btn px-3 py-1.5 rounded-full text-sm font-medium border transition-all bg-yellow-100 text-yellow-800 border-yellow-300 hover:bg-yellow-200">
+                                <i class="fas fa-coffee mr-1"></i>Desayuno
+                            </button>
+                            <button id="filter-comida" onclick="toggleCategoryFilter('comida')" class="category-filter-btn px-3 py-1.5 rounded-full text-sm font-medium border transition-all bg-red-100 text-red-800 border-red-300 hover:bg-red-200">
+                                <i class="fas fa-sun mr-1"></i>Comida
+                            </button>
+                            <button id="filter-cena" onclick="toggleCategoryFilter('cena')" class="category-filter-btn px-3 py-1.5 rounded-full text-sm font-medium border transition-all bg-indigo-100 text-indigo-800 border-indigo-300 hover:bg-indigo-200">
+                                <i class="fas fa-moon mr-1"></i>Cena
+                            </button>
+                            <button id="filter-general" onclick="toggleCategoryFilter('general')" class="category-filter-btn px-3 py-1.5 rounded-full text-sm font-medium border transition-all bg-gradient-to-r from-red-100 to-purple-100 text-gray-800 border-red-300 hover:from-red-200 hover:to-purple-200">
+                                <i class="fas fa-utensils mr-1"></i>General
+                            </button>
+                            <button id="filter-picoteo" onclick="toggleCategoryFilter('picoteo')" class="category-filter-btn px-3 py-1.5 rounded-full text-sm font-medium border transition-all bg-orange-100 text-orange-800 border-orange-300 hover:bg-orange-200">
+                                <i class="fas fa-cookie-bite mr-1"></i>Picoteo
+                            </button>
+                            <button id="filter-dulce" onclick="toggleCategoryFilter('dulce')" class="category-filter-btn px-3 py-1.5 rounded-full text-sm font-medium border transition-all bg-pink-100 text-pink-800 border-pink-300 hover:bg-pink-200">
+                                <i class="fas fa-candy-cane mr-1"></i>Dulce
+                            </button>
+                        </div>
+                    </div>
+                    <div class="mb-4 flex flex-wrap justify-between items-center gap-2">
+                        <div class="flex items-center gap-2">
+                            <span class="text-sm text-gray-600">Ordenar:</span>
+                            <select id="recipeSortOrder" onchange="handleRecipeSortChange()"
+                                class="p-1.5 border rounded-lg text-sm focus:ring-2 focus:ring-blue-500">
+                                <option value="date-desc" selected>Más reciente</option>
+                                <option value="date-asc">Más antiguo</option>
+                                <option value="name-asc">Nombre (A-Z)</option>
+                                <option value="name-desc">Nombre (Z-A)</option>
+                            </select>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span class="text-sm text-gray-600">Vista:</span>
+                            <div class="flex">
+                                <button id="gridViewBtn" class="view-toggle-btn active" onclick="setRecipeView('grid')">
+                                    <i class="fas fa-th-large"></i> Cuadrícula
+                                </button>
+                                <button id="listViewBtn" class="view-toggle-btn" onclick="setRecipeView('list')">
+                                    <i class="fas fa-list"></i> Listado
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="recipesList" class="recipes-grid">
+                        <!-- Recipes will be loaded here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Menus Tab -->
+            <div id="menus-tab" class="tab-content">
+                <!-- Generate Menu Section -->
+                <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+                    <h2 class="text-xl font-bold mb-4">
+                        <i class="fas fa-magic mr-2"></i> Generar Menú Semanal
+                    </h2>
+                    <div class="flex flex-col sm:flex-row gap-4">
+                        <div class="flex-1">
+                            <label class="block text-sm font-medium mb-1">Fecha de inicio</label>
+                            <input type="date" id="menuWeekStart" 
+                                class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500">
+                        </div>
+                        <div class="flex items-end">
+                            <button onclick="generateMenu()" 
+                                class="px-6 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600">
+                                <i class="fas fa-dice mr-2"></i>Generar Menú
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Manual Menu Creation Section -->
+                <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="text-xl font-bold">
+                            <i class="fas fa-edit mr-2"></i> Rellenar Menú Manualmente
+                        </h2>
+                        <button id="toggleManualMenuBtn" onclick="toggleManualMenuForm()" 
+                            class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors">
+                            <i class="fas fa-chevron-down mr-2"></i>Mostrar Formulario
+                        </button>
+                    </div>
+                    <div id="manualMenuForm" class="hidden">
+                        <div class="mb-4">
+                            <label class="block text-sm font-medium mb-1">Fecha de inicio</label>
+                            <input type="date" id="manualMenuWeekStart" 
+                                class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500">
+                        </div>
+                        <div id="manualMenuGrid" class="space-y-3">
+                            <!-- Manual menu grid will be generated here -->
+                        </div>
+                        <div class="mt-4 flex gap-2">
+                            <button onclick="saveManualMenu()" 
+                                class="px-6 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600">
+                                <i class="fas fa-save mr-2"></i>Guardar Menú
+                            </button>
+                            <button onclick="clearManualMenu()" 
+                                class="px-6 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600">
+                                <i class="fas fa-trash mr-2"></i>Limpiar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <h2 class="text-xl font-bold mb-4">
+                        <i class="fas fa-calendar-alt mr-2"></i> Menús Generados
+                    </h2>
+                    <div id="menusList" class="space-y-4">
+                        <!-- Menus will be loaded here -->
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Recipe Detail Modal -->
+    <div id="recipeModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-lg max-w-2xl w-full max-h-screen overflow-y-auto border-2 border-gray-300 shadow-lg hover:shadow-xl hover:border-blue-400 transition-all">
+            <div class="p-6">
+                <div class="flex justify-between items-center mb-4 pb-4 border-b border-gray-200">
+                    <h3 class="text-2xl font-bold text-gray-900" id="modalRecipeName"></h3>
+                    <button onclick="window.recipeManager.closeViewModal()" class="text-gray-500 hover:text-gray-700 transition-colors p-2 hover:bg-gray-100 rounded">
+                        <i class="fas fa-times text-xl"></i>
+                    </button>
+                </div>
+                <div id="modalRecipeContent" class="space-y-4"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recipe Edit Modal -->
+    <div id="editRecipeModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-lg max-w-2xl w-full max-h-screen overflow-y-auto border-2 border-gray-300 shadow-lg hover:shadow-xl hover:border-blue-400 transition-all">
+            <div class="p-6">
+                <div class="flex justify-between items-center mb-4 pb-4 border-b-2 border-gray-300">
+                    <h3 class="text-2xl font-bold text-gray-900">
+                        <i class="fas fa-edit mr-2"></i>Editar Receta
+                    </h3>
+                    <button onclick="window.recipeManager.closeEditModal()" class="text-gray-500 hover:text-gray-700 transition-colors p-2 hover:bg-gray-100 rounded">
+                        <i class="fas fa-times text-xl"></i>
+                    </button>
+                </div>
+                <form id="editRecipeForm" class="space-y-5">
+                    <input type="hidden" id="editRecipeId">
+                    
+                    <!-- Basic Info Section -->
+                    <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
+                        <h4 class="font-semibold text-gray-900 mb-3 text-lg"><i class="fas fa-info-circle mr-2 text-blue-500"></i>Información Básica</h4>
+                        <div class="grid md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-bold text-gray-800 mb-1">Nombre *</label>
+                                <input type="text" id="editRecipeName" required 
+                                    class="w-full p-2 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-bold text-gray-800 mb-1">Categoría</label>
+                                <select id="editRecipeCategory" 
+                                    class="w-full p-2 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white">
+                                    <option value="general">General</option>
+                                    <option value="desayuno">Desayuno</option>
+                                    <option value="comida">Comida</option>
+                                    <option value="cena">Cena</option>
+                                    <option value="picoteo">Picoteo</option>
+                                    <option value="dulce">Dulce</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="mt-4">
+                            <label class="block text-sm font-bold text-gray-800 mb-1">Descripción</label>
+                            <textarea id="editRecipeDescription" rows="2" 
+                                class="w-full p-2 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white"></textarea>
+                        </div>
+                    </div>
+                    
+                    <!-- Time Section -->
+                    <div class="bg-blue-50 p-4 rounded-lg border border-blue-200">
+                        <h4 class="font-semibold text-gray-900 mb-3 text-lg"><i class="fas fa-clock mr-2 text-blue-600"></i>Tiempos</h4>
+                        <div class="grid md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-bold text-gray-800 mb-1"><i class="fas fa-clock text-blue-600 mr-1"></i>Tiempo de preparación (min)</label>
+                                <input type="number" id="editRecipePrepTime" min="0" 
+                                    class="w-full p-2 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-bold text-gray-800 mb-1"><i class="fas fa-fire text-orange-600 mr-1"></i>Tiempo de cocción (min)</label>
+                                <input type="number" id="editRecipeCookTime" min="0" 
+                                    class="w-full p-2 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Ingredients Section -->
+                    <div class="bg-orange-50 p-4 rounded-lg border border-orange-200">
+                        <h4 class="font-semibold text-gray-900 mb-3 text-lg"><i class="fas fa-shopping-basket mr-2 text-orange-500"></i>Ingredientes</h4>
+                        <textarea id="editRecipeIngredients" required rows="4" 
+                            placeholder="Un ingrediente por línea"
+                            class="w-full p-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 bg-white"></textarea>
+                    </div>
+                    
+                    <!-- Instructions Section -->
+                    <div class="bg-green-50 p-4 rounded-lg border border-green-200">
+                        <h4 class="font-semibold text-gray-900 mb-3 text-lg"><i class="fas fa-list-ol mr-2 text-green-500"></i>Instrucciones</h4>
+                        <textarea id="editRecipeInstructions" required rows="5" 
+                            placeholder="Paso a paso de la preparación"
+                            class="w-full p-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 bg-white"></textarea>
+                    </div>
+                    
+                    <div class="flex space-x-3 pt-2 border-t border-gray-200">
+                        <button type="submit" class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-semibold">
+                            <i class="fas fa-save mr-2"></i>Guardar Cambios
+                        </button>
+                        <button type="button" onclick="window.recipeManager.closeEditModal()"
+                            class="px-6 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 font-semibold">
+                            <i class="fas fa-times mr-2"></i>Cancelar
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recipe Selector Modal for Manual Menu -->
+    <div id="recipeSelectorModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-lg max-w-4xl w-full max-h-screen overflow-y-auto border-2 border-gray-300 shadow-lg hover:shadow-xl hover:border-blue-400 transition-all">
+            <div class="p-6">
+                <div class="flex justify-between items-center mb-4 pb-4 border-b-2 border-gray-300">
+                    <h3 class="text-2xl font-bold text-gray-900">
+                        <i class="fas fa-search mr-2"></i>Seleccionar Receta
+                    </h3>
+                    <button onclick="window.manualMenuManager.closeRecipeSelector()" class="text-gray-500 hover:text-gray-700 transition-colors p-2 hover:bg-gray-100 rounded">
+                        <i class="fas fa-times text-xl"></i>
+                    </button>
+                </div>
+                <div class="mb-4">
+                    <input type="text" id="recipeSelectorSearch" 
+                        placeholder="Buscar por nombre, categoría (comida, cena, general) o tiempo máximo..." 
+                        class="w-full p-2 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                        oninput="handleSelectorSearch()">
+                </div>
+                <div class="mb-4 flex flex-wrap justify-between items-center gap-2">
+                    <div class="flex items-center gap-2">
+                        <span class="text-sm text-gray-600">Ordenar:</span>
+                        <select id="selectorSortOrder" onchange="handleSelectorSortChange()"
+                            class="p-1.5 border rounded-lg text-sm focus:ring-2 focus:ring-blue-500">
+                            <option value="date-desc" selected>Más reciente</option>
+                            <option value="date-asc">Más antiguo</option>
+                            <option value="name-asc">Nombre (A-Z)</option>
+                            <option value="name-desc">Nombre (Z-A)</option>
+                        </select>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <span class="text-sm text-gray-600">Vista:</span>
+                        <div class="flex">
+                            <button id="selectorGridViewBtn" class="view-toggle-btn active" onclick="handleSelectorViewToggle('grid')">
+                                <i class="fas fa-th-large"></i> Cuadrícula
+                            </button>
+                            <button id="selectorListViewBtn" class="view-toggle-btn" onclick="handleSelectorViewToggle('list')">
+                                <i class="fas fa-list"></i> Listado
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div id="recipeSelectorResults" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 max-h-96 overflow-y-auto p-2">
+                    <!-- Recipes will be loaded here -->
+                </div>
+                <div class="mt-4 flex justify-end">
+                    <button onclick="closeSelectorModal()" 
+                        class="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 font-semibold">
+                        <i class="fas fa-times mr-2"></i>Cancelar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="js/app.js"></script>
+</body>
+</html>
