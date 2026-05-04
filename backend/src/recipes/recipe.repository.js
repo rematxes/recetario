@@ -23,9 +23,9 @@ class RecipeRepository extends JsonRepository {
   async getRandomForMeal(mealType) {
     const available = await this.findAvailableForMeal(mealType);
     if (available.length === 0) {
-      // Fallback: any recipe except breakfast/snacks
-      const fallback = await this.filter(recipe => 
-        recipe.category !== 'picoteo' && recipe.category !== 'desayuno'
+      // Fallback: any recipe except snacks
+      const fallback = await this.filter(recipe =>
+        recipe.category !== 'picoteo'
       );
       if (fallback.length === 0) return null;
       return fallback[Math.floor(Math.random() * fallback.length)];

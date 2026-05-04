@@ -67,7 +67,7 @@ Ejemplo: `http://192.168.1.100:3000`
 - ✅ **Leer**: Vista en cuadrícula con búsqueda por nombre/categoría/tiempo
 - ✅ **Actualizar**: Modal de edición con validación
 - ✅ **Eliminar**: Confirmación y borrado seguro
-- ✅ **Filtrado por Categorías**: Botones toggle para cada categoría (desayuno, comida, cena, etc.)
+- ✅ **Filtrado por Categorías**: Botones toggle para cada categoría (comida, cena, general, etc.)
 
 ### Gestión de Menús
 - ✅ **Generación Automática**: Menús semanales con recetas aleatorias
@@ -89,7 +89,6 @@ Ejemplo: `http://192.168.1.100:3000`
 
 ### Categorías de Recetas
 - General (☀️🌙)
-- Desayuno (☕)
 - Comida (☀️)
 - Cena (🌙)
 - Picoteo (🍪)

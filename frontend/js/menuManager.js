@@ -239,7 +239,6 @@ export class MenuManager {
     const { mealType } = this.substitutionState;
 
     const selectorFilters = this.appState.get('selectorCategoryFilters') || {
-      desayuno: true,
       comida: true,
       cena: true,
       general: true,

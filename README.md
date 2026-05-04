@@ -6,7 +6,7 @@ Una aplicación web CRUD para gestionar recetas y generar menús semanales autom
 
 ### 🍳 Gestión Completa de Recetas
 - **CRUD Completo**: Crear, leer, actualizar y eliminar recetas
-- **Categorías**: General, Desayuno, Comida, Cena, Picoteo, Dulce
+- **Categorías**: General, Comida, Cena, Picoteo, Dulce
 - **Tiempos Detallados**: Preparación, cocción y total
 - **Búsqueda Avanzada**: Por nombre, categoría o tiempo
 
@@ -161,7 +161,7 @@ npm run dev
   "name": "Nombre de la receta",
   "ingredients": "Ingrediente 1\nIngrediente 2\n...",
   "instructions": "Paso 1\nPaso 2\n...",
-  "category": "general|desayuno|comida|cena|picoteo|dulce",
+  "category": "general|comida|cena|picoteo|dulce",
   "prepTime": 15,
   "cookTime": 30,
   "createdAt": "2024-01-01T00:00:00.000Z",
@@ -295,7 +295,7 @@ Componente reutilizable para mostrar recetas:
 interface Recipe {
   id: string;           // UUID v4
   name: string;         // Nombre de la receta
-  category: "general" | "desayuno" | "comida" | "cena" | "picoteo" | "dulce";
+  category: "general" | "comida" | "cena" | "picoteo" | "dulce";
   prepTime: number;     // Tiempo preparación (minutos)
   cookTime: number;     // Tiempo cocción (minutos)
   ingredients: string;    // Separados por saltos de línea
@@ -339,7 +339,6 @@ interface Meal {
 | Categoría | Icono | Color | Comida | Cena |
 |-----------|-------|-------|--------|------|
 | General | ☀️🌙 | Gris | ✅ | ✅ |
-| Desayuno | ☕ | Amarillo | ❌ | ❌ |
 | Comida | ☀️ | Naranja | ✅ | ❌ |
 | Cena | 🌙 | Índigo | ❌ | ✅ |
 | Picoteo | 🍪 | Verde | ❌ | ❌ |

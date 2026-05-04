@@ -119,7 +119,6 @@ function toggleCategoryFilter(category) {
 
 function toggleSelectorCategoryFilter(category) {
   const filters = appState.get('selectorCategoryFilters') || {
-    desayuno: true,
     comida: true,
     cena: true,
     general: true,
@@ -268,7 +267,6 @@ function initApp() {
 
   // Initialize selector category filter buttons
   const selectorFilters = appState.get('selectorCategoryFilters') || {
-    desayuno: true,
     comida: true,
     cena: true,
     general: true,

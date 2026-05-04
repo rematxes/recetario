@@ -11,7 +11,6 @@ export class AppState {
       recipeSortOrder: 'date-desc',
       selectorSortOrder: 'date-desc',
       categoryFilters: {
-        desayuno: true,
         comida: true,
         cena: true,
         general: true,

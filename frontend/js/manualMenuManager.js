@@ -135,7 +135,6 @@ export class ManualMenuManager {
     const mealType = form.selectedMeal;
 
     const selectorFilters = this.appState.get('selectorCategoryFilters') || {
-      desayuno: true,
       comida: true,
       cena: true,
       general: true,

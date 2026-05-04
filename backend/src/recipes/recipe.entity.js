@@ -1,4 +1,4 @@
-const CATEGORIES = ['general', 'desayuno', 'comida', 'cena', 'picoteo', 'dulce'];
+const CATEGORIES = ['general', 'comida', 'cena', 'picoteo', 'dulce'];
 
 class Recipe {
   constructor(data) {
