@@ -29,7 +29,7 @@ export class RecipeCard {
           ${categoryBadge}
         </div>
         
-        <div class="flex flex-wrap gap-2 mb-4 p-2 bg-white rounded border border-gray-200">
+        <div class="flex flex-nowrap gap-1 mb-3 bg-gray-50 rounded p-1.5 overflow-hidden">
           ${timeBadges}
         </div>
         

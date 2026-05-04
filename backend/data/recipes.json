@@ -341,17 +341,6 @@
     "updatedAt": "2026-05-03T20:00:00.000Z"
   },
   {
-    "id": "p001",
-    "name": "Yogur con frutas y miel",
-    "ingredients": "Yogur\nFruta\nMiel",
-    "instructions": "1. Mezclar todo",
-    "category": "dulce",
-    "prepTime": 5,
-    "cookTime": 0,
-    "createdAt": "2026-05-03T20:00:00.000Z",
-    "updatedAt": "2026-05-04T01:34:17.453Z"
-  },
-  {
     "id": "p002",
     "name": "Tarta de queso rápida",
     "ingredients": "Queso crema\nHuevos\nAzúcar",

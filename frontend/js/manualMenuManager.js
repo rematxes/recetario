@@ -110,6 +110,21 @@ export class ManualMenuManager {
 
     document.getElementById('recipeSelectorSearch').value = '';
 
+    // Set default category filters based on meal type
+    const defaultFilters = mealType === 'comida'
+      ? { comida: true, cena: false, general: true, picoteo: false, dulce: false }
+      : { comida: false, cena: true, general: true, picoteo: false, dulce: false };
+
+    this.appState.set('selectorCategoryFilters', defaultFilters);
+
+    // Update UI buttons to reflect the filters
+    Object.keys(defaultFilters).forEach(category => {
+      const btn = document.getElementById(`selector-filter-${category}`);
+      if (btn) {
+        btn.classList.toggle('active', defaultFilters[category]);
+      }
+    });
+
     this.renderRecipeSelector();
     document.getElementById('recipeSelectorModal').classList.remove('hidden');
   }
@@ -131,8 +146,6 @@ export class ManualMenuManager {
   renderRecipeSelector() {
     const container = document.getElementById('recipeSelectorResults');
     const searchTerm = document.getElementById('recipeSelectorSearch').value.toLowerCase().trim();
-    const form = this.appState.get('manualMenuForm');
-    const mealType = form.selectedMeal;
 
     const selectorFilters = this.appState.get('selectorCategoryFilters') || {
       comida: true,
@@ -143,17 +156,9 @@ export class ManualMenuManager {
     };
 
     let recipes = this.appState.get('recipes').filter(recipe => {
-      // First check category filters
+      // Check category filters (like main recipe search)
       const category = recipe.category || 'general';
-      if (!selectorFilters[category]) return false;
-
-      // Then check meal type filter
-      if (mealType === 'comida') {
-        return ['comida', 'general'].includes(recipe.category);
-      } else if (mealType === 'cena') {
-        return ['cena', 'general'].includes(recipe.category);
-      }
-      return true;
+      return selectorFilters[category];
     });
 
     if (searchTerm) {
@@ -164,7 +169,7 @@ export class ManualMenuManager {
     recipes = this.recipeManager.sortRecipes(recipes, this.appState.get('selectorSortOrder'));
 
     if (recipes.length === 0) {
-      container.innerHTML = '<p class="text-gray-500 text-center py-8">No hay recetas disponibles</p>';
+      container.innerHTML = '<p class="text-gray-500 text-center py-8">No hay recetas disponibles con los filtros seleccionados</p>';
       return;
     }
 

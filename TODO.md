@@ -1,7 +1,5 @@
 ## Usabilidad y estandar
-- Modificar el buscador sustituir receta para que las categorías se comporten igual que el buscador de rectas. Unificar ambos buscadores 
-- Al sustituir una receta aparezca solo seleccionado la categoría de la comida correspondiente (Comida o cena)
-- Ajustar el tamaño de los tiempos para que se vean en una línea en el móvil, se puede pegar a la tarjeta de la receta
+-Unificar ambos buscadores 
 
 ## Version Multiusuario
 - Añadir pantalla de login

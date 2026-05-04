@@ -60,14 +60,14 @@ export class UIHelpers {
     const total = prep + cook;
 
     return `
-      <span class="bg-blue-50 text-blue-700 px-2 py-1 rounded font-medium text-xs">
-        <i class="fas ${TIME_ICONS.prep.icon} mr-1"></i>${TIME_ICONS.prep.label}: ${prep}min
+      <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded font-medium text-xs whitespace-nowrap flex items-center">
+        <i class="fas ${TIME_ICONS.prep.icon} mr-1"></i>${prep}min
       </span>
-      <span class="bg-orange-50 text-orange-700 px-2 py-1 rounded font-medium text-xs">
-        <i class="fas ${TIME_ICONS.cook.icon} mr-1"></i>${TIME_ICONS.cook.label}: ${cook}min
+      <span class="bg-orange-100 text-orange-800 px-2 py-1 rounded font-medium text-xs whitespace-nowrap flex items-center">
+        <i class="fas ${TIME_ICONS.cook.icon} mr-1"></i>${cook}min
       </span>
-      <span class="bg-green-50 text-green-700 px-2 py-1 rounded font-medium text-xs">
-        <i class="fas ${TIME_ICONS.total.icon} mr-1"></i>${TIME_ICONS.total.label}: ${total}min
+      <span class="bg-green-100 text-green-800 px-2 py-1 rounded font-medium text-xs whitespace-nowrap flex items-center">
+        <i class="fas ${TIME_ICONS.total.icon} mr-1"></i>${total}min
       </span>
     `;
   }
