@@ -6,7 +6,7 @@ Una aplicación web CRUD para gestionar recetas y generar menús semanales autom
 
 ### 🍳 Gestión Completa de Recetas
 - **CRUD Completo**: Crear, leer, actualizar y eliminar recetas
-- **Categorías**: General, Desayuno, Comida, Cena, Picoteo, Dulce
+- **Categorías**: General, Comida, Cena, Picoteo, Dulce
 - **Tiempos Detallados**: Preparación, cocción y total
 - **Búsqueda Avanzada**: Por nombre, categoría o tiempo
 
@@ -29,19 +29,58 @@ Una aplicación web CRUD para gestionar recetas y generar menús semanales autom
 
 ## 📋 Estructura del Proyecto
 
+### Backend - Arquitectura Modular
 ```
-windsurf-project/
-├── backend/
-│   ├── server.js          # Servidor Node.js/Express
-│   └── data/              # Directorio de datos JSON
-│       ├── recipes.json   # Base de datos de recetas
-│       └── menus.json     # Base de datos de menús
-├── frontend/
-│   ├── index.html         # Interfaz principal (responsive)
-│   └── app.js            # Lógica del frontend
-├── DEPLOYMENT.md          # Guía completa de despliegue
-├── package.json           # Dependencias del proyecto
-└── README.md             # Este archivo
+backend/
+├── server.js              # Punto de entrada
+├── src/
+│   ├── app.js             # Configuración Express
+│   ├── config/
+│   │   └── index.js       # Configuración centralizada
+│   ├── recipes/           # Módulo Recetas
+│   │   ├── recipe.entity.js       # Entidad y validación
+│   │   ├── recipe.repository.js   # Acceso a datos JSON
+│   │   ├── recipe.service.js      # Lógica de negocio
+│   │   ├── recipe.controller.js # Handlers HTTP
+│   │   └── recipe.routes.js       # Definición de rutas
+│   ├── menus/             # Módulo Menús
+│   │   ├── menu.entity.js
+│   │   ├── menu.repository.js
+│   │   ├── menu.service.js
+│   │   ├── menu.controller.js
+│   │   └── menu.routes.js
+│   └── shared/            # Utilidades compartidas
+│       ├── utils.js
+│       ├── validators.js
+│       └── responseHandler.js
+└── data/
+    ├── recipes.json       # Base de datos recetas
+    └── menus.json         # Base de datos menús
+```
+
+### Frontend - Arquitectura ES6 Modules
+```
+frontend/
+├── index.html             # SPA principal
+└── js/
+    ├── app.js             # Punto de entrada, coordinador
+    ├── config.js          # Constantes y configuración
+    ├── apiService.js      # Capa de acceso a API
+    ├── utils.js           # Utilidades generales
+    ├── uiHelpers.js       # Generadores de HTML
+    ├── tabManager.js      # Navegación por tabs
+    ├── menuManager.js     # Gestión de menús semanales
+    ├── manualMenuManager.js # Creación manual de menús
+    ├── core/
+    │   └── AppState.js    # Estado observable global
+    ├── features/
+    │   └── recipes/
+    │       └── RecipeManager.js   # Manager de recetas (extiende BaseManager)
+    └── shared/
+        ├── BaseManager.js       # Clase base CRUD para managers
+        ├── utils.js             # Utilidades compartidas
+        └── components/
+            └── RecipeCard.js    # Componente reutilizable
 ```
 
 ## 🛠️ Instalación Rápida
@@ -120,10 +159,9 @@ npm run dev
 {
   "id": "uuid",
   "name": "Nombre de la receta",
-  "description": "Descripción opcional",
   "ingredients": "Ingrediente 1\nIngrediente 2\n...",
   "instructions": "Paso 1\nPaso 2\n...",
-  "category": "general|breakfast|lunch|dinner|dessert",
+  "category": "general|comida|cena|picoteo|dulce",
   "prepTime": 15,
   "cookTime": 30,
   "createdAt": "2024-01-01T00:00:00.000Z",
@@ -168,61 +206,87 @@ npm run dev
 
 ## 🔧 Arquitectura Técnica
 
-### Patrón de Diseño
-El frontend utiliza el **Module Pattern** con una arquitectura clara de separación de responsabilidades:
+### Patrón de Diseño Frontend
+El frontend utiliza **ES6 Modules** con arquitectura modular y gestión de estado observable:
 
 ```
-frontend/app.js
-├── CONFIG              # Constantes y configuración
-├── AppState           # Estado global de la aplicación
-├── Utility Functions  # Funciones auxiliares
-├── ApiService         # Capa de acceso a datos
-├── UIHelpers          # Generadores de HTML
-├── RecipeManager      # Gestión de recetas (CRUD)
-├── MenuManager        # Gestión de menús semanales
-├── ManualMenuManager  # Creación manual de menús
-├── TabManager         # Navegación entre pestañas
-└── Initialization     # Punto de entrada
+frontend/js/
+├── app.js              # Coordinador principal, expone funciones globales
+├── config.js           # Constantes centralizadas
+├── apiService.js       # Servicio de API
+├── core/
+│   └── AppState.js     # Estado observable con get/set/subscribe
+├── features/
+│   └── recipes/
+│       └── RecipeManager.js  # Extends BaseManager
+├── shared/
+│   ├── BaseManager.js  # Clase base con CRUD operations
+│   └── components/
+│       └── RecipeCard.js     # Componente reutilizable
+├── manualMenuManager.js
+├── menuManager.js
+├── tabManager.js
+├── uiHelpers.js
+└── utils.js
 ```
 
 ### Flujo de Datos
 ```
 Usuario → Event Handler → Manager → ApiService → Backend
-                                           ↓
-UIHelpers ← AppState ← ← ← ← ← ← ← ← ← ← ← JSON Response
+                             ↓                        ↓
+UIHelpers ← AppState.get() ← ← ← ← ← ← ← ← ← ← ← JSON Response
+                ↑
+         AppState.set() → Notifica suscriptores
 ```
 
 ### Componentes Principales
 
-#### 1. **RecipeManager**
-Gestiona el ciclo completo de vida de las recetas:
-- `loadRecipes()`: Carga inicial desde API
-- `renderRecipes()`: Renderizado condicional (grid/lista)
-- `filterRecipes()`: Búsqueda por nombre/descripción/categoría/tiempo
+#### 1. **RecipeManager** (extiende BaseManager)
+Gestiona el ciclo completo de vida de las recetas usando AppState observable:
+- `loadRecipes()`: Carga inicial desde API → `appState.set('recipes', data)`
+- `renderRecipes()`: Renderizado grid, usa `appState.get('recipes')`
+- `filterRecipes()`: Búsqueda por nombre/categoría/tiempo + filtros de categoría toggle
 - `saveRecipe()`: Crear/actualizar con validación
 - `deleteRecipe()`: Eliminación con confirmación
-- `viewRecipe()`: Modal de visualización detallada
-- `editRecipe()`: Modal de edición con pre-carga
+- `viewRecipe()`: Modal de visualización con instrucciones formateadas
+- `editRecipe()`: Pre-carga datos en modal de edición
+- `toggleCategoryFilter()`: Activa/desactiva filtros de categoría
 
 #### 2. **MenuManager**
 Gestiona menús semanales con visualización colapsable:
-- `loadMenus()`: Carga menús con tracking de estado expandido
+- `loadMenus()`: Carga menús con tracking de estado expandido (`appState.get('expandedMenus')`)
 - `renderMenus()`: Genera HTML con nombres autonuméricos
 - `renderDayCard()`: Tarjetas de día con comida/cena
-- `renderMealCard()**: Visualización de receta en menú con 3 tiempos
-- `generateMenu()**: Generación automática aleatoria
-- `substituteRecipe()**: Cambio de receta con filtros de categoría
-- `toggleMenu()**: Expandir/colapsar menús
-- `editName()**: Edición inline de nombre de menú
+- `renderMealCard()`: Visualización de receta en menú con 3 tiempos
+- `generateMenu()`: Generación automática aleatoria
+- `substituteRecipe()`: Cambio de receta con selector filtrable
+- `toggleMenu()`: Expandir/colapsar menús
+- `editName()`: Edición inline de nombre de menú
 
 #### 3. **ManualMenuManager**
 Flujo de creación manual paso a paso:
-- `toggleForm()**: Mostrar/ocultar formulario
-- `initGrid()**: Grid de 7 días con selección
-- `openRecipeSelector()**: Modal de selección con filtros
-- `renderRecipeSelector()**: Lista filtrada por tipo de comida
-- `selectRecipe()**: Asignación a slot específico
-- `save()**: Persistencia del menú completo
+- `toggleForm()`: Mostrar/ocultar formulario
+- `initGrid()`: Grid de 7 días con selección
+- `openRecipeSelector()`: Modal de selección con filtros de categoría
+- `renderRecipeSelector()`: Lista filtrada por tipo de comida + filtros toggle
+- `selectRecipe()`: Asignación a slot específico
+- `save()`: Persistencia del menú completo
+- `clearMenu()`: Limpia formulario manual
+
+#### 4. **BaseManager** (Clase Base)
+Clase abstracta que proporciona operaciones CRUD base para managers:
+- `loadItems()`: Carga datos desde API, usa `appState.set()`
+- `saveItem()`: Crear/actualizar con validación
+- `deleteItem()`: Eliminación con confirmación
+- `resetForm()`: Limpia formulario
+- `showAddModal()`: Muestra modal para añadir
+- `closeModal()`: Cierra modal y limpia estado
+
+#### 5. **RecipeCard** (Componente)
+Componente reutilizable para mostrar recetas:
+- `renderCompact()`: Vista compacta para selectores
+- `renderGrid()`: Vista completa para grid
+- Genera badges de tiempo y categoría automáticamente
 
 ### Modelo de Datos Completo
 
@@ -231,8 +295,7 @@ Flujo de creación manual paso a paso:
 interface Recipe {
   id: string;           // UUID v4
   name: string;         // Nombre de la receta
-  description: string;  // Descripción breve
-  category: "general" | "desayuno" | "comida" | "cena" | "picoteo" | "dulce";
+  category: "general" | "comida" | "cena" | "picoteo" | "dulce";
   prepTime: number;     // Tiempo preparación (minutos)
   cookTime: number;     // Tiempo cocción (minutos)
   ingredients: string;    // Separados por saltos de línea
@@ -276,7 +339,6 @@ interface Meal {
 | Categoría | Icono | Color | Comida | Cena |
 |-----------|-------|-------|--------|------|
 | General | ☀️🌙 | Gris | ✅ | ✅ |
-| Desayuno | ☕ | Amarillo | ❌ | ❌ |
 | Comida | ☀️ | Naranja | ✅ | ❌ |
 | Cena | 🌙 | Índigo | ❌ | ✅ |
 | Picoteo | 🍪 | Verde | ❌ | ❌ |
@@ -295,27 +357,49 @@ Cada receta almacena 3 tiempos:
 3. **Total** (⏳ Verde): Suma automática (prep + cocción)
 
 Visualización consistente en:
-- Vista de recetas (grid/lista)
+- Vista de recetas (grid)
 - Modal de detalle
 - Menús semanales (badges individuales)
 
-### Gestión de Estado
+### Gestión de Estado - AppState Observable
 
-**AppState** centraliza el estado:
+**AppState** es una clase observable que proporciona acceso reactivo al estado global:
+
 ```javascript
-AppState = {
-  recipes: [],           // Cache de recetas
-  menus: [],             // Cache de menús
-  currentView: 'grid',     // 'grid' | 'list'
-  expandedMenus: Set,    // IDs de menús expandidos
-  editingRecipeId: null, // ID en edición
-  manualMenuForm: {      // Estado form manual
-    isExpanded: false,
-    selectedDay: null,
-    selectedMeal: null,
-    selectorViewMode: 'grid',
-    data: {}             // Datos temporales
+// Core: AppState.js
+class AppState {
+  constructor() {
+    this.state = new Map();      // Almacena el estado
+    this.subscribers = new Map(); // Callbacks por key
   }
+  
+  get(key) { return this.state.get(key); }
+  
+  set(key, value) {
+    this.state.set(key, value);
+    this.notify(key, value);  // Notifica suscriptores
+  }
+  
+  subscribe(key, callback) {
+    // Suscripción a cambios de estado
+  }
+}
+
+// Uso en Managers:
+const recipes = this.appState.get('recipes');
+this.appState.set('recipes', updatedRecipes);
+```
+
+**Estado Global:**
+```javascript
+{
+  recipes: [],              // Cache de recetas
+  menus: [],                // Cache de menús
+  expandedMenus: Set,       // IDs de menús expandidos
+  editingRecipeId: null,    // ID en edición
+  activeCategoryFilters: [], // Filtros toggle activos
+  selectorCategoryFilters: [], // Filtros en selector modal
+  // ... más estado según necesidad
 }
 ```
 
@@ -349,8 +433,10 @@ AppState = {
 const CONFIG = { API_BASE, DAYS_OF_WEEK, MEAL_TYPES, VIEWS }
 const CATEGORY_CONFIG = { /* definiciones visuales */ }
 
-// 2. ESTADO
-const AppState = { /* estado global */ }
+// 2. ESTADO (Observable)
+import { AppState } from './core/AppState.js';
+const appState = new AppState();
+// appState.get('key'), appState.set('key', value), appState.subscribe('key', callback)
 
 // 3. UTILIDADES
 function escapeHtml(text) { /* sanitización */ }
@@ -364,13 +450,17 @@ const ApiService = {
 }
 
 // 5. MÓDULOS DE GESTIÓN
-const RecipeManager = { /* CRUD de recetas */ }
-const MenuManager = { /* Gestión de menús */ }
-const ManualMenuManager = { /* Menús manuales */ }
-const TabManager = { /* Navegación */ }
+class BaseManager { /* Operaciones CRUD base */ }
+class RecipeManager extends BaseManager { /* CRUD de recetas */ }
+class MenuManager { /* Gestión de menús */ }
+class ManualMenuManager { /* Menús manuales */ }
+class TabManager { /* Navegación */ }
 
-// 6. INICIALIZACIÓN
-document.addEventListener('DOMContentLoaded', initApp)
+// 6. COMPONENTES
+class RecipeCard { /* Componente reutilizable */ }
+
+// 7. INICIALIZACIÓN
+import { appState, recipeManager, menuManager } from './app.js';
 ```
 
 ### Convenciones de Código
@@ -391,16 +481,19 @@ Para añadir nuevas funcionalidades:
 3. Actualizar reglas de asignación si aplica
 
 **Nuevo campo en receta:**
-1. Añadir input en formularios HTML
-2. Añadir a `recipeData` en `saveRecipe()`
-3. Mostrar en `viewRecipe()` y renderizados
-4. Actualizar modelo en este README
+1. Añadir input en formularios HTML (`index.html`)
+2. Añadir a `recipeData` en `RecipeManager.saveRecipe()`
+3. Actualizar `recipe.entity.js` en backend
+4. Mostrar en `RecipeManager.renderRecipeDetails()`
+5. Actualizar modelo en este README
 
 **Nuevo endpoint API:**
-1. Añadir ruta en `backend/server.js`
-2. Añadir método en `ApiService`
-3. Crear manager function que lo use
-4. Conectar a UI event handler
+1. Añadir ruta en `backend/src/<module>/<module>.routes.js`
+2. Implementar controller en `<module>.controller.js`
+3. Añadir lógica en `<module>.service.js`
+4. Añadir método en `frontend/js/apiService.js`
+5. Crear manager function que lo use
+6. Conectar a UI event handler
 
 ## 📊 Performance
 

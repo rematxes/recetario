@@ -4,8 +4,9 @@
 Aplicación web para gestión de recetas con generación automática de menús semanales. Compatible con dispositivos móviles conectados a la misma red WiFi.
 
 ## Arquitectura
-- **Backend**: Node.js + Express con almacenamiento en JSON local
-- **Frontend**: HTML5 + Tailwind CSS + JavaScript vanilla
+- **Backend**: Node.js + Express con arquitectura modular (Entity, Repository, Service, Controller, Routes)
+- **Frontend**: HTML5 + Tailwind CSS + JavaScript ES6 Modules con arquitectura modular
+- **Estado**: AppState observable para gestión de estado global
 - **Acceso**: Disponible para dispositivos en la misma red local
 
 ## Requisitos Previos
@@ -63,9 +64,10 @@ Ejemplo: `http://192.168.1.100:3000`
 
 ### CRUD de Recetas
 - ✅ **Crear**: Formulario completo con categorías y tiempos
-- ✅ **Leer**: Vista en cuadrícula y listado con búsqueda
+- ✅ **Leer**: Vista en cuadrícula con búsqueda por nombre/categoría/tiempo
 - ✅ **Actualizar**: Modal de edición con validación
 - ✅ **Eliminar**: Confirmación y borrado seguro
+- ✅ **Filtrado por Categorías**: Botones toggle para cada categoría (comida, cena, general, etc.)
 
 ### Gestión de Menús
 - ✅ **Generación Automática**: Menús semanales con recetas aleatorias
@@ -79,9 +81,14 @@ Ejemplo: `http://192.168.1.100:3000`
 - ✅ **Sin Zoom Forzado**: viewport configurado para móvil
 - ✅ **Acceso WiFi**: Disponible en toda la red local
 
+### Arquitectura Frontend Modular
+- ✅ **ES6 Modules**: Código organizado en módulos con import/export
+- ✅ **AppState Observable**: Estado global reactivo con suscripción
+- ✅ **BaseManager**: Clase base para managers con operaciones CRUD
+- ✅ **Componentes Reutilizables**: RecipeCard para diferentes vistas
+
 ### Categorías de Recetas
 - General (☀️🌙)
-- Desayuno (☕)
 - Comida (☀️)
 - Cena (🌙)
 - Picoteo (🍪)
@@ -92,15 +99,39 @@ Ejemplo: `http://192.168.1.100:3000`
 ```
 windsurf-project/
 ├── backend/
-│   ├── server.js              # Servidor Express
+│   ├── server.js              # Punto de entrada del servidor
+│   ├── src/
+│   │   ├── app.js             # Configuración Express
+│   │   ├── config/            # Configuración centralizada
+│   │   ├── recipes/           # Módulo Recetas (entity, repository, service, controller, routes)
+│   │   ├── menus/             # Módulo Menús (entity, repository, service, controller, routes)
+│   │   └── shared/            # Utilidades compartidas
 │   └── data/
 │       ├── recipes.json       # Base de datos de recetas
 │       └── menus.json         # Base de datos de menús
 ├── frontend/
-│   ├── index.html             # Interfaz principal
-│   └── app.js                 # Lógica del frontend
-├── package.json               # Dependencias
-└── README.md                  # Documentación
+│   ├── index.html             # Interfaz principal SPA
+│   └── js/
+│       ├── app.js             # Punto de entrada y coordinador
+│       ├── config.js          # Configuración global
+│       ├── apiService.js      # Servicio de API
+│       ├── core/
+│       │   └── AppState.js    # Estado observable global
+│       ├── features/
+│       │   └── recipes/
+│       │       └── RecipeManager.js  # Gestión de recetas
+│       ├── shared/
+│       │   ├── BaseManager.js # Clase base para managers
+│       │   ├── components/
+│       │   │   └── RecipeCard.js     # Componente reutilizable
+│       │   └── utils.js       # Utilidades compartidas
+│       ├── manualMenuManager.js      # Creación manual de menús
+│       ├── menuManager.js            # Gestión de menús
+│       ├── tabManager.js             # Navegación por tabs
+│       └── uiHelpers.js              # Helpers de UI
+├── DEPLOYMENT.md              # Guía de despliegue
+├── README.md                  # Documentación completa
+└── package.json               # Dependencias
 ```
 
 ## Configuración del Servidor
