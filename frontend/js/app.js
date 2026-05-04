@@ -16,6 +16,8 @@ import { RecipeManager } from './features/recipes/RecipeManager.js';
 import { MenuManager } from './menuManager.js';
 import { ManualMenuManager } from './manualMenuManager.js';
 import { TabManager } from './tabManager.js';
+import { UnifiedModal, ModalManager } from './shared/components/UnifiedModal.js';
+import { SearchBar, createSearchBar } from './shared/components/SearchBar.js';
 
 console.log('[APP] Module loaded, initializing...');
 
@@ -105,7 +107,7 @@ function handleRecipeSortChange() {
 }
 
 function toggleCategoryFilter(category) {
-  const filters = appState.get('categoryFilters');
+  const filters = { ...appState.get('categoryFilters') };
   filters[category] = !filters[category];
   appState.set('categoryFilters', filters);
 
@@ -118,13 +120,13 @@ function toggleCategoryFilter(category) {
 }
 
 function toggleSelectorCategoryFilter(category) {
-  const filters = appState.get('selectorCategoryFilters') || {
+  const filters = { ...(appState.get('selectorCategoryFilters') || {
     comida: true,
     cena: true,
     general: true,
     picoteo: true,
     dulce: true
-  };
+  }) };
   filters[category] = !filters[category];
   appState.set('selectorCategoryFilters', filters);
 
@@ -154,7 +156,7 @@ function closeSelectorModal() {
   if (appState.get('manualMenuForm').selectedDay !== null) {
     manualMenuManager.closeRecipeSelector();
   } else {
-    document.getElementById('recipeSelectorModal').classList.add('hidden');
+    document.getElementById('recipeSelectorModal').classList.remove('active');
   }
 }
 
@@ -180,6 +182,12 @@ window.recipeManager = recipeManager;
 window.menuManager = menuManager;
 window.manualMenuManager = manualMenuManager;
 window.tabManager = tabManager;
+
+// Expose UI components for global access
+window.UnifiedModal = UnifiedModal;
+window.ModalManager = ModalManager;
+window.SearchBar = SearchBar;
+window.createSearchBar = createSearchBar;
 
 console.log('[APP] Global functions and managers exposed to window');
 

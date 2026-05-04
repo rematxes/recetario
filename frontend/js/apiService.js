@@ -46,6 +46,10 @@ export class ApiService {
     return this.request('/api/recipes');
   }
 
+  async getRecipe(id) {
+    return this.request(`/api/recipes/${id}`);
+  }
+
   async createRecipe(data) {
     return this.request('/api/recipes', { method: 'POST', body: JSON.stringify(data) });
   }

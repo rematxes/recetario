@@ -112,13 +112,27 @@ export class RecipeManager {
     }
   }
 
-  viewRecipe(id) {
-    const recipe = this.items.find(r => r.id === id);
-    if (!recipe) return;
+  async viewRecipe(id) {
+    let recipe = this.items.find(r => r.id === id);
+    
+    // If not in local cache, fetch from API
+    if (!recipe) {
+      try {
+        recipe = await apiService.getRecipe(id);
+        if (!recipe) {
+          showError('Receta no encontrada');
+          return;
+        }
+      } catch (error) {
+        showError('Error al cargar la receta');
+        console.error('View recipe error:', error);
+        return;
+      }
+    }
 
     document.getElementById('modalRecipeName').textContent = recipe.name;
     document.getElementById('modalRecipeContent').innerHTML = this.renderRecipeDetails(recipe);
-    document.getElementById('recipeModal').classList.remove('hidden');
+    document.getElementById('recipeModal').classList.add('active');
   }
 
   renderRecipeDetails(recipe) {
@@ -178,9 +192,23 @@ export class RecipeManager {
     `;
   }
 
-  editRecipe(id) {
-    const recipe = this.items.find(r => r.id === id);
-    if (!recipe) return;
+  async editRecipe(id) {
+    let recipe = this.items.find(r => r.id === id);
+    
+    // If not in local cache, fetch from API
+    if (!recipe) {
+      try {
+        recipe = await apiService.getRecipe(id);
+        if (!recipe) {
+          showError('Receta no encontrada');
+          return;
+        }
+      } catch (error) {
+        showError('Error al cargar la receta');
+        console.error('Edit recipe error:', error);
+        return;
+      }
+    }
 
     this.appState.set('editingRecipeId', id);
 
@@ -192,7 +220,7 @@ export class RecipeManager {
     document.getElementById('editRecipeIngredients').value = recipe.ingredients || '';
     document.getElementById('editRecipeInstructions').value = recipe.instructions || '';
 
-    document.getElementById('editRecipeModal').classList.remove('hidden');
+    document.getElementById('editRecipeModal').classList.add('active');
   }
 
   async saveRecipe(event) {
@@ -228,10 +256,23 @@ export class RecipeManager {
   }
 
   async deleteRecipe(id) {
-    const recipeIndex = this.items.findIndex(r => r.id === id);
-    if (recipeIndex === -1) return;
-
-    const recipe = this.items[recipeIndex];
+    let recipeIndex = this.items.findIndex(r => r.id === id);
+    let recipe = this.items[recipeIndex];
+    
+    // If not in local cache, fetch from API
+    if (!recipe) {
+      try {
+        recipe = await apiService.getRecipe(id);
+        if (!recipe) {
+          showError('Receta no encontrada');
+          return;
+        }
+      } catch (error) {
+        showError('Error al cargar la receta');
+        console.error('Delete recipe error:', error);
+        return;
+      }
+    }
 
     if (!confirm(`¿Estás seguro de eliminar "${recipe.name}"?\n\nEsta acción no se puede deshacer.`)) {
       return;
@@ -264,11 +305,11 @@ export class RecipeManager {
   }
 
   closeViewModal() {
-    document.getElementById('recipeModal').classList.add('hidden');
+    document.getElementById('recipeModal').classList.remove('active');
   }
 
   closeEditModal() {
-    document.getElementById('editRecipeModal').classList.add('hidden');
+    document.getElementById('editRecipeModal').classList.remove('active');
     this.appState.set('editingRecipeId', null);
   }
 

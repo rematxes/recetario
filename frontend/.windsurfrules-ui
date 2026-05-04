@@ -1,0 +1,170 @@
+# Agente Frontend — Reglas UI/UX y CSS
+
+Estas reglas aplican a todo el código relacionado con UI/UX, CSS y componentes visuales en `frontend/`.
+
+## Sistema de Diseño
+
+### Paleta de Colores
+
+**Colores Principales:**
+- Azul corporativo: `blue-500` (#3b82f6) - Botones primarios, acentos, focus rings
+- Azul oscuro: `blue-600`, `blue-700` - Hover states
+- Gris bordes: `gray-300` (#d1d5db) - Bordes de cards, modales
+- Gris texto: `gray-800`, `gray-900` - Texto principal
+- Gris fondo: `gray-50`, `gray-100` - Fondos alternos
+
+**Colores Categorías (siempre usar estos exactos):**
+- General: `from-red-100 to-purple-100` (gradient) o `bg-gray-100`
+- Comida: `red-100` text `red-800`
+- Cena: `indigo-100` text `indigo-800`
+- Picoteo: `orange-100` text `orange-800`
+- Dulce: `pink-100` text `pink-800`
+
+**Colores Tiempos:**
+- Preparación: `blue-100` text `blue-800`
+- Cocción: `orange-100` text `orange-800`
+- Total: `green-100` text `green-800`
+
+### Espaciado
+
+**Padding:**
+- Modales y secciones: `p-6`
+- Cards: `p-5` (estándar), `p-4` (compacto)
+- Formularios inputs: `p-2` o `p-3`
+- Badges y pills: `px-2 py-1`
+
+**Gap:**
+- Entre cards: `gap-4`
+- Entre botones: `gap-2`
+- Entre badges: `gap-1` o `gap-2`
+
+**Margin:**
+- Secciones: `mb-6`
+- Subsecciones: `mb-4`
+- Elementos relacionados: `mb-3`
+
+### Tipografía
+
+**Tamaños:**
+- Títulos página: `text-2xl font-bold`
+- Títulos sección: `text-lg font-semibold`
+- Títulos modal: `text-2xl font-bold`
+- Labels: `text-sm font-bold`
+- Body: `text-base`
+- Badges/tiempos: `text-xs font-medium`
+
+## Componentes
+
+### Modales
+
+**Estructura estándar:**
+```html
+<div id="modalId" class="modal-overlay">
+  <div class="modal-container modal-container--md">
+    <div class="p-6">
+      <div class="modal-header">
+        <h3 class="modal-title"><i class="fas fa-icon mr-2"></i>Título</h3>
+        <button class="modal-close-btn"><i class="fas fa-times text-xl"></i></button>
+      </div>
+      <div class="modal-body">
+        <!-- Contenido -->
+      </div>
+      <div class="modal-footer">
+        <!-- Botones -->
+      </div>
+    </div>
+  </div>
+</div>
+```
+
+**Usar UnifiedModal.js para modales dinámicos:**
+```javascript
+import { UnifiedModal } from './shared/components/UnifiedModal.js';
+
+const modal = new UnifiedModal({
+  id: 'myModal',
+  title: 'Título',
+  size: 'md',
+  onClose: () => { /* ... */ }
+});
+
+modal.setContent(htmlContent);
+modal.open();
+```
+
+### Buscadores
+
+**Usar SearchBar.js:**
+```javascript
+import { SearchBar } from './shared/components/SearchBar.js';
+
+const searchBar = new SearchBar({
+  containerId: 'searchContainer',
+  placeholder: 'Buscar recetas...',
+  onSearch: (term) => { /* ... */ },
+  filters: ['comida', 'cena', 'general', 'picoteo', 'dulce']
+});
+```
+
+**O usar clases CSS:**
+- Contenedor: `search-box`
+- Input: `search-input`
+- Filtros: `search-filters` + `search-filters__group`
+
+### Cards de Recetas
+
+**Usar RecipeCard.js:**
+```javascript
+import { RecipeCard } from './shared/components/RecipeCard.js';
+
+RecipeCard.render(recipe, {
+  showActions: true,
+  onView: 'window.recipeManager.viewRecipe',
+  onEdit: 'window.recipeManager.editRecipe',
+  onDelete: 'window.recipeManager.deleteRecipe'
+});
+```
+
+### Botones de Categoría
+
+**Siempre usar clases del sistema:**
+```html
+<button class="category-filter-btn category-filter-btn--comida">
+  <i class="fas fa-sun mr-1"></i>Comida
+</button>
+```
+
+## Layout Responsive
+
+**Breakpoints:**
+- Móvil: default (< 768px)
+- Tablet: `md:` (768px+)
+- Desktop: `lg:` (1024px+)
+
+**Grid de recetas:**
+```html
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+```
+
+## Archivos CSS
+
+**Importar en index.html:**
+```html
+<link rel="stylesheet" href="css/styles.css">
+```
+
+**No duplicar estilos.** Si un patrón se repite, moverlo a `styles.css`.
+
+## Animaciones
+
+**Modales:** Usar clase `modal-container` (incluye animación fade-in)
+**Hover:** Usar `transition-all` en elementos interactivos
+**Cards:** Usar `hover:shadow-lg hover:border-blue-400 transition-all`
+
+## Anti-patrones (Prohibidos)
+
+- ❌ No usar `style="..."` inline
+- ❌ No usar colores arbitrarios (ej. `bg-[#123456]`)
+- ❌ No duplicar estructuras de modales - usar UnifiedModal.js
+- ❌ No hardcodear clases Tailwind en strings JS - usar `styles.css`
+- ❌ No usar `!important` en CSS
