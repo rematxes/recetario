@@ -11,54 +11,24 @@
 
 import { CONFIG } from './config.js';
 import { showSuccess, showError } from './utils.js';
-import { RecipeManager } from './recipeManager.js';
+import { appState } from './core/AppState.js';
+import { RecipeManager } from './features/recipes/RecipeManager.js';
 import { MenuManager } from './menuManager.js';
 import { ManualMenuManager } from './manualMenuManager.js';
 import { TabManager } from './tabManager.js';
 
-// ============================================
-// APPLICATION STATE
-// ============================================
-
-const AppState = {
-  recipes: [],
-  menus: [],
-  currentView: CONFIG.VIEWS.GRID,
-  recipeSortOrder: 'date-desc', // name-asc, name-desc, date-desc, date-asc
-  selectorSortOrder: 'date-desc',
-  categoryFilters: {
-    desayuno: true,
-    comida: true,
-    cena: true,
-    general: true,
-    picoteo: true,
-    dulce: true
-  },
-  expandedMenus: new Set(),
-  manualMenuForm: {
-    isExpanded: false,
-    selectedDay: null,
-    selectedMeal: null,
-    selectorViewMode: CONFIG.VIEWS.GRID,
-    data: {}
-  },
-  editingRecipeId: null
-};
+console.log('[APP] Module loaded, initializing...');
 
 // ============================================
 // INITIALIZE MANAGERS
 // ============================================
 
-const recipeManager = new RecipeManager(AppState);
-const menuManager = new MenuManager(AppState, recipeManager);
-const manualMenuManager = new ManualMenuManager(AppState, recipeManager);
+const recipeManager = new RecipeManager(appState);
+const menuManager = new MenuManager(appState, recipeManager);
+const manualMenuManager = new ManualMenuManager(appState, recipeManager);
 const tabManager = new TabManager(recipeManager, menuManager);
 
-// Expose to window for HTML event handlers
-window.recipeManager = recipeManager;
-window.menuManager = menuManager;
-window.manualMenuManager = manualMenuManager;
-window.tabManager = tabManager;
+console.log('[APP] Managers initialized');
 
 // ============================================
 // GLOBAL WRAPPER FUNCTIONS
@@ -113,7 +83,7 @@ function setRecipeView(view) {
 }
 
 function handleSelectorSearch() {
-  if (AppState.manualMenuForm.selectedDay !== null) {
+  if (appState.get('manualMenuForm').selectedDay !== null) {
     manualMenuManager.renderRecipeSelector();
   } else if (menuManager.substitutionState.menuId !== null) {
     menuManager.renderSubstitutionSelector();
@@ -121,7 +91,7 @@ function handleSelectorSearch() {
 }
 
 function handleSelectorViewToggle(mode) {
-  if (AppState.manualMenuForm.selectedDay !== null) {
+  if (appState.get('manualMenuForm').selectedDay !== null) {
     manualMenuManager.toggleSelectorView(mode);
   } else if (menuManager.substitutionState.menuId !== null) {
     menuManager.toggleSubstitutionView(mode);
@@ -130,25 +100,51 @@ function handleSelectorViewToggle(mode) {
 
 function handleRecipeSortChange() {
   const sortOrder = document.getElementById('recipeSortOrder')?.value || 'name-asc';
-  AppState.recipeSortOrder = sortOrder;
-  recipeManager.renderRecipes();
+  appState.set('recipeSortOrder', sortOrder);
+  recipeManager.render();
 }
 
 function toggleCategoryFilter(category) {
-  AppState.categoryFilters[category] = !AppState.categoryFilters[category];
+  const filters = appState.get('categoryFilters');
+  filters[category] = !filters[category];
+  appState.set('categoryFilters', filters);
 
   const btn = document.getElementById(`filter-${category}`);
   if (btn) {
-    btn.classList.toggle('active', AppState.categoryFilters[category]);
+    btn.classList.toggle('active', filters[category]);
   }
 
-  recipeManager.renderRecipes();
+  recipeManager.render();
+}
+
+function toggleSelectorCategoryFilter(category) {
+  const filters = appState.get('selectorCategoryFilters') || {
+    desayuno: true,
+    comida: true,
+    cena: true,
+    general: true,
+    picoteo: true,
+    dulce: true
+  };
+  filters[category] = !filters[category];
+  appState.set('selectorCategoryFilters', filters);
+
+  const btn = document.getElementById(`selector-filter-${category}`);
+  if (btn) {
+    btn.classList.toggle('active', filters[category]);
+  }
+
+  if (appState.get('manualMenuForm').selectedDay !== null) {
+    manualMenuManager.renderRecipeSelector();
+  } else if (menuManager.substitutionState.menuId !== null) {
+    menuManager.renderSubstitutionSelector();
+  }
 }
 
 function handleSelectorSortChange() {
   const sortOrder = document.getElementById('selectorSortOrder')?.value || 'name-asc';
-  AppState.selectorSortOrder = sortOrder;
-  if (AppState.manualMenuForm.selectedDay !== null) {
+  appState.set('selectorSortOrder', sortOrder);
+  if (appState.get('manualMenuForm').selectedDay !== null) {
     manualMenuManager.renderRecipeSelector();
   } else if (menuManager.substitutionState.menuId !== null) {
     menuManager.renderSubstitutionSelector();
@@ -156,11 +152,10 @@ function handleSelectorSortChange() {
 }
 
 function closeSelectorModal() {
-  if (AppState.manualMenuForm.selectedDay !== null) {
+  if (appState.get('manualMenuForm').selectedDay !== null) {
     manualMenuManager.closeRecipeSelector();
   } else {
     document.getElementById('recipeSelectorModal').classList.add('hidden');
-    menuManager.substitutionState = { menuId: null, dayIndex: null, mealType: null, viewMode: 'grid' };
   }
 }
 
@@ -178,7 +173,16 @@ window.handleSelectorViewToggle = handleSelectorViewToggle;
 window.handleRecipeSortChange = handleRecipeSortChange;
 window.handleSelectorSortChange = handleSelectorSortChange;
 window.toggleCategoryFilter = toggleCategoryFilter;
+window.toggleSelectorCategoryFilter = toggleSelectorCategoryFilter;
 window.closeSelectorModal = closeSelectorModal;
+
+// Expose managers
+window.recipeManager = recipeManager;
+window.menuManager = menuManager;
+window.manualMenuManager = manualMenuManager;
+window.tabManager = tabManager;
+
+console.log('[APP] Global functions and managers exposed to window');
 
 // ============================================
 // EVENT LISTENERS
@@ -194,7 +198,7 @@ function setupEventListeners() {
   });
 
   document.getElementById('recipeSearch')?.addEventListener('input', () => {
-    recipeManager.renderRecipes();
+    recipeManager.render();
   });
 
   document.getElementById('recipeSelectorSearch')?.addEventListener('input', () => {
@@ -254,10 +258,28 @@ function initApp() {
   if (menusTab) menusTab.classList.remove('active');
 
   // Initialize category filter buttons
-  Object.keys(AppState.categoryFilters).forEach(category => {
+  const categoryFilters = appState.get('categoryFilters');
+  Object.keys(categoryFilters).forEach(category => {
     const btn = document.getElementById(`filter-${category}`);
     if (btn) {
-      btn.classList.toggle('active', AppState.categoryFilters[category]);
+      btn.classList.toggle('active', categoryFilters[category]);
+    }
+  });
+
+  // Initialize selector category filter buttons
+  const selectorFilters = appState.get('selectorCategoryFilters') || {
+    desayuno: true,
+    comida: true,
+    cena: true,
+    general: true,
+    picoteo: true,
+    dulce: true
+  };
+  appState.set('selectorCategoryFilters', selectorFilters);
+  Object.keys(selectorFilters).forEach(category => {
+    const btn = document.getElementById(`selector-filter-${category}`);
+    if (btn) {
+      btn.classList.toggle('active', selectorFilters[category]);
     }
   });
 

@@ -228,11 +228,6 @@
                                 </select>
                             </div>
                         </div>
-                        <div>
-                            <label class="block text-sm font-medium mb-1">Descripción</label>
-                            <textarea id="recipeDescription" rows="2" 
-                                class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500"></textarea>
-                        </div>
                         <div class="grid md:grid-cols-2 gap-4">
                             <div>
                                 <label class="block text-sm font-medium mb-1">Tiempo de preparación (min)</label>
@@ -277,8 +272,8 @@
                         <input type="text" id="recipeSearch" placeholder="Buscar recetas (nombre, categoría o tiempo máximo en min)..."
                             class="w-full p-3 border-2 border-gray-400 rounded-lg bg-gray-50 text-gray-900 placeholder-gray-500 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:bg-white transition-all">
                     </div>
-                    <div class="mb-4">
-                        <div class="flex flex-wrap gap-2">
+                    <div class="mb-4 flex flex-wrap justify-between items-center gap-2">
+                        <div class="flex flex-wrap items-center gap-2">
                             <button id="filter-desayuno" onclick="toggleCategoryFilter('desayuno')" class="category-filter-btn px-3 py-1.5 rounded-full text-sm font-medium border transition-all bg-yellow-100 text-yellow-800 border-yellow-300 hover:bg-yellow-200">
                                 <i class="fas fa-coffee mr-1"></i>Desayuno
                             </button>
@@ -298,8 +293,6 @@
                                 <i class="fas fa-candy-cane mr-1"></i>Dulce
                             </button>
                         </div>
-                    </div>
-                    <div class="mb-4 flex flex-wrap justify-between items-center gap-2">
                         <div class="flex items-center gap-2">
                             <span class="text-sm text-gray-600">Ordenar:</span>
                             <select id="recipeSortOrder" onchange="handleRecipeSortChange()"
@@ -309,17 +302,6 @@
                                 <option value="name-asc">Nombre (A-Z)</option>
                                 <option value="name-desc">Nombre (Z-A)</option>
                             </select>
-                        </div>
-                        <div class="flex items-center gap-2">
-                            <span class="text-sm text-gray-600">Vista:</span>
-                            <div class="flex">
-                                <button id="gridViewBtn" class="view-toggle-btn active" onclick="setRecipeView('grid')">
-                                    <i class="fas fa-th-large"></i> Cuadrícula
-                                </button>
-                                <button id="listViewBtn" class="view-toggle-btn" onclick="setRecipeView('list')">
-                                    <i class="fas fa-list"></i> Listado
-                                </button>
-                            </div>
                         </div>
                     </div>
                     <div id="recipesList" class="recipes-grid">
@@ -447,13 +429,8 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="mt-4">
-                            <label class="block text-sm font-bold text-gray-800 mb-1">Descripción</label>
-                            <textarea id="editRecipeDescription" rows="2" 
-                                class="w-full p-2 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white"></textarea>
-                        </div>
                     </div>
-                    
+
                     <!-- Time Section -->
                     <div class="bg-blue-50 p-4 rounded-lg border border-blue-200">
                         <h4 class="font-semibold text-gray-900 mb-3 text-lg"><i class="fas fa-clock mr-2 text-blue-600"></i>Tiempos</h4>
@@ -514,10 +491,32 @@
                     </button>
                 </div>
                 <div class="mb-4">
-                    <input type="text" id="recipeSelectorSearch" 
-                        placeholder="Buscar por nombre, categoría (comida, cena, general) o tiempo máximo..." 
+                    <input type="text" id="recipeSelectorSearch"
+                        placeholder="Buscar por nombre, categoría (comida, cena, general) o tiempo máximo..."
                         class="w-full p-2 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                         oninput="handleSelectorSearch()">
+                </div>
+                <div class="mb-4">
+                    <div class="flex flex-wrap gap-2">
+                        <button id="selector-filter-desayuno" onclick="toggleSelectorCategoryFilter('desayuno')" class="category-filter-btn px-3 py-1.5 rounded-full text-sm font-medium border transition-all bg-yellow-100 text-yellow-800 border-yellow-300 hover:bg-yellow-200">
+                            <i class="fas fa-coffee mr-1"></i>Desayuno
+                        </button>
+                        <button id="selector-filter-comida" onclick="toggleSelectorCategoryFilter('comida')" class="category-filter-btn px-3 py-1.5 rounded-full text-sm font-medium border transition-all bg-red-100 text-red-800 border-red-300 hover:bg-red-200">
+                            <i class="fas fa-sun mr-1"></i>Comida
+                        </button>
+                        <button id="selector-filter-cena" onclick="toggleSelectorCategoryFilter('cena')" class="category-filter-btn px-3 py-1.5 rounded-full text-sm font-medium border transition-all bg-indigo-100 text-indigo-800 border-indigo-300 hover:bg-indigo-200">
+                            <i class="fas fa-moon mr-1"></i>Cena
+                        </button>
+                        <button id="selector-filter-general" onclick="toggleSelectorCategoryFilter('general')" class="category-filter-btn px-3 py-1.5 rounded-full text-sm font-medium border transition-all bg-gradient-to-r from-red-100 to-purple-100 text-gray-800 border-red-300 hover:from-red-200 hover:to-purple-200">
+                            <i class="fas fa-utensils mr-1"></i>General
+                        </button>
+                        <button id="selector-filter-picoteo" onclick="toggleSelectorCategoryFilter('picoteo')" class="category-filter-btn px-3 py-1.5 rounded-full text-sm font-medium border transition-all bg-orange-100 text-orange-800 border-orange-300 hover:bg-orange-200">
+                            <i class="fas fa-cookie-bite mr-1"></i>Picoteo
+                        </button>
+                        <button id="selector-filter-dulce" onclick="toggleSelectorCategoryFilter('dulce')" class="category-filter-btn px-3 py-1.5 rounded-full text-sm font-medium border transition-all bg-pink-100 text-pink-800 border-pink-300 hover:bg-pink-200">
+                            <i class="fas fa-candy-cane mr-1"></i>Dulce
+                        </button>
+                    </div>
                 </div>
                 <div class="mb-4 flex flex-wrap justify-between items-center gap-2">
                     <div class="flex items-center gap-2">
@@ -529,17 +528,6 @@
                             <option value="name-asc">Nombre (A-Z)</option>
                             <option value="name-desc">Nombre (Z-A)</option>
                         </select>
-                    </div>
-                    <div class="flex items-center gap-2">
-                        <span class="text-sm text-gray-600">Vista:</span>
-                        <div class="flex">
-                            <button id="selectorGridViewBtn" class="view-toggle-btn active" onclick="handleSelectorViewToggle('grid')">
-                                <i class="fas fa-th-large"></i> Cuadrícula
-                            </button>
-                            <button id="selectorListViewBtn" class="view-toggle-btn" onclick="handleSelectorViewToggle('list')">
-                                <i class="fas fa-list"></i> Listado
-                            </button>
-                        </div>
                     </div>
                 </div>
                 <div id="recipeSelectorResults" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 max-h-96 overflow-y-auto p-2">
@@ -555,6 +543,6 @@
         </div>
     </div>
 
-    <script type="module" src="js/app.js"></script>
+    <script type="module" src="js/app.js" defer></script>
 </body>
 </html>

@@ -2,7 +2,6 @@
   {
     "id": "3768ae23-3e68-4010-9b94-b3b38638df0b",
     "name": "Lentejas al curry",
-    "description": "Lentejas cocinadas con especias al curry, una receta nutritiva y llena de sabor",
     "ingredients": "250g lentejas pardas\n1 cebolla grande\n2 dientes de ajo\n1 zanahoria\n2 cucharadas de aceite de oliva\n2 cucharadas de curry en polvo\n1 cucharadita de cúrcuma\n1/2 cucharadita de comino\n500ml caldo de verduras\nSal y pimienta al gusto\nCilantro fresco para decorar",
     "instructions": "1. Remojar las lentejas durante al menos 2 horas o toda la noche\n2. Picar finamente la cebolla, los ajos y la zanahoria\n3. Calentar el aceite en una olla grande y sofreír la cebolla hasta que esté transparente\n4. Añadir los ajos picados y la zanahoria, cocinar 3 minutos más\n5. Incorporar las especias (curry, cúrcuma, comino) y cocinar 1 minuto removiendo constantemente\n6. Escurrir las lentejas y añadirlas a la olla junto con el caldo\n7. Llevar a ebullición, luego reducir el fuego y cocinar a fuego lento 20-25 minutos\n8. Sazonar con sal y pimienta al gusto\n9. Servir caliente decorado con cilantro fresco picado",
     "category": "comida",
@@ -14,7 +13,6 @@
   {
     "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567801",
     "name": "Gazpacho andaluz",
-    "description": "Sopa fría de tomate y verduras frescas, el plato estrella del verano andaluz",
     "ingredients": "1kg tomates maduros\n1 pepino\n1 pimiento verde\n1 diente de ajo\n50ml aceite de oliva virgen extra\n2 cucharadas de vinagre de jerez\n1 rebanada de pan del día anterior\n500ml agua fría\nSal al gusto",
     "instructions": "1. Lavar y trocar todos los tomates, el pepino, el pimiento y el ajo\n2. Remojar la rebanada de pan en agua durante 5 minutos\n3. Introducir todas las verduras en el vaso de la batidora junto con el pan escurrido\n4. Añadir el aceite de oliva, el vinagre y la sal\n5. Triturar a máxima velocidad durante 2-3 minutos hasta obtener una crema fina\n6. Pasar por un colador fino para eliminar pieles y pepitas\n7. Añadir agua fría hasta conseguir la consistencia deseada\n8. Rectificar de sal y vinagre\n9. Refrigerar al menos 2 horas antes de servir\n10. Servir muy frío con guarnición de pepino y pimiento picado",
     "category": "general",
@@ -26,7 +24,6 @@
   {
     "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567802",
     "name": "Tortilla española",
-    "description": "Icónica tortilla de patata y cebolla, uno de los platos más representativos de la gastronomía española",
     "ingredients": "6 huevos\n4 patatas medianas\n1 cebolla grande\n200ml aceite de oliva\nSal al gusto",
     "instructions": "1. Pelar y cortar las patatas en láminas finas o en dados pequeños\n2. Pelar y cortar la cebolla en juliana fina\n3. Calentar abundante aceite en una sartén grande a fuego medio\n4. Freír las patatas y la cebolla juntas a fuego medio-bajo durante 20 minutos, removiendo ocasionalmente\n5. Escurrir las patatas y la cebolla en un colador, reservar el aceite\n6. Batir los huevos con sal en un bol grande\n7. Mezclar las patatas y cebolla escurridas con los huevos batidos\n8. Dejar reposar 5 minutos\n9. Calentar 2 cucharadas del aceite reservado en la sartén a fuego medio-alto\n10. Verter la mezcla y cocinar 3-4 minutos hasta que los bordes estén cuajados\n11. Dar la vuelta con un plato y cocinar 2-3 minutos más\n12. Servir caliente, templada o fría",
     "category": "general",
@@ -38,7 +35,6 @@
   {
     "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567803",
     "name": "Paella valenciana",
-    "description": "El plato más internacional de España, elaborado con pollo, conejo, judías y azafrán",
     "ingredients": "400g arroz de grano redondo\n500g pollo troceado\n300g conejo troceado\n150g judías verdes planas\n100g garrofón (alubia blanca grande)\n1 tomate maduro rallado\n1 cucharadita de pimentón dulce\nUnas hebras de azafrán\n1,2L agua o caldo caliente\n100ml aceite de oliva\nSal al gusto\nRomero fresco",
     "instructions": "1. Calentar el aceite en la paella a fuego fuerte\n2. Salar el pollo y el conejo y dorar bien por todos los lados\n3. Añadir las judías verdes y el garrofón, rehogar 3 minutos\n4. Incorporar el tomate rallado y el pimentón, sofreír 2 minutos cuidando que no se queme el pimentón\n5. Añadir el agua o caldo caliente y el azafrán, llevar a ebullición\n6. Cocinar a fuego medio-alto durante 20 minutos para que el caldo tome sabor\n7. Rectificar de sal\n8. Repartir el arroz en forma de cruz por toda la paella\n9. Cocinar a fuego fuerte los primeros 5 minutos, luego reducir a medio\n10. Cocinar 15-18 minutos más sin remover\n11. Dejar reposar tapado con papel de periódico 5 minutos antes de servir",
     "category": "comida",
@@ -50,7 +46,6 @@
   {
     "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567804",
     "name": "Cocido madrileño",
-    "description": "Contundente guiso de garbanzos con carnes y verduras, el puchero más famoso de Madrid",
     "ingredients": "400g garbanzos\n300g morcillo de ternera\n200g tocino salado\n2 chorizos\n2 morcillas\n1 hueso de jamón\n2 muslos de pollo\n2 patatas\n2 zanahorias\n1/4 repollo\n150g fideos finos\nSal al gusto",
     "instructions": "1. Remojar los garbanzos en agua con sal la noche anterior\n2. En una olla grande poner el morcillo, el tocino, el hueso de jamón y el pollo cubiertos de agua fría\n3. Llevar a ebullición y espumar bien\n4. Añadir los garbanzos escurridos dentro de una malla y cocinar a fuego medio 1 hora\n5. Incorporar las patatas, las zanahorias y las verduras\n6. Cocinar 30 minutos más\n7. En otra olla cocer los chorizos y morcillas aparte durante 20 minutos\n8. Separar el caldo y cocer en él los fideos para hacer la sopa\n9. Servir en tres vuelcos: primero la sopa, luego los garbanzos con verduras y finalmente las carnes",
     "category": "comida",
@@ -62,7 +57,6 @@
   {
     "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567805",
     "name": "Patatas bravas",
-    "description": "Tapa clásica española de patatas fritas con salsa brava picante, imprescindible en cualquier bar",
     "ingredients": "800g patatas\nAceite de oliva para freír\nSal al gusto\n\nPara la salsa brava:\n200ml tomate frito\n1 cucharadita de pimentón picante\n1 cucharadita de pimentón dulce\n1 diente de ajo\n1 cucharada de vinagre\n1 guindilla\nAceite de oliva",
     "instructions": "1. Pelar y cortar las patatas en dados irregulares de tamaño mediano\n2. Freír las patatas en abundante aceite caliente a 160°C durante 8 minutos (primer frito)\n3. Retirar y escurrir, subir el aceite a 190°C\n4. Volver a freír las patatas 3-4 minutos hasta que estén doradas y crujientes\n5. Para la salsa: sofreír el ajo laminado con un poco de aceite\n6. Añadir las pimientas y la guindilla, rehogar 1 minuto\n7. Incorporar el tomate frito y el vinagre, cocinar 5 minutos\n8. Triturar la salsa y pasar por un colador\n9. Escurrir las patatas sobre papel absorbente, salar\n10. Servir las patatas con la salsa brava por encima",
     "category": "picoteo",
@@ -74,7 +68,6 @@
   {
     "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567806",
     "name": "Croquetas de jamón",
-    "description": "Suaves y cremosas croquetas de jamón serrano con bechamel, la tapa más querida de España",
     "ingredients": "150g jamón serrano picado\n100g mantequilla\n100g harina\n700ml leche entera\nNuez moscada\nSal y pimienta\n2 huevos para rebozar\nPan rallado\nAceite para freír",
     "instructions": "1. Derretir la mantequilla en una sartén a fuego medio\n2. Añadir el jamón picado y rehogar 2 minutos\n3. Incorporar la harina de golpe y remover enérgicamente 2 minutos para que se tueste\n4. Añadir la leche caliente poco a poco sin dejar de remover\n5. Cocinar la bechamel a fuego bajo durante 15 minutos removiendo constantemente\n6. Salpimentar y añadir nuez moscada\n7. Volcar la masa en una fuente, cubrir con film a piel y refrigerar mínimo 3 horas\n8. Dar forma a las croquetas con dos cucharas o con las manos\n9. Pasar por huevo batido y pan rallado\n10. Freír en aceite abundante y caliente hasta que estén doradas\n11. Escurrir sobre papel absorbente y servir calientes",
     "category": "picoteo",
@@ -86,7 +79,6 @@
   {
     "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567807",
     "name": "Pulpo a la gallega",
-    "description": "Tierno pulpo cocido servido sobre patatas con aceite de oliva y pimentón, especialidad gallega",
     "ingredients": "1 pulpo de 1,5kg\n4 patatas medianas\nAceite de oliva virgen extra\nPimentón dulce y picante\nSal gruesa\n1 hoja de laurel",
     "instructions": "1. Limpiar bien el pulpo bajo el agua fría\n2. Congelar el pulpo al menos 48 horas antes para ablandar las fibras, luego descongelar en nevera\n3. Llevar a ebullición una olla grande con agua y el laurel\n4. Sujetar el pulpo por la cabeza y sumergirlo y sacarlo del agua hirviendo 3 veces (asustarlo)\n5. Dejarlo cocer en el agua hirviendo durante 45-50 minutos\n6. Comprobar que está tierno pinchando con un palillo\n7. Cocer las patatas en rodajas gruesas en el mismo agua del pulpo 20 minutos\n8. Dejar reposar el pulpo fuera del agua 10 minutos\n9. Cortar el pulpo en rodajas con tijeras\n10. Colocar las patatas en una tabla de madera, poner el pulpo encima\n11. Aliñar generosamente con aceite de oliva, sal gruesa y pimentón",
     "category": "general",
@@ -98,7 +90,6 @@
   {
     "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567808",
     "name": "Fabada asturiana",
-    "description": "El guiso de alubias más famoso de España, con compango asturiano, un plato contundente del norte",
     "ingredients": "500g fabes de la granja\n200g chorizo asturiano\n200g morcilla asturiana\n150g lacón\n100g tocino\n2 dientes de ajo\n1 cebolla\nUnas hebras de azafrán\nPimentón dulce\nAceite de oliva\nSal al gusto",
     "instructions": "1. Remojar las fabes en agua fría durante 12 horas\n2. Poner las fabes en una olla con agua fría y llevar a ebullición\n3. Añadir el chorizo, la morcilla, el lacón y el tocino\n4. Cuando rompa a hervir, espumar bien y bajar el fuego\n5. Añadir el ajo, la cebolla entera, el azafrán y el pimentón\n6. Cocinar a fuego muy lento durante 2-2,5 horas\n7. Interrumpir la cocción varias veces añadiendo agua fría para asustar las fabes\n8. Remover ocasionalmente moviendo la olla con suavidad, no remover con cuchara\n9. Rectificar de sal al final de la cocción\n10. Dejar reposar 15 minutos antes de servir",
     "category": "comida",
@@ -110,7 +101,6 @@
   {
     "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567809",
     "name": "Salmorejo cordobés",
-    "description": "Crema fría de tomate más espesa que el gazpacho, típica de Córdoba y servida con huevo y jamón",
     "ingredients": "1kg tomates maduros tipo pera\n200g pan blanco del día anterior sin corteza\n1 diente de ajo\n100ml aceite de oliva virgen extra\n2 cucharadas de vinagre de jerez\nSal al gusto\n2 huevos cocidos para decorar\n100g jamón serrano para decorar",
     "instructions": "1. Escaldar los tomates, pelarlos y quitarles las semillas\n2. Poner el pan a remojo en agua 10 minutos y escurrir bien\n3. Triturar los tomates con el ajo, el pan y la sal\n4. Con la batidora en marcha, añadir el aceite en hilo fino poco a poco\n5. Añadir el vinagre y rectificar de sal\n6. Pasar por un colador fino para obtener una crema perfecta\n7. Refrigerar al menos 2 horas\n8. Cocer los huevos 10 minutos, enfriar, pelar y picar\n9. Picar finamente el jamón serrano\n10. Servir el salmorejo muy frío con huevo y jamón por encima y un chorrito de aceite de oliva",
     "category": "general",
@@ -122,7 +112,6 @@
   {
     "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567810",
     "name": "Gambas al ajillo",
-    "description": "Gambas salteadas en aceite de oliva con ajo y guindilla, tapa sencilla y explosiva de sabor",
     "ingredients": "500g gambas peladas\n8 dientes de ajo\n2 guindillas\n100ml aceite de oliva virgen extra\nSal al gusto\nPerejil fresco picado\nPan para acompañar",
     "instructions": "1. Lavar y secar bien las gambas con papel absorbente\n2. Laminar los ajos en cortes finos\n3. Calentar el aceite en una cazuela de barro o sartén a fuego medio\n4. Añadir los ajos laminados y las guindillas\n5. Sofreír a fuego suave hasta que el ajo empiece a dorarse sin quemarse\n6. Subir el fuego a máximo y añadir las gambas de golpe\n7. Salar y saltear durante 1-2 minutos hasta que las gambas estén rosadas\n8. Espolvorear perejil fresco picado\n9. Servir inmediatamente en la misma cazuela bien caliente\n10. Acompañar con pan para mojar en el aceite",
     "category": "picoteo",
@@ -134,7 +123,6 @@
   {
     "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567811",
     "name": "Pisto manchego",
-    "description": "Guiso de verduras de verano al estilo de La Mancha, similar al ratatouille francés",
     "ingredients": "2 calabacines medianos\n2 pimientos rojos\n2 pimientos verdes\n3 tomates maduros\n1 cebolla grande\n2 dientes de ajo\n100ml aceite de oliva\nSal y azúcar al gusto\n4 huevos (opcional)",
     "instructions": "1. Lavar y cortar todas las verduras en dados de tamaño similar\n2. Calentar el aceite en una sartén grande o cazuela\n3. Sofreír la cebolla y el ajo picados hasta transparentar\n4. Añadir los pimientos y cocinar 10 minutos removiendo\n5. Incorporar el calabacín y cocinar 5 minutos más\n6. Pelar y triturar los tomates, añadirlos a la sartén\n7. Sazonar con sal y una pizca de azúcar para corregir la acidez\n8. Cocinar a fuego medio-bajo durante 30 minutos sin tapa hasta que el pisto esté bien meloso\n9. Opcional: hacer huevos fritos o escalfados encima del pisto\n10. Servir caliente o a temperatura ambiente",
     "category": "general",
@@ -144,21 +132,8 @@
     "updatedAt": "2026-05-03T23:43:01.168Z"
   },
   {
-    "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567812",
-    "name": "Churros con chocolate",
-    "description": "Clásico desayuno y merienda española de churros crujientes con chocolate espeso para mojar",
-    "ingredients": "250g harina\n250ml agua hirviendo\n1 cucharadita de sal\nAceite para freír\nAzúcar para espolvorear\n\nPara el chocolate:\n100g chocolate negro (70% cacao)\n500ml leche entera\n2 cucharadas de azúcar\n1 cucharada de maicena",
-    "instructions": "1. Para la masa: mezclar la harina con la sal en un bol\n2. Añadir el agua hirviendo de golpe y mezclar rápidamente hasta obtener una masa homogénea\n3. Dejar reposar la masa 5 minutos tapada\n4. Calentar abundante aceite a 180°C\n5. Poner la masa en una manga pastelera con boquilla de estrella\n6. Escudillar los churros directamente en el aceite caliente en tiras de 10-15cm\n7. Freír hasta que estén dorados y crujientes, 2-3 minutos por cada lado\n8. Escurrir y rebozar en azúcar\n9. Para el chocolate: disolver la maicena en un poco de leche fría\n10. Calentar el resto de la leche con el azúcar y el chocolate troceado\n11. Añadir la maicena disuelta y remover hasta espesar\n12. Servir los churros con el chocolate caliente",
-    "category": "desayuno",
-    "prepTime": 10,
-    "cookTime": 20,
-    "createdAt": "2026-05-03T19:42:45.138Z",
-    "updatedAt": "2026-05-03T19:42:45.138Z"
-  },
-  {
     "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567813",
     "name": "Arroz con leche",
-    "description": "Postre tradicional español de arroz cremoso con leche, canela y limón, reconfortante y delicioso",
     "ingredients": "200g arroz de grano redondo\n1L leche entera\n200ml agua\n150g azúcar\n1 rama de canela\nPiel de 1 limón\nCanela en polvo para decorar",
     "instructions": "1. Poner el arroz en una olla con el agua fría\n2. Cuando el agua se absorba, añadir la leche poco a poco\n3. Incorporar la rama de canela y la piel de limón\n4. Cocinar a fuego muy bajo durante 35-40 minutos removiendo con frecuencia\n5. Añadir el azúcar a mitad de cocción y mezclar bien\n6. El arroz estará listo cuando tenga consistencia cremosa pero no líquida\n7. Retirar la rama de canela y la piel de limón\n8. Verter en cuencos individuales\n9. Dejar enfriar a temperatura ambiente y luego refrigerar\n10. Espolvorear con canela en polvo antes de servir",
     "category": "dulce",
@@ -170,7 +145,6 @@
   {
     "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567814",
     "name": "Bacalao al pil-pil",
-    "description": "Exquisita receta vasca de bacalao en salsa emulsionada con aceite de oliva y ajo",
     "ingredients": "600g bacalao desalado en lomos\n300ml aceite de oliva virgen extra\n6 dientes de ajo\n2 guindillas pequeñas\nPerejil fresco",
     "instructions": "1. Desalar el bacalao cambiando el agua cada 8 horas durante 48 horas en nevera\n2. Secar bien los lomos con papel absorbente\n3. Laminar los ajos y freírlos en el aceite a fuego suave hasta dorar, retirar\n4. Freír las guindillas un momento y retirar también\n5. Bajar el fuego al mínimo y poner los lomos de bacalao con la piel hacia arriba\n6. Cocinar a fuego muy suave 10 minutos, los lomos soltarán su gelatina\n7. Retirar el bacalao y reservar caliente\n8. Mover la cazuela en movimientos circulares añadiendo el aceite poco a poco\n9. La salsa irá ligando sola con la gelatina del bacalao\n10. Devolver el bacalao y los ajos a la cazuela\n11. Servir decorado con perejil y las guindillas",
     "category": "general",
@@ -182,7 +156,6 @@
   {
     "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567815",
     "name": "Crema catalana",
-    "description": "El postre más antiguo de Europa, una crema pastelera con costra de azúcar caramelizado",
     "ingredients": "500ml leche entera\n6 yemas de huevo\n120g azúcar\n20g maicena\nPiel de 1 limón\nPiel de 1 naranja\n1 rama de canela\nAzúcar para quemar",
     "instructions": "1. Infusionar la leche con la piel de limón, de naranja y la canela a fuego suave 10 minutos\n2. Dejar enfriar la leche y colar\n3. Batir las yemas con el azúcar hasta blanquear\n4. Incorporar la maicena tamizada y mezclar\n5. Añadir la leche infusionada poco a poco sin dejar de batir\n6. Poner la mezcla al fuego medio removiendo constantemente\n7. Cocinar hasta que espese sin que llegue a hervir\n8. Verter en cazuelas de barro individuales\n9. Dejar enfriar y refrigerar mínimo 4 horas\n10. Espolvorear azúcar sobre la crema fría\n11. Quemar el azúcar con un soplete o la pala de crema catalana hasta formar la costra\n12. Servir inmediatamente",
     "category": "dulce",
@@ -194,7 +167,6 @@
   {
     "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567816",
     "name": "Pimientos del padrón",
-    "description": "Sencillísima tapa gallega de pimientos pequeños fritos en aceite y salados, unos pican y otros no",
     "ingredients": "300g pimientos del padrón\nAceite de oliva virgen extra abundante\nSal gruesa o en escamas",
     "instructions": "1. Lavar y secar perfectamente los pimientos del padrón\n2. Es fundamental que estén muy secos para evitar salpicaduras\n3. Calentar abundante aceite de oliva en una sartén grande a fuego muy alto\n4. Cuando el aceite esté muy caliente, añadir los pimientos de golpe\n5. Freír a fuego vivo sin tapar durante 3-4 minutos\n6. Remover y voltear los pimientos para que se frían por todos los lados\n7. Los pimientos deben quedar tostados y con ampollas en la piel\n8. Retirar con una espumadera y escurrir el exceso de aceite\n9. Colocar en un plato o cazuela de barro\n10. Salar generosamente con sal gruesa o en escamas en el momento de servir\n11. Servir inmediatamente y muy calientes",
     "category": "picoteo",
@@ -206,7 +178,6 @@
   {
     "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567817",
     "name": "Ropa vieja canaria",
-    "description": "Guiso tradicional canario elaborado con garbanzos, carne deshilachada y verduras especiadas",
     "ingredients": "400g garbanzos cocidos\n400g carne de res cocida y deshilachada\n1 cebolla\n2 dientes de ajo\n1 pimiento verde\n1 pimiento rojo\n2 tomates maduros\n1 cucharadita de comino\n1 cucharadita de pimentón\nAceite de oliva\nSal y pimienta",
     "instructions": "1. Picar finamente la cebolla, los ajos y los pimientos\n2. Calentar aceite en una cazuela a fuego medio\n3. Pochar la cebolla y el ajo hasta transparentar\n4. Añadir los pimientos y sofreír 5 minutos\n5. Incorporar el tomate pelado y troceado, cocinar 10 minutos\n6. Añadir el comino y el pimentón, mezclar bien\n7. Incorporar la carne deshilachada y remover para integrar\n8. Añadir los garbanzos y mezclar con cuidado\n9. Cocinar todo junto 10-15 minutos a fuego suave\n10. Rectificar de sal y pimienta\n11. Servir caliente como plato principal",
     "category": "comida",
@@ -218,7 +189,6 @@
   {
     "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567818",
     "name": "Albóndigas en salsa",
-    "description": "Jugosas albóndigas de carne caseras cocinadas en una salsa de tomate y verduras al vino",
     "ingredients": "500g carne picada mixta (cerdo y ternera)\n1 huevo\n2 dientes de ajo\nPan rallado\nLeche\nPerejil fresco\nSal y pimienta\nHarina para rebozar\nAceite para freír\n\nPara la salsa:\n1 cebolla\n2 dientes de ajo\n2 tomates maduros\n150ml vino blanco\n300ml caldo de carne\n1 zanahoria",
     "instructions": "1. Mezclar la carne con el huevo, el ajo picado, el perejil, sal y pimienta\n2. Añadir pan rallado remojado en leche hasta obtener una masa manejable\n3. Formar las albóndigas del tamaño de una nuez\n4. Rebozar ligeramente en harina y freír en aceite hasta dorar por fuera\n5. Retirar y reservar\n6. En la misma sartén sofreír la cebolla y el ajo picados\n7. Añadir la zanahoria en rodajas y el tomate troceado\n8. Verter el vino blanco y dejar evaporar el alcohol\n9. Añadir el caldo y cocinar la salsa 10 minutos\n10. Triturar la salsa y volver a la cazuela\n11. Incorporar las albóndigas y cocinar a fuego suave 20 minutos\n12. Servir con patatas fritas o arroz blanco",
     "category": "general",
@@ -228,21 +198,8 @@
     "updatedAt": "2026-05-03T23:43:53.386Z"
   },
   {
-    "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567819",
-    "name": "Pan con tomate",
-    "description": "El desayuno más popular de Cataluña, pan tostado frotado con tomate maduro y aceite de oliva",
-    "ingredients": "4 rebanadas gruesas de pan de payés o rústico\n2 tomates maduros grandes\n1 diente de ajo\nAceite de oliva virgen extra\nSal en escamas",
-    "instructions": "1. Cortar el pan en rebanadas gruesas de unos 2cm\n2. Tostar el pan en una tostadora, plancha o horno hasta que esté dorado y crujiente\n3. Partir el diente de ajo por la mitad y frotar el pan tostado con el ajo\n4. Partir los tomates por la mitad\n5. Frotar el tomate contra el pan con energía, exprimiendo la pulpa y el jugo\n6. Todo el interior del tomate debe quedar impregnado en el pan\n7. Aliñar generosamente con aceite de oliva virgen extra\n8. Espolvorear sal en escamas al gusto\n9. Servir inmediatamente mientras el pan está caliente\n10. Opcional: acompañar con jamón, queso o anchoas",
-    "category": "desayuno",
-    "prepTime": 5,
-    "cookTime": 5,
-    "createdAt": "2026-05-03T19:42:45.138Z",
-    "updatedAt": "2026-05-03T19:42:45.138Z"
-  },
-  {
     "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567820",
     "name": "Merluza a la vasca",
-    "description": "Clásico de la cocina vasca, merluza en salsa verde con almejas, guisantes y espárragos",
     "ingredients": "800g lomos de merluza fresca\n200g almejas\n100g guisantes\n4 espárragos blancos en conserva\n4 dientes de ajo\nPerejil fresco abundante\n100ml vino blanco txakoli\n200ml caldo de pescado\n4 cucharadas de aceite de oliva\nHarina\nSal al gusto",
     "instructions": "1. Limpiar las almejas y dejarlas en agua con sal 30 minutos\n2. Salar los lomos de merluza y pasarlos ligeramente por harina\n3. Picar muy finamente el ajo y el perejil\n4. Calentar el aceite en una cazuela ancha y baja\n5. Sofreír el ajo a fuego suave sin que se dore\n6. Añadir el perejil picado y rehogar 30 segundos\n7. Incorporar el vino blanco y dejar evaporar\n8. Añadir el caldo de pescado y llevar a ebullición suave\n9. Colocar los lomos de merluza y las almejas\n10. Agitar la cazuela en movimientos circulares para ligar la salsa\n11. Cocinar 8-10 minutos a fuego suave\n12. Añadir los guisantes y los espárragos los últimos 3 minutos\n13. Servir en la misma cazuela",
     "category": "general",
@@ -254,7 +211,6 @@
   {
     "id": "49e26d06-62fb-4f2d-a78a-cdc71ab91d70",
     "name": "Paella",
-    "description": "Paella y pami",
     "ingredients": "Cosas para el arroz",
     "instructions": "Echar el arroz a las cosas",
     "category": "comida",
@@ -266,7 +222,6 @@
   {
     "id": "l001",
     "name": "Ensalada de quinoa y verduras",
-    "description": "Plato saludable y completo rico en proteína vegetal",
     "ingredients": "200g quinoa\n1 pepino\n1 tomate\n1 aguacate\nAceite de oliva\nLimón\nSal",
     "instructions": "1. Cocer la quinoa y enfriar\n2. Cortar verduras\n3. Mezclar todo\n4. Aliñar",
     "category": "general",
@@ -278,7 +233,6 @@
   {
     "id": "l002",
     "name": "Bowl de arroz con pollo teriyaki",
-    "description": "Comida rápida estilo asiático muy popular",
     "ingredients": "Arroz\nPollo\nSalsa teriyaki\nBrócoli",
     "instructions": "1. Cocer arroz\n2. Saltear pollo\n3. Añadir salsa\n4. Servir con verduras",
     "category": "general",
@@ -290,7 +244,6 @@
   {
     "id": "l003",
     "name": "Pasta con tomate y burrata",
-    "description": "Receta italiana cremosa y rápida",
     "ingredients": "Pasta\nTomate\nBurrata\nAlbahaca",
     "instructions": "1. Cocer pasta\n2. Calentar tomate\n3. Añadir burrata\n4. Mezclar",
     "category": "comida",
@@ -302,7 +255,6 @@
   {
     "id": "l004",
     "name": "Tacos de pollo",
-    "description": "Comida informal rápida y sabrosa",
     "ingredients": "Tortillas\nPollo\nLechuga\nSalsa",
     "instructions": "1. Cocinar pollo\n2. Calentar tortillas\n3. Rellenar",
     "category": "general",
@@ -314,7 +266,6 @@
   {
     "id": "l005",
     "name": "Arroz con verduras estilo wok",
-    "description": "Plato ligero y rápido",
     "ingredients": "Arroz\nVerduras\nSoja",
     "instructions": "1. Saltear verduras\n2. Añadir arroz\n3. Incorporar soja",
     "category": "general",
@@ -326,7 +277,6 @@
   {
     "id": "l050",
     "name": "Poke de atún",
-    "description": "Receta fresca de moda en España",
     "ingredients": "Arroz\nAtún\nAguacate\nSoja",
     "instructions": "1. Cocer arroz\n2. Cortar atún\n3. Montar bol",
     "category": "general",
@@ -338,7 +288,6 @@
   {
     "id": "d001",
     "name": "Salmón en air fryer",
-    "description": "Cena sana y rápida con freidora de aire",
     "ingredients": "Salmón\nAceite\nSal\nLimón",
     "instructions": "1. Sazonar\n2. Cocinar 10 min air fryer",
     "category": "general",
@@ -350,7 +299,6 @@
   {
     "id": "d002",
     "name": "Tortilla francesa con espinacas",
-    "description": "Cena ligera y nutritiva",
     "ingredients": "Huevos\nEspinacas\nSal",
     "instructions": "1. Batir huevos\n2. Añadir espinacas\n3. Cuajar",
     "category": "cena",
@@ -362,7 +310,6 @@
   {
     "id": "d003",
     "name": "Pizza rápida con base de tortilla",
-    "description": "Alternativa saludable y rápida",
     "ingredients": "Tortilla\nTomate\nQueso\nJamón",
     "instructions": "1. Añadir ingredientes\n2. Hornear 10 min",
     "category": "cena",
@@ -374,7 +321,6 @@
   {
     "id": "d004",
     "name": "Wok de ternera",
-    "description": "Cena rápida con proteína",
     "ingredients": "Ternera\nVerduras\nSoja",
     "instructions": "1. Saltear carne\n2. Añadir verduras\n3. Incorporar salsa",
     "category": "general",
@@ -386,7 +332,6 @@
   {
     "id": "d050",
     "name": "Huevos rotos saludables",
-    "description": "Versión ligera del clásico",
     "ingredients": "Patata air fryer\nHuevos\nJamón",
     "instructions": "1. Cocinar patata\n2. Freír huevo\n3. Mezclar",
     "category": "cena",
@@ -398,19 +343,17 @@
   {
     "id": "p001",
     "name": "Yogur con frutas y miel",
-    "description": "Postre saludable y rápido",
     "ingredients": "Yogur\nFruta\nMiel",
     "instructions": "1. Mezclar todo",
-    "category": "desayuno",
+    "category": "dulce",
     "prepTime": 5,
     "cookTime": 0,
     "createdAt": "2026-05-03T20:00:00.000Z",
-    "updatedAt": "2026-05-03T23:45:12.590Z"
+    "updatedAt": "2026-05-04T01:34:17.453Z"
   },
   {
     "id": "p002",
     "name": "Tarta de queso rápida",
-    "description": "Postre moderno muy popular",
     "ingredients": "Queso crema\nHuevos\nAzúcar",
     "instructions": "1. Mezclar\n2. Hornear",
     "category": "dulce",
@@ -422,7 +365,6 @@
   {
     "id": "p003",
     "name": "Mug cake de chocolate",
-    "description": "Bizcocho rápido en microondas",
     "ingredients": "Harina\nCacao\nLeche",
     "instructions": "1. Mezclar\n2. Microondas 2 min",
     "category": "dulce",
@@ -434,7 +376,6 @@
   {
     "id": "p020",
     "name": "Helado de plátano casero",
-    "description": "Postre saludable sin azúcar añadido",
     "ingredients": "Plátanos congelados",
     "instructions": "1. Triturar plátano congelado",
     "category": "dulce",
@@ -446,7 +387,6 @@
   {
     "id": "59a0820f-3174-4e11-a378-1305c2514727",
     "name": "Lentejas con chorizo",
-    "description": "Guiso de Lentejas con chorizo",
     "ingredients": "Lentejas, chorizo y caldo",
     "instructions": "Hacer el sofrito, freír un poco el chorizo y retirarlo. Añadirle las lentejas y el tomate y darle un par de folpesy. Cubrir de caldo y a cocer",
     "category": "comida",
@@ -458,7 +398,6 @@
   {
     "id": "a7abdd11-d549-4699-8c77-ee68d6662d22",
     "name": "Lentejas con pollo",
-    "description": "Lentejas con pollo",
     "ingredients": "Lentejas (60 por persona)\nZanahorias\nPollo\nCaldo\nVerduras",
     "instructions": "Hacer el sofrito, con la zanahoria en tronchos gordos. dorar los trozos del pollo y retirarlo. Añadirle las lentejas y el tomate y darle un par de folpesy. Cubrir de caldo y a cocer",
     "category": "comida",
@@ -466,5 +405,60 @@
     "cookTime": 55,
     "createdAt": "2026-05-03T23:48:39.953Z",
     "updatedAt": "2026-05-03T23:57:54.481Z"
+  },
+  {
+    "id": "a468a9a5-443c-4b92-8f86-502628cc4952",
+    "name": "Ensalada de Pasta",
+    "ingredients": "Pasta\nTomate\nHuevos cocidos\nEncurtidos \nBoca de mar\nAtún\nVinagreta\nSalsa rosa",
+    "instructions": "Cocer las cosas. Picar las cosas. Juntar las cosas. Meter las cosas en la nevera",
+    "category": "comida",
+    "prepTime": 5,
+    "cookTime": 15,
+    "createdAt": "2026-05-04T01:21:34.738Z",
+    "updatedAt": "2026-05-04T01:21:34.738Z"
+  },
+  {
+    "id": "17d9bedf-96e3-465c-b4c6-6011ed5a04d8",
+    "name": "Pechugas empanadas",
+    "ingredients": "Pechugas\nHuevos\nPan rallado",
+    "instructions": "Empanar y freir",
+    "category": "general",
+    "prepTime": 20,
+    "cookTime": 20,
+    "createdAt": "2026-05-04T01:22:42.492Z",
+    "updatedAt": "2026-05-04T01:22:42.492Z"
+  },
+  {
+    "id": "ca1e695c-93fa-4053-9fc9-eb178f665f67",
+    "name": "Arroz a la cubana",
+    "ingredients": "Arroz\nSalchichas \nHuevos\nTomate frito",
+    "instructions": "Lavar el arroz 3 veces y cocer el arroz con el método del dedo chino. Freir los huevos y las salchichas",
+    "category": "comida",
+    "prepTime": 5,
+    "cookTime": 20,
+    "createdAt": "2026-05-04T01:24:26.753Z",
+    "updatedAt": "2026-05-04T01:24:26.753Z"
+  },
+  {
+    "id": "94438467-d48b-46da-a515-f1d1e020c095",
+    "name": "Rissoto setas",
+    "ingredients": "Arroz rissoteable\nSetas\nCebolla\nMantequilla \nQueso fuerte \nCaldo",
+    "instructions": "Hacer el sofrito de setas y retirarlas, dorar la cebolla y añadirle las setas, nacarar el arroz y echar poco a poco el caldo caliente. Añadir al final el queso rallado",
+    "category": "general",
+    "prepTime": 20,
+    "cookTime": 35,
+    "createdAt": "2026-05-04T01:26:49.174Z",
+    "updatedAt": "2026-05-04T01:26:49.174Z"
+  },
+  {
+    "id": "4803bac4-4c00-4830-a37a-efbb8f54d221",
+    "name": "Huevos rellenos",
+    "ingredients": "Huevos\nAtún\nMahonesa\nTomate frito\nEncurtidos",
+    "instructions": "Cocer los huevos 12m. Pelarlos y abrirlos por l mitad. Separa 2 yemas y el resto mezclarlas con el atún, los encurtidos y el tomate frito , rellenar los juevos con el potingue y después cubrir con mahonesa. Rallar por encima las yemas.\n\nVersión pro: Con atún de verdad y pimientos del piquillo asado",
+    "category": "general",
+    "prepTime": 15,
+    "cookTime": 20,
+    "createdAt": "2026-05-04T01:42:16.292Z",
+    "updatedAt": "2026-05-04T01:42:16.292Z"
   }
 ]
