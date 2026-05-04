@@ -99,36 +99,64 @@ Ejemplo: `http://192.168.1.100:3000`
 ```
 windsurf-project/
 ├── backend/
-│   ├── server.js              # Punto de entrada del servidor
+│   ├── server.js              # Punto de entrada y bootstrap de repositorios
+│   ├── .windsurfrules         # Reglas de arquitectura para el agente backend
 │   ├── src/
-│   │   ├── app.js             # Configuración Express
-│   │   ├── config/            # Configuración centralizada
-│   │   ├── recipes/           # Módulo Recetas (entity, repository, service, controller, routes)
-│   │   ├── menus/             # Módulo Menús (entity, repository, service, controller, routes)
+│   │   ├── app.js             # Configuración Express y registro de rutas
+│   │   ├── config/            # Configuración centralizada (puerto, host)
+│   │   ├── recipes/           # Módulo Recetas (5 archivos obligatorios)
+│   │   │   ├── recipe.entity.js
+│   │   │   ├── recipe.repository.js
+│   │   │   ├── recipe.service.js
+│   │   │   ├── recipe.controller.js
+│   │   │   └── recipe.routes.js
+│   │   ├── menus/             # Módulo Menús (5 archivos obligatorios)
+│   │   │   ├── menu.entity.js
+│   │   │   ├── menu.repository.js
+│   │   │   ├── menu.service.js
+│   │   │   ├── menu.controller.js
+│   │   │   └── menu.routes.js
 │   │   └── shared/            # Utilidades compartidas
+│   │       ├── errors/
+│   │       │   └── AppError.js
+│   │       ├── middleware/
+│   │       │   └── errorHandler.js
+│   │       └── repositories/
+│   │           └── JsonRepository.js
 │   └── data/
-│       ├── recipes.json       # Base de datos de recetas
-│       └── menus.json         # Base de datos de menús
+│       ├── recipes.json       # Persistencia JSON de recetas
+│       └── menus.json         # Persistencia JSON de menús
 ├── frontend/
-│   ├── index.html             # Interfaz principal SPA
+│   ├── index.html             # SPA única (no se crean páginas adicionales)
+│   ├── css/
+│   │   └── styles.css         # Sistema de diseño: modales, filtros de categoría
+│   ├── .windsurfrules         # Reglas de arquitectura para el agente frontend
 │   └── js/
-│       ├── app.js             # Punto de entrada y coordinador
-│       ├── config.js          # Configuración global
-│       ├── apiService.js      # Servicio de API
+│       ├── app.js             # Coordinador principal: managers, funciones globales, init
+│       ├── config.js          # Constantes centralizadas (API_BASE)
+│       ├── apiService.js      # Único punto de salida HTTP (no fetch() directo)
+│       ├── utils.js           # Funciones puras: escapeHtml, showSuccess, showError
+│       ├── uiHelpers.js       # Generadores de HTML compartidos (badges)
+│       ├── tabManager.js      # Navegación por tabs
+│       ├── menuManager.js     # Gestión de menús semanales + sustitución
+│       ├── manualMenuManager.js # Creación manual de menús (grid 7 días)
 │       ├── core/
-│       │   └── AppState.js    # Estado observable global
+│       │   └── AppState.js    # Estado observable global (get/set/subscribe)
 │       ├── features/
 │       │   └── recipes/
-│       │       └── RecipeManager.js  # Gestión de recetas
-│       ├── shared/
-│       │   ├── BaseManager.js # Clase base para managers
-│       │   ├── components/
-│       │   │   └── RecipeCard.js     # Componente reutilizable
-│       │   └── utils.js       # Utilidades compartidas
-│       ├── manualMenuManager.js      # Creación manual de menús
-│       ├── menuManager.js            # Gestión de menús
-│       ├── tabManager.js             # Navegación por tabs
-│       └── uiHelpers.js              # Helpers de UI
+│       │       └── RecipeManager.js   # Manager de recetas (extiende BaseManager)
+│       └── shared/
+│           ├── BaseManager.js       # Clase base CRUD para managers
+│           ├── components/
+│           │   ├── RecipeCard.js    # Componente reutilizable de tarjeta
+│           │   ├── UnifiedModal.js  # Sistema de modales genérico
+│           │   ├── SearchBar.js     # Barra de búsqueda con filtros de categoría
+│           │   └── Modal.js         # Componente modal legacy
+│           └── utils.js             # Utilidades compartidas entre features
+├── .windsurf/
+│   └── workflows/
+│       ├── add-crud-entity.md       # Workflow: Añadir nueva entidad CRUD
+│       └── debug-layers.md        # Workflow: Depurar errores por capas
 ├── DEPLOYMENT.md              # Guía de despliegue
 ├── README.md                  # Documentación completa
 └── package.json               # Dependencias
@@ -188,6 +216,59 @@ El servidor muestra:
 - URL local: `http://localhost:3000`
 - URL para móviles: `http://TU_IP:3000`
 - Interfaz de red: `0.0.0.0:3000`
+
+## 🤖 Reglas y Workflows de Cascade (Agente AI)
+
+Este proyecto incluye reglas de arquitectura y workflows para el agente AI (Cascade), ubicados en:
+- **Frontend rules**: `frontend/.windsurfrules`
+- **Backend rules**: `backend/.windsurfrules`
+- **Workflows**: `.windsurf/workflows/`
+
+### Reglas Frontend (`frontend/.windsurfrules`)
+
+Reglas arquitectónicas que rigen el desarrollo en el frontend:
+
+- **Módulos ES6**: Usar exclusivamente `import/export`. No usar `require()`.
+- **Estado global**: Usar `AppState` (singleton) con `get()` y `set()`. No usar `localStorage`.
+- **Patrón Manager**: Cada feature tiene su clase `*Manager` con métodos: `loadItems()`, `render()`, `save()`, `delete()`.
+- **Comunicación HTTP**: Todas las llamadas HTTP **solo** mediante `apiService`. No `fetch()` directo.
+- **Funciones globales**: Las funciones llamadas desde `onclick` en HTML se declaran en `app.js` y se exponen en `window`.
+- **SPA única**: Un único `index.html`. Navegación por tabs con `TabManager`.
+- **Renderizado**: HTML como strings con template literals. No frameworks adicionales.
+
+### Reglas Backend (`backend/.windsurfrules`)
+
+Reglas arquitectónicas que rigen el desarrollo en el backend:
+
+- **Patrón de 5 archivos por entidad**: `entity`, `repository`, `service`, `controller`, `routes`.
+- **Entity**: Exponer `static validate(data)` y `static fromRequest(data)`. No asignar `id`, `createdAt`, `updatedAt`.
+- **Repository**: Extender `JsonRepository`. No escribir al FS directamente.
+- **Service**: Flujo estándar: `fromRequest()` → `validate()` → `repository.create()`. Usar `AppError`.
+- **Controller**: Solo extrae datos de `req` y delega. Nunca lógica de negocio. Siempre `try/catch` + `next(error)`.
+- **Routes**: Registrar bajo `/api/<entidad>`, **antes** del middleware de archivos estáticos.
+- **Módulos CommonJS**: Usar exclusivamente `require()` y `module.exports`.
+
+### Workflows Disponibles
+
+#### `/add-crud-entity` — Añadir nueva entidad CRUD completa
+
+Workflow paso a paso para añadir una nueva entidad al sistema (backend + frontend):
+
+1. **Backend**: Crear entity, repository, service, controller y routes.
+2. **Registrar rutas** en `backend/src/app.js`.
+3. **Registrar persistencia** en `backend/server.js` (bootstrap).
+4. **Frontend**: Añadir métodos en `apiService.js`.
+5. **Frontend**: Crear el Manager en `frontend/js/features/<entidad>/`.
+6. **Frontend**: Registrar el Manager en `app.js`.
+7. **Frontend**: Añadir sección en `index.html`.
+
+#### `/debug-layers` — Depurar errores por capas
+
+Workflow sistemático para diagnosticar bugs respetando la separación de capas:
+
+1. **Identificar capa afectada**: UI → AppState → HTTP → Controller → Service → Repository.
+2. **Aplicar fix en la capa raíz**, no donde se manifiesta el síntoma.
+3. **Reglas**: No duplicar validaciones, no usar `fetch()` directo, no modificar formato JSON.
 
 ## Seguridad
 - **Solo red local**: No accesible desde internet
