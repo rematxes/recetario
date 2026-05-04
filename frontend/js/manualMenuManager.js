@@ -126,14 +126,14 @@ export class ManualMenuManager {
     });
 
     this.renderRecipeSelector();
-    document.getElementById('recipeSelectorModal').classList.remove('hidden');
+    document.getElementById('recipeSelectorModal').classList.add('active');
   }
 
   /**
    * Closes the recipe selector modal
    */
   closeRecipeSelector() {
-    document.getElementById('recipeSelectorModal').classList.add('hidden');
+    document.getElementById('recipeSelectorModal').classList.remove('active');
     const form = this.appState.get('manualMenuForm');
     form.selectedDay = null;
     form.selectedMeal = null;

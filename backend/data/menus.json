@@ -8,11 +8,11 @@
         "dayName": "Lunes",
         "meals": {
           "comida": {
-            "recipeId": "a1b2c3d4-e5f6-7890-abcd-ef1234567801",
-            "recipeName": "Gazpacho andaluz",
+            "recipeId": "4803bac4-4c00-4830-a37a-efbb8f54d221",
+            "recipeName": "Huevos rellenos",
             "prepTime": 15,
-            "cookTime": 0,
-            "totalTime": 15
+            "cookTime": 20,
+            "totalTime": 35
           },
           "cena": {
             "recipeId": "d004",
@@ -145,7 +145,7 @@
       }
     ],
     "name": "Menu Prueba SEH",
-    "updatedAt": "2026-05-03T23:53:47.093Z"
+    "updatedAt": "2026-05-04T21:09:45.575Z"
   },
   {
     "id": "af150167-11ba-48ad-abdf-9099f5e47731",

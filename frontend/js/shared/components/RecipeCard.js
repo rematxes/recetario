@@ -116,18 +116,24 @@ export class RecipeCard {
   static renderActions(recipe, onView, onEdit, onDelete) {
     return `
       <div class="flex gap-2 mt-auto">
-        <button onclick="${onView}('${recipe.id}')" 
-          class="flex-1 px-3 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 text-sm font-semibold transition-colors">
-          <i class="fas fa-eye mr-1"></i>Ver
-        </button>
-        <button onclick="${onEdit}('${recipe.id}')" 
-          class="flex-1 px-3 py-2 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600 text-sm font-semibold transition-colors">
-          <i class="fas fa-edit mr-1"></i>Editar
-        </button>
-        <button onclick="${onDelete}('${recipe.id}')" 
-          class="flex-1 px-3 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 text-sm font-semibold transition-colors">
-          <i class="fas fa-trash mr-1"></i>Borrar
-        </button>
+        ${onView ? `
+          <button onclick="${onView}('${recipe.id}')" 
+            class="flex-1 px-3 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 text-sm font-semibold transition-colors">
+            <i class="fas fa-eye mr-1"></i>Ver
+          </button>
+        ` : ''}
+        ${onEdit ? `
+          <button onclick="${onEdit}('${recipe.id}')" 
+            class="flex-1 px-3 py-2 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600 text-sm font-semibold transition-colors">
+            <i class="fas fa-edit mr-1"></i>Editar
+          </button>
+        ` : ''}
+        ${onDelete ? `
+          <button onclick="${onDelete}('${recipe.id}')" 
+            class="flex-1 px-3 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 text-sm font-semibold transition-colors">
+            <i class="fas fa-trash mr-1"></i>Borrar
+          </button>
+        ` : ''}
       </div>
     `;
   }

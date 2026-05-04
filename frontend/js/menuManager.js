@@ -240,7 +240,7 @@ export class MenuManager {
     });
 
     this.renderSubstitutionSelector();
-    document.getElementById('recipeSelectorModal').classList.remove('hidden');
+    document.getElementById('recipeSelectorModal').classList.add('active');
     const expandedMenus = this.appState.get('expandedMenus');
     expandedMenus.add(menuId);
     this.appState.set('expandedMenus', expandedMenus);
@@ -353,7 +353,7 @@ export class MenuManager {
 
     try {
       await apiService.updateMenu(menuId, { days: updatedDays });
-      document.getElementById('recipeSelectorModal').classList.add('hidden');
+      document.getElementById('recipeSelectorModal').classList.remove('active');
       const expandedMenus = this.appState.get('expandedMenus');
       expandedMenus.add(menuId);
       this.appState.set('expandedMenus', expandedMenus);

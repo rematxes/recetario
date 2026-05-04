@@ -1,0 +1,607 @@
+/**
+ * ============================================
+ * UI/UX Design System - Common Styles
+ * ============================================
+ * 
+ * This file contains utility classes that complement Tailwind CSS
+ * for consistent styling across the application.
+ * 
+ * Usage: Import in index.html after Tailwind CDN
+ * <link rel="stylesheet" href="css/styles.css">
+ */
+
+/* ============================================
+   MODAL SYSTEM
+   ============================================ */
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: none;
+  z-index: 50;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.modal-overlay.active {
+  display: flex;
+}
+
+.modal-container {
+  background-color: white;
+  border-radius: 0.5rem;
+  width: 100%;
+  max-height: 100vh;
+  overflow-y: auto;
+  border: 2px solid #d1d5db;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+
+.modal-container--sm {
+  max-width: 28rem;
+}
+
+.modal-container--md {
+  max-width: 42rem;
+}
+
+.modal-container--lg {
+  max-width: 56rem;
+}
+
+.modal-container--xl {
+  max-width: 72rem;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid #d1d5db;
+}
+
+.modal-title {
+  font-size: 1.5rem;
+  line-height: 2rem;
+  font-weight: 700;
+  color: #111827;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.modal-close-btn {
+  color: #6b7280;
+  padding: 0.5rem;
+  border-radius: 0.25rem;
+  transition: all 0.2s;
+}
+
+.modal-close-btn:hover {
+  color: #374151;
+  background-color: #f3f4f6;
+}
+
+.modal-body {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  padding-top: 1rem;
+  border-top: 1px solid #e5e7eb;
+  margin-top: 1rem;
+}
+
+/* ============================================
+   SEARCH COMPONENTS
+   ============================================ */
+
+.search-box {
+  width: 100%;
+  margin-bottom: 1rem;
+}
+
+.search-input {
+  width: 100%;
+  padding: 0.75rem;
+  border: 2px solid #9ca3af;
+  border-radius: 0.5rem;
+  background-color: #f9fafb;
+  color: #111827;
+}
+
+.search-input::placeholder {
+  color: #6b7280;
+}
+
+.search-input:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px #3b82f6;
+  border-color: #3b82f6;
+  background-color: white;
+}
+
+.search-filters {
+  margin-bottom: 1rem;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.search-filters__group {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.search-sort {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.search-sort__label {
+  font-size: 0.875rem;
+  color: #4b5563;
+}
+
+.search-sort__select {
+  padding: 0.375rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+}
+
+.search-sort__select:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px #3b82f6;
+}
+
+/* ============================================
+   CATEGORY FILTER BUTTONS
+   ============================================ */
+
+.category-filter-btn {
+  padding: 0.375rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  border: 1px solid;
+  transition: all 0.2s;
+}
+
+/* Inactive state - gray */
+.category-filter-btn--comida {
+  background-color: #e5e7eb;
+  color: #4b5563;
+  border-color: #d1d5db;
+}
+
+.category-filter-btn--comida:hover {
+  background-color: #d1d5db;
+}
+
+/* Active state - category color */
+.category-filter-btn--comida.active {
+  background-color: #fee2e2;
+  color: #991b1b;
+  border-color: #fca5a5;
+}
+
+.category-filter-btn--comida.active:hover {
+  background-color: #fecaca;
+}
+
+/* Inactive state - gray */
+.category-filter-btn--cena {
+  background-color: #e5e7eb;
+  color: #4b5563;
+  border-color: #d1d5db;
+}
+
+.category-filter-btn--cena:hover {
+  background-color: #d1d5db;
+}
+
+/* Active state - category color */
+.category-filter-btn--cena.active {
+  background-color: #e0e7ff;
+  color: #3730a3;
+  border-color: #a5b4fc;
+}
+
+.category-filter-btn--cena.active:hover {
+  background-color: #c7d2fe;
+}
+
+/* Inactive state - gray */
+.category-filter-btn--general {
+  background-color: #e5e7eb;
+  color: #4b5563;
+  border-color: #d1d5db;
+}
+
+.category-filter-btn--general:hover {
+  background-color: #d1d5db;
+}
+
+/* Active state - category color */
+.category-filter-btn--general.active {
+  background: linear-gradient(to right, #fee2e2, #f3e8ff);
+  color: #1f2937;
+  border-color: #fca5a5;
+}
+
+.category-filter-btn--general.active:hover {
+  background: linear-gradient(to right, #fecaca, #e9d5ff);
+}
+
+/* Inactive state - gray */
+.category-filter-btn--picoteo {
+  background-color: #e5e7eb;
+  color: #4b5563;
+  border-color: #d1d5db;
+}
+
+.category-filter-btn--picoteo:hover {
+  background-color: #d1d5db;
+}
+
+/* Active state - category color */
+.category-filter-btn--picoteo.active {
+  background-color: #ffedd5;
+  color: #9a3412;
+  border-color: #fdba74;
+}
+
+.category-filter-btn--picoteo.active:hover {
+  background-color: #fed7aa;
+}
+
+/* Inactive state - gray */
+.category-filter-btn--dulce {
+  background-color: #e5e7eb;
+  color: #4b5563;
+  border-color: #d1d5db;
+}
+
+.category-filter-btn--dulce:hover {
+  background-color: #d1d5db;
+}
+
+/* Active state - category color */
+.category-filter-btn--dulce.active {
+  background-color: #fce7f3;
+  color: #9d174d;
+  border-color: #f9a8d4;
+}
+
+.category-filter-btn--dulce.active:hover {
+  background-color: #fbcfe8;
+}
+
+/* ============================================
+   CARDS
+   ============================================ */
+
+.card {
+  background-color: white;
+  border: 2px solid #d1d5db;
+  border-radius: 0.5rem;
+  padding: 1.25rem;
+  transition: all 0.2s;
+}
+
+.card:hover {
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  border-color: #60a5fa;
+}
+
+.card--compact {
+  padding: 1rem;
+}
+
+/* ============================================
+   BUTTONS
+   ============================================ */
+
+.btn {
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  transition: all 0.2s;
+  border: none;
+  cursor: pointer;
+}
+
+.btn--primary {
+  background-color: #3b82f6;
+  color: white;
+}
+
+.btn--primary:hover {
+  background-color: #2563eb;
+}
+
+.btn--secondary {
+  background-color: #6b7280;
+  color: white;
+}
+
+.btn--secondary:hover {
+  background-color: #4b5563;
+}
+
+.btn--success {
+  background-color: #10b981;
+  color: white;
+}
+
+.btn--success:hover {
+  background-color: #059669;
+}
+
+.btn--warning {
+  background-color: #f59e0b;
+  color: white;
+}
+
+.btn--warning:hover {
+  background-color: #d97706;
+}
+
+.btn--danger {
+  background-color: #ef4444;
+  color: white;
+}
+
+.btn--danger:hover {
+  background-color: #dc2626;
+}
+
+.btn--ghost {
+  background-color: transparent;
+  color: #6b7280;
+}
+
+.btn--ghost:hover {
+  background-color: #f3f4f6;
+  color: #374151;
+}
+
+/* Button sizes */
+.btn--sm {
+  padding: 0.375rem 0.75rem;
+  font-size: 0.875rem;
+}
+
+.btn--lg {
+  padding: 0.75rem 1.5rem;
+  font-size: 1.125rem;
+}
+
+/* ============================================
+   BADGES
+   ============================================ */
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.badge--comida {
+  background-color: #fee2e2;
+  color: #991b1b;
+}
+
+.badge--cena {
+  background-color: #e0e7ff;
+  color: #3730a3;
+}
+
+.badge--general {
+  background: linear-gradient(to right, #fee2e2, #f3e8ff);
+  color: #1f2937;
+}
+
+.badge--picoteo {
+  background-color: #ffedd5;
+  color: #9a3412;
+}
+
+.badge--dulce {
+  background-color: #fce7f3;
+  color: #9d174d;
+}
+
+.badge--time {
+  background-color: #dbeafe;
+  color: #1e40af;
+}
+
+.badge--time-cook {
+  background-color: #ffedd5;
+  color: #9a3412;
+}
+
+.badge--time-total {
+  background-color: #d1fae5;
+  color: #065f46;
+}
+
+/* ============================================
+   GRID & LIST VIEWS
+   ============================================ */
+
+.recipe-grid {
+  display: grid;
+  gap: 1rem;
+}
+
+@media (min-width: 640px) {
+  .recipe-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .recipe-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.recipe-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+/* ============================================
+   MOBILE MENU
+   ============================================ */
+
+.mobile-menu {
+  position: fixed;
+  top: 0;
+  right: -100%;
+  width: 80%;
+  max-width: 300px;
+  height: 100vh;
+  background-color: #1f2937;
+  z-index: 50;
+  transition: right 0.3s ease-in-out;
+  padding: 1rem;
+}
+
+.mobile-menu.open {
+  right: 0;
+}
+
+.mobile-menu-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 40;
+  display: none;
+}
+
+.mobile-menu-overlay.active {
+  display: block;
+}
+
+/* ============================================
+   FORM ELEMENTS
+   ============================================ */
+
+.form-input {
+  width: 100%;
+  padding: 0.75rem;
+  border: 2px solid #d1d5db;
+  border-radius: 0.5rem;
+  background-color: #f9fafb;
+  color: #111827;
+  transition: all 0.2s;
+}
+
+.form-input:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px #3b82f6;
+  border-color: #3b82f6;
+  background-color: white;
+}
+
+.form-label {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #374151;
+  margin-bottom: 0.25rem;
+}
+
+.form-textarea {
+  width: 100%;
+  padding: 0.75rem;
+  border: 2px solid #d1d5db;
+  border-radius: 0.5rem;
+  background-color: #f9fafb;
+  color: #111827;
+  min-height: 100px;
+  resize: vertical;
+  transition: all 0.2s;
+}
+
+.form-textarea:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px #3b82f6;
+  border-color: #3b82f6;
+  background-color: white;
+}
+
+.form-select {
+  width: 100%;
+  padding: 0.75rem;
+  border: 2px solid #d1d5db;
+  border-radius: 0.5rem;
+  background-color: #f9fafb;
+  color: #111827;
+  transition: all 0.2s;
+}
+
+.form-select:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px #3b82f6;
+  border-color: #3b82f6;
+  background-color: white;
+}
+
+/* ============================================
+   UTILITY CLASSES
+   ============================================ */
+
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Focus ring for accessibility */
+.focus-ring:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.5);
+}
+
+/* Smooth transitions */
+.transition-all {
+  transition-property: all;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 200ms;
+}
+
+/* Hover lift effect */
+.hover-lift:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+}

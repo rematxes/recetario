@@ -1,0 +1,59 @@
+# Agente Frontend — Gestor de Recetas y Menús
+
+Estas reglas aplican a todo el código dentro de `frontend/`. Complementan las reglas globales del proyecto.
+
+## Estado global (AppState)
+
+- Usar siempre `appState` (instancia singleton de `AppState`) importado desde `frontend/js/core/AppState.js`.
+- Leer estado con `appState.get(key)` y escribir con `appState.set(key, value)`.
+- `appState.set()` notifica automáticamente a todos los suscriptores; no llamar a `render()` manualmente salvo tras carga inicial explícita.
+- No mantener estado de la aplicación en variables locales de los managers salvo `this.items` como caché de la última respuesta de la API.
+- No usar `localStorage`, `sessionStorage` ni cookies para estado de la aplicación.
+
+## Patrón Manager
+
+- Cada feature tiene su clase `*Manager` (ej. `RecipeManager`, `MenuManager`).
+- Los managers se ubican en `frontend/js/features/<entidad>/` para features nuevas, o en `frontend/js/` si siguen el patrón legacy existente.
+- Los managers reciben `appState` por constructor (inyección de dependencias). No acceder a `appState` directamente como global dentro del manager.
+- Métodos mínimos por manager: `loadItems()` (carga desde API), `render()` (actualiza DOM), `save()` (crea o actualiza), `delete(id)`.
+
+## Comunicación con el backend
+
+- Todas las llamadas HTTP se realizan **únicamente** mediante métodos de `apiService` (instancia singleton de `ApiService` en `frontend/js/apiService.js`).
+- No usar `fetch()` directamente en ningún manager, helper ni en `app.js`.
+- Al añadir una nueva entidad, añadir los métodos correspondientes en `apiService.js` siguiendo los patrones existentes (`getAllRecipes`, `createRecipe`, etc.).
+
+## Funciones globales expuestas al HTML
+
+- Las funciones llamadas desde atributos `onclick` en `index.html` deben declararse en `frontend/js/app.js` y exponerse en `window.*`.
+- Estas funciones globales solo delegan al manager correspondiente; no contienen lógica propia.
+- Patrón: `function doSomething() { someManager.method(); }` seguido de `window.doSomething = doSomething;`.
+
+## Módulos
+
+- Usar exclusivamente ES6 modules: `import ... from ...` y `export`.
+- No usar `require()` en ningún archivo de `frontend/`.
+- Los imports siempre van al inicio del archivo.
+
+## HTML y estructura del SPA
+
+- Un único `frontend/index.html`. No crear páginas HTML adicionales.
+- La navegación entre secciones se gestiona por tabs usando `TabManager` (`frontend/js/tabManager.js`).
+- Los tabs se activan con `showTab(tabName)` expuesto en `window`.
+- No añadir scripts inline en `index.html`; toda la lógica va en los archivos JS correspondientes.
+
+## Renderizado
+
+- Los managers generan HTML como strings con template literals y lo asignan a `container.innerHTML`.
+- No usar frameworks de renderizado adicionales (React, Vue, etc.).
+- Las clases CSS siguen la convención Tailwind CSS ya presente en el proyecto.
+
+## Carpetas y archivos
+
+- `frontend/js/core/` — Clases de infraestructura compartida (AppState, etc.).
+- `frontend/js/features/<entidad>/` — Managers de cada feature nueva.
+- `frontend/js/shared/` — Utilidades compartidas entre features.
+- `frontend/js/apiService.js` — Único punto de salida HTTP.
+- `frontend/js/config.js` — Configuración global (API_BASE, etc.).
+- `frontend/js/utils.js` — Funciones utilitarias puras.
+- `frontend/js/app.js` — Coordinador principal: instancia managers, funciones globales, event listeners, init.

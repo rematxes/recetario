@@ -14,6 +14,9 @@
 ## Aplicacion moovil standalone
 - Modo standalone por teléfono, pero que permita sincronizar recetas entre dos dispositivos en la misma red wifi. Compara id de recetas y se queda con la receta más reciente
 
+## Proxy Windsurf
+http://127.0.0.1:63442/
+
 
 
 
