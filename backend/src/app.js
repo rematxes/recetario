@@ -1,19 +1,48 @@
 const express = require('express');
 const cors = require('cors');
+const helmet = require('helmet');
+const rateLimit = require('express-rate-limit');
 const path = require('path');
 const { PORT, HOST } = require('./config');
 const errorHandler = require('./shared/middleware/errorHandler');
+const authMiddleware = require('./shared/middleware/authMiddleware');
+const authRoutes = require('./auth/auth.routes');
 const recipeRoutes = require('./recipes/recipe.routes');
 const menuRoutes = require('./menus/menu.routes');
 
 const app = express();
 
+// Security middleware
+app.use(helmet({
+  contentSecurityPolicy: {
+    directives: {
+      defaultSrc: ["'self'"],
+      scriptSrc: ["'self'", "'unsafe-inline'"],
+      scriptSrcAttr: ["'unsafe-inline'"],
+      styleSrc: ["'self'", "'unsafe-inline'", "https://cdn.jsdelivr.net"],
+      imgSrc: ["'self'", "data:", "https:"],
+      connectSrc: ["'self'"],
+      fontSrc: ["'self'", "https://cdnjs.cloudflare.com"],
+    },
+  },
+}));
+
+// Rate limiting for login endpoint
+const loginLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 5, // Limit each IP to 5 requests per windowMs
+  message: 'Demasiados intentos de login. Intenta de nuevo más tarde.'
+});
+
 app.use(cors());
 app.use(express.json());
 
-// API Routes - must be before static files
-app.use('/api/recipes', recipeRoutes);
-app.use('/api/menus', menuRoutes);
+// Auth routes - no authentication required
+app.use('/api/auth', loginLimiter, authRoutes);
+
+// API Routes - authentication required
+app.use('/api/recipes', authMiddleware, recipeRoutes);
+app.use('/api/menus', authMiddleware, menuRoutes);
 
 // Static files with proper MIME types
 app.use(express.static(path.join(__dirname, '..', '..', 'frontend'), {

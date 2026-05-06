@@ -25,7 +25,9 @@ export class AppState {
         selectorViewMode: 'grid',
         data: {}
       },
-      editingRecipeId: null
+      editingRecipeId: null,
+      isAuthenticated: false,
+      authUsername: null
     };
     this._listeners = new Map();
   }

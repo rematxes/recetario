@@ -13,6 +13,7 @@ import { CONFIG } from './config.js';
 import { showSuccess, showError } from './utils.js';
 import { appState } from './core/AppState.js';
 import { RecipeManager } from './features/recipes/RecipeManager.js';
+import { AuthManager } from './features/auth/AuthManager.js';
 import { MenuManager } from './menuManager.js';
 import { ManualMenuManager } from './manualMenuManager.js';
 import { TabManager } from './tabManager.js';
@@ -25,6 +26,7 @@ console.log('[APP] Module loaded, initializing...');
 // INITIALIZE MANAGERS
 // ============================================
 
+const authManager = new AuthManager(appState);
 const recipeManager = new RecipeManager(appState);
 const menuManager = new MenuManager(appState, recipeManager);
 const manualMenuManager = new ManualMenuManager(appState, recipeManager);
@@ -160,6 +162,32 @@ function closeSelectorModal() {
   }
 }
 
+function handleLogin(e) {
+  e.preventDefault();
+  const username = document.getElementById('loginUsername').value;
+  const password = document.getElementById('loginPassword').value;
+
+  if (!username || !password) {
+    showError('Usuario y contraseña son requeridos');
+    return;
+  }
+
+  authManager.login(username, password).then(success => {
+    if (success) {
+      document.getElementById('loginScreen').classList.add('hidden');
+      document.getElementById('mainApp').classList.remove('hidden');
+    }
+  });
+}
+
+function handleLogout() {
+  authManager.logout();
+  document.getElementById('loginScreen').classList.remove('hidden');
+  document.getElementById('mainApp').classList.add('hidden');
+  document.getElementById('loginUsername').value = '';
+  document.getElementById('loginPassword').value = '';
+}
+
 // Expose global functions
 window.toggleRecipeForm = toggleRecipeForm;
 window.resetRecipeForm = resetRecipeForm;
@@ -176,8 +204,11 @@ window.handleSelectorSortChange = handleSelectorSortChange;
 window.toggleCategoryFilter = toggleCategoryFilter;
 window.toggleSelectorCategoryFilter = toggleSelectorCategoryFilter;
 window.closeSelectorModal = closeSelectorModal;
+window.handleLogin = handleLogin;
+window.handleLogout = handleLogout;
 
 // Expose managers
+window.authManager = authManager;
 window.recipeManager = recipeManager;
 window.menuManager = menuManager;
 window.manualMenuManager = manualMenuManager;
@@ -196,6 +227,9 @@ console.log('[APP] Global functions and managers exposed to window');
 // ============================================
 
 function setupEventListeners() {
+  // Login form
+  document.getElementById('loginForm')?.addEventListener('submit', handleLogin);
+
   document.getElementById('recipeForm')?.addEventListener('submit', (e) => {
     recipeManager.saveRecipe(e);
   });
@@ -259,49 +293,63 @@ function setupEventListeners() {
 function initApp() {
   setupEventListeners();
 
-  const recipesTab = document.getElementById('recipes-tab');
-  const menusTab = document.getElementById('menus-tab');
-  if (recipesTab) recipesTab.classList.add('active');
-  if (menusTab) menusTab.classList.remove('active');
+  // Check authentication on startup
+  const isAuthenticated = authManager.checkAuth();
 
-  // Initialize category filter buttons
-  const categoryFilters = appState.get('categoryFilters');
-  Object.keys(categoryFilters).forEach(category => {
-    const btn = document.getElementById(`filter-${category}`);
-    if (btn) {
-      btn.classList.toggle('active', categoryFilters[category]);
+  if (isAuthenticated) {
+    // User is authenticated, show main app
+    document.getElementById('loginScreen').classList.add('hidden');
+    document.getElementById('mainApp').classList.remove('hidden');
+    
+    const recipesTab = document.getElementById('recipes-tab');
+    const menusTab = document.getElementById('menus-tab');
+    if (recipesTab) recipesTab.classList.add('active');
+    if (menusTab) menusTab.classList.remove('active');
+
+    // Initialize category filter buttons
+    const categoryFilters = appState.get('categoryFilters');
+    Object.keys(categoryFilters).forEach(category => {
+      const btn = document.getElementById(`filter-${category}`);
+      if (btn) {
+        btn.classList.toggle('active', categoryFilters[category]);
+      }
+    });
+
+    // Initialize selector category filter buttons
+    const selectorFilters = appState.get('selectorCategoryFilters') || {
+      comida: true,
+      cena: true,
+      general: true,
+      picoteo: true,
+      dulce: true
+    };
+    appState.set('selectorCategoryFilters', selectorFilters);
+    Object.keys(selectorFilters).forEach(category => {
+      const btn = document.getElementById(`selector-filter-${category}`);
+      if (btn) {
+        btn.classList.toggle('active', selectorFilters[category]);
+      }
+    });
+
+    recipeManager.loadRecipes();
+
+    const today = new Date();
+    const nextMonday = new Date(today);
+    nextMonday.setDate(today.getDate() + (1 + 7 - today.getDay()) % 7);
+
+    const menuDateInput = document.getElementById('menuWeekStart');
+    if (menuDateInput) {
+      menuDateInput.valueAsDate = nextMonday;
     }
-  });
 
-  // Initialize selector category filter buttons
-  const selectorFilters = appState.get('selectorCategoryFilters') || {
-    comida: true,
-    cena: true,
-    general: true,
-    picoteo: true,
-    dulce: true
-  };
-  appState.set('selectorCategoryFilters', selectorFilters);
-  Object.keys(selectorFilters).forEach(category => {
-    const btn = document.getElementById(`selector-filter-${category}`);
-    if (btn) {
-      btn.classList.toggle('active', selectorFilters[category]);
-    }
-  });
-
-  recipeManager.loadRecipes();
-
-  const today = new Date();
-  const nextMonday = new Date(today);
-  nextMonday.setDate(today.getDate() + (1 + 7 - today.getDay()) % 7);
-
-  const menuDateInput = document.getElementById('menuWeekStart');
-  if (menuDateInput) {
-    menuDateInput.valueAsDate = nextMonday;
+    console.log('API Base URL:', CONFIG.API_BASE);
+    console.log('Recipe & Menu Manager v3.0.0 initialized successfully');
+  } else {
+    // User is not authenticated, show login screen
+    document.getElementById('loginScreen').classList.remove('hidden');
+    document.getElementById('mainApp').classList.add('hidden');
+    console.log('Authentication required. Please log in.');
   }
-
-  console.log('API Base URL:', CONFIG.API_BASE);
-  console.log('Recipe & Menu Manager v3.0.0 initialized successfully');
 }
 
 // Start the application
