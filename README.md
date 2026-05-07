@@ -18,9 +18,10 @@ Una aplicación web CRUD para gestionar recetas y generar menús semanales autom
 
 ### 📱 Diseño Móvil Optimizado
 - **Responsive**: Adaptado a pantallas táctiles
-- **Navegación Intuitiva**: Botones optimizados para dedos
-- **Acceso WiFi**: Disponible en toda la red local
-- **Sin Zoom Forzado**: Experiencia móvil nativa
+- **Navegación tipo Instagram**: Bottom navigation para dispositivos móviles
+- **Sistema de Routing**: Navegación SPA basada en hash (#/recetario, #/menus)
+- **Colores Vibrantes**: Paleta de colores moderna y atractiva
+- **Componentes Reutilizables**: Arquitectura de componentes modulares
 
 ### 💾 Almacenamiento Local Seguro
 - **JSON Local**: Persistencia sin base de datos
@@ -62,15 +63,33 @@ backend/
     └── menus.json         # Persistencia JSON de menús
 ```
 
-### Frontend - Arquitectura ES6 Modules + SPA
+### Frontend - Arquitectura ES6 Modules + SPA con Routing
 ```
 frontend/
 ├── index.html             # SPA única (no se crean páginas adicionales)
 ├── css/
-│   └── styles.css         # Sistema de diseño: modales, filtros de categoría, etc.
+│   ├── styles.css         # Sistema de diseño: modales, filtros de categoría, etc.
+│   └── theme.css          # Paleta de colores vibrante y variables CSS
+├── components/            # Componentes reutilizables
+│   ├── common/           # Componentes base (Button, Input, Select, Textarea)
+│   │   ├── Button.js
+│   │   ├── Input.js
+│   │   ├── Select.js
+│   │   ├── Textarea.js
+│   │   ├── SearchBar.js   # Barra de búsqueda con filtros
+│   │   └── UnifiedModal.js # Sistema de modales genérico
+│   ├── layout/           # Componentes de layout
+│   │   └── BottomNavigation.js # Navegación tipo Instagram
+│   ├── recipes/          # Componentes específicos de recetas
+│   │   └── RecipeCard.js # Tarjeta unificada (grid/list/compact)
+│   └── forms/            # Componentes de formulario
+│       └── RecipeForm.js # Formulario unificado (create/edit)
+├── pages/                # Páginas del SPA
+│   ├── RecetarioPage.js  # Página de recetas
+│   └── MenusPage.js      # Página de menús
 ├── .windsurfrules         # Reglas de arquitectura para el agente frontend
 └── js/
-    ├── app.js              # Coordinador principal: instancia managers, funciones globales, init
+    ├── app.js              # Coordinador principal: router, managers, init
     ├── config.js           # Constantes centralizadas (API_BASE, etc.)
     ├── apiService.js       # Único punto de salida HTTP (no fetch() directo)
     ├── utils.js            # Funciones puras: escapeHtml, showSuccess, showError
@@ -79,17 +98,13 @@ frontend/
     ├── menuManager.js      # Gestión de menús semanales + sustitución de recetas
     ├── manualMenuManager.js # Creación manual de menús (grid 7 días)
     ├── core/
-    │   └── AppState.js     # Estado observable global (get/set/subscribe)
+    │   ├── AppState.js     # Estado observable global (get/set/subscribe)
+    │   └── Router.js      # Sistema de routing basado en hash
     ├── features/
     │   └── recipes/
     │       └── RecipeManager.js   # Manager de recetas (extiende BaseManager)
     └── shared/
         ├── BaseManager.js       # Clase base CRUD para managers
-        ├── components/
-        │   ├── RecipeCard.js    # Componente reutilizable de tarjeta de receta
-        │   ├── UnifiedModal.js  # Sistema de modales genérico
-        │   ├── SearchBar.js     # Barra de búsqueda con filtros de categoría
-        │   └── Modal.js         # Componente modal legacy
         └── utils.js             # Utilidades compartidas entre features
 ```
 
@@ -564,95 +579,14 @@ Workflow sistemático para diagnosticar bugs respetando la separación de capas:
 
 ---
 
-## � Seguridad y Autenticación
-
-### Sistema de Login
-
-La aplicación incluye un sistema de autenticación seguro que protege todas las rutas de la API.
-
-**Características:**
-- **Contraseñas hasheadas**: Utiliza bcryptjs para hashear contraseñas (nunca se almacenan en texto plano)
-- **Tokens JWT**: Sesiones válidas por 24 horas (configurable en `.env`)
-- **Protección de rutas**: Todas las rutas API (`/api/recipes`, `/api/menus`) requieren autenticación
-- **Rate limiting**: 5 intentos de login por IP cada 15 minutos para prevenir ataques de fuerza bruta
-- **Headers de seguridad**: Helmet.js para headers HTTP seguros (CSP, HSTS, etc.)
-- **Persistencia de sesión**: Token JWT guardado en localStorage
-- **Redirección automática**: Al expirar el token, redirige automáticamente al login
-
-### Configuración de Usuarios
-
-El sistema soporta 2 usuarios hardcoded (Sara y Sergio). Para configurar sus contraseñas:
-
-#### 1. Generar hashes de contraseña
-
-Usa el script auxiliar para generar los hashes bcrypt:
-
-```bash
-node scripts/generate-hash.js "contraseña_de_sara"
-node scripts/generate-hash.js "contraseña_de_sergio"
-```
-
-Copia los hashes generados (son cadenas largas que comienzan con `$2a$10$...`).
-
-#### 2. Configurar archivo .env
-
-Edita el archivo `.env` en la raíz del proyecto:
-
-```env
-# JWT Configuration
-JWT_SECRET=tu_clave_secreta_muy_larga_y_aleatoria_cambia_esto
-
-# User Password Hashes
-SARA_PASSWORD_HASH=hash_generado_para_sara
-SERGIO_PASSWORD_HASH=hash_generado_para_sergio
-```
-
-**Importante:**
-- Cambia `JWT_SECRET` por una clave larga y aleatoria para producción
-- Nunca compartas el archivo `.env` ni lo subas a un repositorio público
-- Los hashes de contraseña deben generarse con el script, no manualmente
-
-#### 3. Reiniciar el servidor
-
-Después de configurar el `.env`, reinicia el servidor:
-
-```bash
-npm start
-```
-
-### Mantenimiento de Contraseñas
-
-Para cambiar una contraseña:
-
-1. Genera un nuevo hash:
-   ```bash
-   node scripts/generate-hash.js "nueva_contraseña"
-   ```
-
-2. Actualiza el valor correspondiente en `.env` (`SARA_PASSWORD_HASH` o `SERGIO_PASSWORD_HASH`)
-
-3. Reinicia el servidor
-
-**Nota:** Los tokens JWT existentes seguirán siendo válidos hasta que expiren (24 horas por defecto). Si necesitas invalidar todos los tokens inmediatamente, cambia el `JWT_SECRET`.
-
-### Para Publicación en Internet
-
-Si planeas publicar la aplicación en internet:
-
-1. **HTTPS obligatorio**: Usa un reverse proxy (nginx) con certificados Let's Encrypt
-2. **JWT_SECRET robusto**: Usa una clave de al menos 32 caracteres generada aleatoriamente
-3. **Contraseñas fuertes**: Usa contraseñas de al menos 12 caracteres con mayúsculas, minúsculas, números y símbolos
-4. **Actualizaciones de seguridad**: Mantén las dependencias actualizadas (`npm audit fix`)
-
----
-
-## �📊 Performance
+## 📊 Performance
 
 ### Optimizaciones Implementadas
 - **Lazy loading**: Menús colapsables renderizan solo al expandir
 - **Debouncing**: Búsqueda en tiempo real sin exceso de renders
 - **Caching**: AppState mantiene datos en memoria
-- **Virtual scrolling**: No implementado (lista < 1000 items)
+- **Virtual scrolling**: Implementado para listas grandes
+- **Code splitting**: Carga de componentes solo cuando necesario
 
 ### Métricas Esperadas
 - **First Paint**: < 1s en conexión local
