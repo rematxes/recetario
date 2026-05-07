@@ -401,7 +401,7 @@
                         <h2 class="text-xl font-bold">
                             <i class="fas fa-edit mr-2"></i> Rellenar Menú Manualmente
                         </h2>
-                        <button id="toggleManualMenuBtn" onclick="toggleManualMenuForm()" 
+                        <button id="toggleManualMenuBtn" onclick="window.manualMenuManager.toggleForm()" 
                             class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors">
                             <i class="fas fa-chevron-down mr-2"></i>Mostrar Formulario
                         </button>
@@ -550,7 +550,12 @@
                         <i class="fas fa-search mr-2"></i>
                         <span>Seleccionar Receta</span>
                     </h3>
-                    <button onclick="window.manualMenuManager.closeRecipeSelector()" class="modal-close-btn">
+                    <button onclick="
+                        const modal = document.getElementById('recipeSelectorModal');
+                        modal.style.display = 'none';
+                        modal.classList.remove('active');
+                        document.body.classList.remove('modal-open');
+                    " class="modal-close-btn">
                         <i class="fas fa-times text-xl"></i>
                     </button>
                 </div>

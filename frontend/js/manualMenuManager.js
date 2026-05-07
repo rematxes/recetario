@@ -19,8 +19,14 @@ export class ManualMenuManager {
    * Toggles the manual menu form visibility
    */
   toggleForm() {
+    console.log('[ManualMenuManager] toggleForm called');
     const formEl = document.getElementById('manualMenuForm');
     const btn = document.getElementById('toggleManualMenuBtn');
+
+    if (!formEl || !btn) {
+      console.error('[ManualMenuManager] Form elements not found', { formEl: !!formEl, btn: !!btn });
+      return;
+    }
 
     const formState = this.appState.get('manualMenuForm');
     formState.isExpanded = !formState.isExpanded;
@@ -31,6 +37,7 @@ export class ManualMenuManager {
       btn.innerHTML = '<i class="fas fa-chevron-up mr-2"></i>Ocultar Formulario';
       btn.classList.remove('bg-blue-500', 'hover:bg-blue-600');
       btn.classList.add('bg-red-500', 'hover:bg-red-600');
+      console.log('[ManualMenuManager] Form expanded, calling initGrid');
       this.initGrid();
     } else {
       formEl.classList.add('hidden');
@@ -44,10 +51,12 @@ export class ManualMenuManager {
    * Initializes the manual menu grid
    */
   initGrid() {
+    console.log('[ManualMenuManager] initGrid called');
     const grid = document.getElementById('manualMenuGrid');
     const startDate = document.getElementById('manualMenuWeekStart')?.value;
 
     if (!startDate) {
+      console.log('[ManualMenuManager] No startDate, returning');
       grid.innerHTML = '<p class="text-gray-500 text-center">Selecciona una fecha de inicio</p>';
       return;
     }
@@ -73,8 +82,8 @@ export class ManualMenuManager {
               <div class="text-sm mb-2 ${dayData.comida ? 'font-medium' : 'text-gray-500'}">
                 ${dayData.comida?.recipeName || 'No seleccionada'}
               </div>
-              <button onclick="window.manualMenuManager.openRecipeSelector(${index}, 'comida')" 
-                class="w-full px-2 py-1 bg-red-500 text-white rounded text-xs hover:bg-red-600 font-medium">
+              <button data-day-index="${index}" data-meal-type="comida"
+                class="manual-menu-change-btn w-full px-2 py-1 bg-red-500 text-white rounded text-xs hover:bg-red-600 font-medium">
                 ${dayData.comida ? 'Cambiar' : 'Seleccionar'}
               </button>
             </div>
@@ -87,8 +96,8 @@ export class ManualMenuManager {
               <div class="text-sm mb-2 ${dayData.cena ? 'font-medium' : 'text-gray-500'}">
                 ${dayData.cena?.recipeName || 'No seleccionada'}
               </div>
-              <button onclick="window.manualMenuManager.openRecipeSelector(${index}, 'cena')" 
-                class="w-full px-2 py-1 bg-indigo-500 text-white rounded text-xs hover:bg-indigo-600 font-medium">
+              <button data-day-index="${index}" data-meal-type="cena"
+                class="manual-menu-change-btn w-full px-2 py-1 bg-indigo-500 text-white rounded text-xs hover:bg-indigo-600 font-medium">
                 ${dayData.cena ? 'Cambiar' : 'Seleccionar'}
               </button>
             </div>
@@ -96,19 +105,41 @@ export class ManualMenuManager {
         </div>
       `;
     }).join('');
+
+    // Bind click events to buttons
+    const buttons = grid.querySelectorAll('.manual-menu-change-btn');
+    console.log('[ManualMenuManager] Found', buttons.length, 'change buttons');
+    buttons.forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        const dayIndex = parseInt(btn.dataset.dayIndex);
+        const mealType = btn.dataset.mealType;
+        console.log('[ManualMenuManager] Change button clicked', dayIndex, mealType);
+        this.openRecipeSelector(dayIndex, mealType);
+      });
+    });
+
+    console.log('[ManualMenuManager] Grid rendered and events bound');
   }
 
   /**
    * Opens the recipe selector modal
    */
   openRecipeSelector(dayIndex, mealType) {
+    console.log('[ManualMenuManager] openRecipeSelector called', dayIndex, mealType);
     const form = this.appState.get('manualMenuForm');
     form.selectedDay = dayIndex;
     form.selectedMeal = mealType;
     form.selectorViewMode = CONFIG.VIEWS.GRID;
     this.appState.set('manualMenuForm', form);
 
-    document.getElementById('recipeSelectorSearch').value = '';
+    const searchInput = document.getElementById('recipeSelectorSearch');
+    if (searchInput) {
+      searchInput.value = '';
+    } else {
+      console.error('[ManualMenuManager] recipeSelectorSearch not found');
+    }
 
     // Set default category filters based on meal type
     const defaultFilters = mealType === 'comida'
@@ -126,7 +157,15 @@ export class ManualMenuManager {
     });
 
     this.renderRecipeSelector();
-    document.getElementById('recipeSelectorModal').classList.add('active');
+    
+    const modal = document.getElementById('recipeSelectorModal');
+    if (modal) {
+      modal.style.display = 'flex';
+      modal.classList.add('active');
+      document.body.classList.add('modal-open');
+    } else {
+      console.error('[ManualMenuManager] recipeSelectorModal not found');
+    }
   }
 
   /**

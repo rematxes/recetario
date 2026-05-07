@@ -221,6 +221,7 @@ export class MenuManager {
    * Opens recipe selector for substitution
    */
   openSubstitutionSelector(menuId, dayIndex, mealType) {
+    console.log('[MenuManager] openSubstitutionSelector called', menuId, dayIndex, mealType);
     this.substitutionState = { menuId, dayIndex, mealType, viewMode: 'grid' };
     document.getElementById('recipeSelectorSearch').value = '';
 
@@ -240,7 +241,16 @@ export class MenuManager {
     });
 
     this.renderSubstitutionSelector();
-    document.getElementById('recipeSelectorModal').classList.add('active');
+    
+    const modal = document.getElementById('recipeSelectorModal');
+    if (modal) {
+      modal.style.display = 'flex';
+      modal.classList.add('active');
+      document.body.classList.add('modal-open');
+    } else {
+      console.error('[MenuManager] recipeSelectorModal not found');
+    }
+    
     const expandedMenus = this.appState.get('expandedMenus');
     expandedMenus.add(menuId);
     this.appState.set('expandedMenus', expandedMenus);
@@ -353,7 +363,12 @@ export class MenuManager {
 
     try {
       await apiService.updateMenu(menuId, { days: updatedDays });
-      document.getElementById('recipeSelectorModal').classList.remove('active');
+      const modal = document.getElementById('recipeSelectorModal');
+      if (modal) {
+        modal.classList.remove('active');
+        modal.style.display = 'none';
+      }
+      document.body.classList.remove('modal-open');
       const expandedMenus = this.appState.get('expandedMenus');
       expandedMenus.add(menuId);
       this.appState.set('expandedMenus', expandedMenus);
