@@ -1,4 +1,3 @@
-require('dotenv').config({ path: require('path').join(__dirname, '..', '.env') });
 const { start } = require('./src/app');
 const JsonRepository = require('./src/shared/repositories/JsonRepository');
 const { RECIPES_FILE, MENUS_FILE } = require('./src/config');
