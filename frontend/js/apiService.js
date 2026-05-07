@@ -21,14 +21,7 @@ export class ApiService {
     try {
       const url = `${this.baseUrl}${endpoint}`;
       
-      // Add Authorization header for all requests except login
       const headers = { 'Content-Type': 'application/json' };
-      if (!endpoint.includes('/api/auth/login')) {
-        const token = localStorage.getItem('authToken');
-        if (token) {
-          headers['Authorization'] = `Bearer ${token}`;
-        }
-      }
 
       const response = await fetch(url, {
         headers,
@@ -36,14 +29,6 @@ export class ApiService {
       });
 
       if (!response.ok) {
-        // Handle 401 Unauthorized - token expired or invalid
-        if (response.status === 401) {
-          // Clear token and redirect to login
-          localStorage.removeItem('authToken');
-          localStorage.removeItem('authUsername');
-          window.location.reload();
-          throw new Error('Sesión expirada. Por favor, inicia sesión de nuevo.');
-        }
         throw new Error(`HTTP ${response.status}: ${response.statusText}`);
       }
 
