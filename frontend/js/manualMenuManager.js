@@ -161,7 +161,7 @@ export class ManualMenuManager {
     const modal = document.getElementById('recipeSelectorModal');
     if (modal) {
       modal.style.display = 'flex';
-      modal.classList.add('active');
+      modal.classList.remove('hidden');
       document.body.classList.add('modal-open');
     } else {
       console.error('[ManualMenuManager] recipeSelectorModal not found');
@@ -172,7 +172,7 @@ export class ManualMenuManager {
    * Closes the recipe selector modal
    */
   closeRecipeSelector() {
-    document.getElementById('recipeSelectorModal').classList.remove('active');
+    document.getElementById('recipeSelectorModal').classList.add('hidden');
     const form = this.appState.get('manualMenuForm');
     form.selectedDay = null;
     form.selectedMeal = null;

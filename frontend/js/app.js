@@ -16,7 +16,6 @@ import { router } from './core/Router.js';
 import { RecipeManager } from './features/recipes/RecipeManager.js';
 import { MenuManager } from './menuManager.js';
 import { ManualMenuManager } from './manualMenuManager.js';
-import { TabManager } from './tabManager.js';
 import { UnifiedModal, ModalManager } from './shared/components/UnifiedModal.js';
 import { SearchBar, createSearchBar } from './shared/components/SearchBar.js';
 import { createBottomNavigation } from '../components/layout/BottomNavigation.js';
@@ -32,7 +31,6 @@ console.log('[APP] Module loaded, initializing...');
 const recipeManager = new RecipeManager(appState);
 const menuManager = new MenuManager(appState, recipeManager);
 const manualMenuManager = new ManualMenuManager(appState, recipeManager);
-const tabManager = new TabManager(recipeManager, menuManager);
 
 // Initialize pages
 const recetarioPage = new RecetarioPage(appState, recipeManager);
@@ -44,32 +42,74 @@ console.log('[APP] Managers initialized');
 // GLOBAL WRAPPER FUNCTIONS
 // ============================================
 
-function toggleRecipeForm() {
-  const form = document.getElementById('recipeForm');
-  const chevron = document.getElementById('recipeFormChevron');
-
-  if (form.classList.contains('hidden')) {
-    form.classList.remove('hidden');
-    if (chevron) {
-      chevron.classList.remove('fa-chevron-down');
-      chevron.classList.add('fa-chevron-up');
-    }
-  } else {
-    form.classList.add('hidden');
-    if (chevron) {
-      chevron.classList.remove('fa-chevron-up');
-      chevron.classList.add('fa-chevron-down');
-    }
-    recipeManager.resetForm('recipeForm');
+function handleFabClick() {
+  const currentHash = window.location.hash.slice(1) || 'recetario';
+  if (currentHash === 'recetario') {
+    openCreateRecipeModal();
+  } else if (currentHash === 'menus') {
+    openCreateMenuModal();
   }
 }
 
-function resetRecipeForm() {
-  recipeManager.resetForm('recipeForm');
+function closeCreateMenuModal() {
+  const modal = document.getElementById('createMenuModal');
+  if (modal) {
+    modal.classList.add('hidden');
+    document.body.classList.remove('modal-open');
+  }
 }
 
-function showTab(tabName) {
-  tabManager.switchTab(tabName);
+function openCreateMenuModal() {
+  const modal = document.getElementById('createMenuModal');
+  if (modal) {
+    modal.classList.remove('hidden');
+    document.body.classList.add('modal-open');
+    // Set default date to next Monday
+    const today = new Date();
+    const nextMonday = new Date(today);
+    nextMonday.setDate(today.getDate() + (1 + 7 - today.getDay()) % 7);
+    const dateInput = document.getElementById('randomMenuWeekStart');
+    if (dateInput) {
+      dateInput.valueAsDate = nextMonday;
+    }
+  }
+}
+
+function generateRandomMenu() {
+  const dateInput = document.getElementById('randomMenuWeekStart');
+  if (dateInput && dateInput.value) {
+    // Set the date in the main menuWeekStart input and call generateMenu
+    const mainDateInput = document.getElementById('menuWeekStart');
+    if (mainDateInput) {
+      mainDateInput.value = dateInput.value;
+    }
+    closeCreateMenuModal();
+    generateMenu();
+  }
+}
+
+function createManualMenu() {
+  closeCreateMenuModal();
+  toggleManualMenuForm();
+}
+
+function closeCreateRecipeModal() {
+  const modal = document.getElementById('createRecipeModal');
+  if (modal) {
+    modal.classList.add('hidden');
+    document.body.classList.remove('modal-open');
+  }
+}
+
+function openCreateRecipeModal() {
+  const modal = document.getElementById('createRecipeModal');
+  if (modal) {
+    modal.classList.remove('hidden');
+    document.body.classList.add('modal-open');
+    // Reset form
+    document.getElementById('createRecipeForm').reset();
+    document.getElementById('createRecipeId').value = '';
+  }
 }
 
 function toggleManualMenuForm() {
@@ -169,9 +209,13 @@ function closeSelectorModal() {
 }
 
 // Expose global functions
-window.toggleRecipeForm = toggleRecipeForm;
-window.resetRecipeForm = resetRecipeForm;
-window.showTab = showTab;
+window.handleFabClick = handleFabClick;
+window.openCreateRecipeModal = openCreateRecipeModal;
+window.closeCreateRecipeModal = closeCreateRecipeModal;
+window.openCreateMenuModal = openCreateMenuModal;
+window.closeCreateMenuModal = closeCreateMenuModal;
+window.generateRandomMenu = generateRandomMenu;
+window.createManualMenu = createManualMenu;
 window.toggleManualMenuForm = toggleManualMenuForm;
 window.saveManualMenu = saveManualMenu;
 window.clearManualMenu = clearManualMenu;
@@ -189,7 +233,6 @@ window.closeSelectorModal = closeSelectorModal;
 window.recipeManager = recipeManager;
 window.menuManager = menuManager;
 window.manualMenuManager = manualMenuManager;
-window.tabManager = tabManager;
 
 // Expose router
 window.router = router;
@@ -207,8 +250,10 @@ console.log('[APP] Global functions and managers exposed to window');
 // ============================================
 
 function setupEventListeners() {
-  document.getElementById('recipeForm')?.addEventListener('submit', (e) => {
-    recipeManager.saveRecipe(e);
+  document.getElementById('createRecipeForm')?.addEventListener('submit', (e) => {
+    e.preventDefault();
+    recipeManager.saveRecipe(e, 'createRecipeForm');
+    closeCreateRecipeModal();
   });
 
   document.getElementById('editRecipeForm')?.addEventListener('submit', (e) => {
@@ -267,6 +312,33 @@ function setupEventListeners() {
 // INITIALIZATION
 // ============================================
 
+function updateBottomNavigation(activeRoute) {
+  const bottomNavContainer = document.getElementById('bottomNavigation');
+  if (bottomNavContainer) {
+    const bottomNav = createBottomNavigation(
+      [
+        {
+          icon: 'fas fa-book',
+          label: 'Recetas',
+          active: activeRoute === 'recetario',
+          onClick: "window.router.navigate('recetario')"
+        },
+        {
+          icon: 'fas fa-calendar-week',
+          label: 'Menús',
+          active: activeRoute === 'menus',
+          onClick: "window.router.navigate('menus')"
+        }
+      ],
+      {
+        icon: 'fas fa-plus',
+        onClick: "window.handleFabClick()"
+      }
+    );
+    bottomNavContainer.innerHTML = bottomNav.render();
+  }
+}
+
 function initApp() {
   setupEventListeners();
 
@@ -275,13 +347,21 @@ function initApp() {
   
   // Setup routing
   router.register('recetario', () => {
-    showTab('recipes');
+    const recipesTab = document.getElementById('recipes-tab');
+    const menusTab = document.getElementById('menus-tab');
+    if (recipesTab) recipesTab.classList.remove('hidden');
+    if (menusTab) menusTab.classList.add('hidden');
     recetarioPage.init();
+    updateBottomNavigation('recetario');
   });
   
   router.register('menus', () => {
-    showTab('menus');
+    const recipesTab = document.getElementById('recipes-tab');
+    const menusTab = document.getElementById('menus-tab');
+    if (recipesTab) recipesTab.classList.add('hidden');
+    if (menusTab) menusTab.classList.remove('hidden');
     menusPage.init();
+    updateBottomNavigation('menus');
   });
   
   router.start();
@@ -289,27 +369,37 @@ function initApp() {
   // Initialize BottomNavigation
   const bottomNavContainer = document.getElementById('bottomNavigation');
   if (bottomNavContainer) {
-    const bottomNav = createBottomNavigation([
+    const bottomNav = createBottomNavigation(
+      [
+        {
+          icon: 'fas fa-book',
+          label: 'Recetas',
+          active: true,
+          onClick: "window.router.navigate('recetario')"
+        },
+        {
+          icon: 'fas fa-calendar-week',
+          label: 'Menús',
+          active: false,
+          onClick: "window.router.navigate('menus')"
+        }
+      ],
       {
-        icon: 'fas fa-book',
-        label: 'Recetas',
-        active: true,
-        onClick: "router.navigate('recetario')"
-      },
-      {
-        icon: 'fas fa-calendar-week',
-        label: 'Menús',
-        active: false,
-        onClick: "router.navigate('menus')"
+        icon: 'fas fa-plus',
+        onClick: "window.handleFabClick()"
       }
-    ]);
+    );
     bottomNavContainer.innerHTML = bottomNav.render();
   }
   
+  // Initialize tabs - show recipes by default
   const recipesTab = document.getElementById('recipes-tab');
   const menusTab = document.getElementById('menus-tab');
-  if (recipesTab) recipesTab.classList.add('active');
-  if (menusTab) menusTab.classList.remove('active');
+  if (recipesTab) recipesTab.classList.remove('hidden');
+  if (menusTab) menusTab.classList.add('hidden');
+  
+  // Initialize recetario page
+  recetarioPage.init();
 
   // Initialize category filter buttons
   const categoryFilters = appState.get('categoryFilters');

@@ -8,11 +8,11 @@
         "dayName": "Lunes",
         "meals": {
           "comida": {
-            "recipeId": "4803bac4-4c00-4830-a37a-efbb8f54d221",
-            "recipeName": "Huevos rellenos",
-            "prepTime": 15,
-            "cookTime": 20,
-            "totalTime": 35
+            "recipeId": "94438467-d48b-46da-a515-f1d1e020c095",
+            "recipeName": "Rissoto setas",
+            "prepTime": 20,
+            "cookTime": 35,
+            "totalTime": 55
           },
           "cena": {
             "recipeId": "d004",
@@ -145,7 +145,7 @@
       }
     ],
     "name": "Menu Prueba SEH",
-    "updatedAt": "2026-05-07T11:53:39.127Z"
+    "updatedAt": "2026-05-07T13:22:53.099Z"
   },
   {
     "id": "af150167-11ba-48ad-abdf-9099f5e47731",
@@ -294,5 +294,154 @@
       }
     ],
     "updatedAt": "2026-05-03T23:07:38.178Z"
+  },
+  {
+    "id": "0adb1793-988e-4669-ac83-3096862c1bf6",
+    "name": "Menú generado 3",
+    "weekStart": "2026-05-11T00:00:00.000Z",
+    "days": [
+      {
+        "date": "2026-05-11T00:00:00.000Z",
+        "dayName": "Lunes",
+        "meals": {
+          "comida": {
+            "recipeId": "l002",
+            "recipeName": "Bowl de arroz con pollo teriyaki",
+            "prepTime": 10,
+            "cookTime": 15,
+            "totalTime": 25
+          },
+          "cena": {
+            "recipeId": "94438467-d48b-46da-a515-f1d1e020c095",
+            "recipeName": "Rissoto setas",
+            "prepTime": 20,
+            "cookTime": 35,
+            "totalTime": 55
+          }
+        }
+      },
+      {
+        "date": "2026-05-12T00:00:00.000Z",
+        "dayName": "Martes",
+        "meals": {
+          "comida": {
+            "recipeId": "a1b2c3d4-e5f6-7890-abcd-ef1234567811",
+            "recipeName": "Pisto manchego",
+            "prepTime": 20,
+            "cookTime": 45,
+            "totalTime": 65
+          },
+          "cena": {
+            "recipeId": "17d9bedf-96e3-465c-b4c6-6011ed5a04d8",
+            "recipeName": "Pechugas empanadas",
+            "prepTime": 20,
+            "cookTime": 20,
+            "totalTime": 40
+          }
+        }
+      },
+      {
+        "date": "2026-05-13T00:00:00.000Z",
+        "dayName": "Miércoles",
+        "meals": {
+          "comida": {
+            "recipeId": "ca1e695c-93fa-4053-9fc9-eb178f665f67",
+            "recipeName": "Arroz a la cubana",
+            "prepTime": 5,
+            "cookTime": 20,
+            "totalTime": 25
+          },
+          "cena": {
+            "recipeId": "a1b2c3d4-e5f6-7890-abcd-ef1234567820",
+            "recipeName": "Merluza a la vasca",
+            "prepTime": 15,
+            "cookTime": 20,
+            "totalTime": 35
+          }
+        }
+      },
+      {
+        "date": "2026-05-14T00:00:00.000Z",
+        "dayName": "Jueves",
+        "meals": {
+          "comida": {
+            "recipeId": "l003",
+            "recipeName": "Pasta con tomate y burrata",
+            "prepTime": 5,
+            "cookTime": 12,
+            "totalTime": 17
+          },
+          "cena": {
+            "recipeId": "17d9bedf-96e3-465c-b4c6-6011ed5a04d8",
+            "recipeName": "Pechugas empanadas",
+            "prepTime": 20,
+            "cookTime": 20,
+            "totalTime": 40
+          }
+        }
+      },
+      {
+        "date": "2026-05-15T00:00:00.000Z",
+        "dayName": "Viernes",
+        "meals": {
+          "comida": {
+            "recipeId": "a468a9a5-443c-4b92-8f86-502628cc4952",
+            "recipeName": "Ensalada de Pasta",
+            "prepTime": 5,
+            "cookTime": 15,
+            "totalTime": 20
+          },
+          "cena": {
+            "recipeId": "17d9bedf-96e3-465c-b4c6-6011ed5a04d8",
+            "recipeName": "Pechugas empanadas",
+            "prepTime": 20,
+            "cookTime": 20,
+            "totalTime": 40
+          }
+        }
+      },
+      {
+        "date": "2026-05-16T00:00:00.000Z",
+        "dayName": "Sábado",
+        "meals": {
+          "comida": {
+            "recipeId": "l004",
+            "recipeName": "Tacos de pollo",
+            "prepTime": 10,
+            "cookTime": 10,
+            "totalTime": 20
+          },
+          "cena": {
+            "recipeId": "d004",
+            "recipeName": "Wok de ternera",
+            "prepTime": 10,
+            "cookTime": 10,
+            "totalTime": 20
+          }
+        }
+      },
+      {
+        "date": "2026-05-17T00:00:00.000Z",
+        "dayName": "Domingo",
+        "meals": {
+          "comida": {
+            "recipeId": "a1b2c3d4-e5f6-7890-abcd-ef1234567818",
+            "recipeName": "Albóndigas en salsa",
+            "prepTime": 25,
+            "cookTime": 40,
+            "totalTime": 65
+          },
+          "cena": {
+            "recipeId": "a1b2c3d4-e5f6-7890-abcd-ef1234567818",
+            "recipeName": "Albóndigas en salsa",
+            "prepTime": 25,
+            "cookTime": 40,
+            "totalTime": 65
+          }
+        }
+      }
+    ],
+    "createdAt": "2026-05-07T13:18:39.831Z",
+    "updatedAt": "2026-05-07T13:18:39.831Z"
   }
 ]

@@ -359,3 +359,172 @@
   background-color: var(--color-bg-primary);
   cursor: pointer;
 }
+
+/* ============================================
+   MOBILE OPTIMIZATION
+   ============================================ */
+
+@media (max-width: 640px) {
+  /* Base font size for mobile */
+  body {
+    font-size: 16px;
+  }
+
+  /* Minimum touch target size (44x44px) */
+  button {
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  /* Increased padding for inputs */
+  input,
+  select,
+  textarea {
+    padding: 12px;
+    font-size: 16px;
+  }
+
+  /* Recipes grid - 1 column on mobile */
+  .recipes-grid {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+
+  /* Modal responsive on mobile */
+  .modal-container--md {
+    max-width: 95%;
+    max-height: 90vh;
+  }
+
+  /* Modal content padding on mobile */
+  .modal-container .p-6 {
+    padding: 1rem;
+  }
+
+  /* Form spacing on mobile */
+  form.space-y-4 > * + * {
+    margin-top: 1rem;
+  }
+
+  /* Button spacing on mobile */
+  .flex.space-x-2 {
+    gap: 0.5rem;
+  }
+
+  /* Category filter buttons on mobile */
+  .category-filter-btn {
+    padding: 0.75rem 1rem;
+    font-size: 0.875rem;
+    min-height: 44px;
+  }
+
+  /* Search input on mobile */
+  .search-input {
+    padding: 12px;
+    font-size: 16px;
+  }
+
+  /* Header text on mobile */
+  header h1 {
+    font-size: 1rem;
+  }
+
+  /* Section padding on mobile */
+  .p-6 {
+    padding: 1rem;
+  }
+
+  /* Grid gap on mobile */
+  .grid.md\:grid-cols-2 {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+}
+
+/* ============================================
+   BODY SCROLL LOCK FOR MODALS
+   ============================================ */
+
+body.modal-open {
+  overflow: hidden;
+  position: fixed;
+  width: 100%;
+}
+
+/* ============================================
+   FAB BUTTON STYLES (Instagram-style)
+   ============================================ */
+
+.fab-button {
+  width: 56px;
+  height: 56px;
+  background-color: var(--color-primary);
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+  transition: all var(--transition-normal);
+  cursor: pointer;
+  border: none;
+}
+
+.fab-button:hover {
+  background-color: var(--color-primary-hover);
+  transform: scale(1.1);
+  box-shadow: 0 6px 16px rgba(59, 130, 246, 0.5);
+}
+
+.fab-button:active {
+  transform: scale(0.95);
+}
+
+/* ============================================
+   MODAL OVERLAY STYLES
+   ============================================ */
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: none;
+  z-index: 9999;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.modal-overlay:not(.hidden) {
+  display: flex;
+}
+
+.modal-container {
+  background-color: var(--color-bg-primary);
+  border-radius: var(--radius-lg);
+  width: 100%;
+  max-height: 100vh;
+  overflow-y: auto;
+  border: 2px solid var(--color-border);
+  box-shadow: var(--shadow-xl);
+  animation: modalSlideIn 0.3s ease-out;
+}
+
+@keyframes modalSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* ============================================
+   BOTTOM NAVIGATION FAB POSITION
+   ============================================ */
+
+.bottom-nav-fab {
+  margin-top: -20px;
+}

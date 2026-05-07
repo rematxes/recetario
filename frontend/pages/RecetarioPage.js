@@ -22,8 +22,9 @@ export class RecetarioPage {
   }
 
   setupEventListeners() {
-    document.getElementById('recipeForm')?.addEventListener('submit', (e) => {
-      this.recipeManager.saveRecipe(e);
+    document.getElementById('createRecipeForm')?.addEventListener('submit', (e) => {
+      e.preventDefault();
+      this.recipeManager.saveRecipe(e, 'createRecipeForm');
     });
 
     document.getElementById('recipeSearch')?.addEventListener('input', () => {

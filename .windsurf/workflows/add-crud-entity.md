@@ -265,19 +265,92 @@ export class <Entidad>Manager {
 }
 ```
 
-## Paso 10 — Frontend: Registrar el Manager en app.js
+## Paso 10 — Frontend: Crear la Página
+
+Crear `frontend/pages/<Entidad>Page.js`:
+
+```js
+import { appState } from '../../js/core/AppState.js';
+import { <Entidad>Manager } from '../../js/features/<entidad>/<Entidad>Manager.js';
+
+export class <Entidad>Page {
+  constructor(appState, <entidad>Manager) {
+    this.appState = appState;
+    this.<entidad>Manager = <entidad>Manager;
+  }
+
+  init() {
+    console.log('[<Entidad>Page] Initializing...');
+    this.setupEventListeners();
+    this.render();
+  }
+
+  setupEventListeners() {
+    // Configurar event listeners para formularios, botones, etc.
+  }
+
+  render() {
+    this.<entidad>Manager.loadItems();
+  }
+}
+```
+
+## Paso 11 — Frontend: Registrar el Manager y Página en app.js
 
 Editar `frontend/js/app.js`:
 
-1. Añadir import: `import { <Entidad>Manager } from './features/<entidad>/<Entidad>Manager.js';`
-2. Instanciar: `const <entidad>Manager = new <Entidad>Manager(appState);`
-3. Añadir funciones globales necesarias y exponerlas en `window`.
-4. Llamar a `<entidad>Manager.loadItems()` en `initApp()` si es necesario.
+1. Añadir imports:
+```js
+import { <Entidad>Manager } from './features/<entidad>/<Entidad>Manager.js';
+import { <Entidad>Page } from '../pages/<Entidad>Page.js';
+```
 
-## Paso 11 — Frontend: Añadir sección en index.html
+2. Instanciar:
+```js
+const <entidad>Manager = new <Entidad>Manager(appState);
+const <entidad>Page = new <Entidad>Page(appState, <entidad>Manager);
+```
+
+3. Exponer en window:
+```js
+window.<entidad>Manager = <entidad>Manager;
+```
+
+4. Registrar ruta en el router:
+```js
+router.register('<entidad>s', () => {
+  const <entidad>Tab = document.getElementById('<entidad>s-tab');
+  <entidad>Tab.classList.remove('hidden');
+  // Ocultar otras tabs si es necesario
+  <entidad>Page.init();
+  updateBottomNavigation('<entidad>s');
+});
+```
+
+5. Añadir funciones globales necesarias y exponerlas en `window`.
+
+## Paso 12 — Frontend: Añadir sección en index.html
 
 Editar `frontend/index.html`:
 
-1. Añadir botón de tab en la barra de navegación (siguiendo el patrón de `showTab('recipes')` / `showTab('menus')`).
-2. Añadir sección `<section id="<entidad>s-tab">` con formulario y contenedor de lista.
-3. El tab debe ocultarse/mostrarse con las clases CSS `hidden` / `active` gestionadas por `TabManager`.
+1. Añadir sección dentro de `<main>`:
+```html
+<div id="<entidad>s-tab" class="tab-content">
+    <div class="bg-white rounded-lg shadow-md p-6">
+        <h2 class="text-xl font-bold mb-4">Lista de <Entidad>s</h2>
+        <div id="<entidad>s-container" class="...">
+            <!-- Items se renderizarán aquí -->
+        </div>
+    </div>
+</div>
+```
+
+2. La sección debe tener clase `tab-content` y estar oculta por defecto (sin clase `active`, el routing la mostrará usando `classList.remove('hidden')`).
+
+## Paso 13 — Frontend: Añadir botón en BottomNavigation (opcional)
+
+Si la entidad necesita un botón en la navegación inferior:
+
+Editar `frontend/js/app.js` en la función `updateBottomNavigation()`:
+- Añadir el nuevo item al array de items con su icono, label y onClick
+- Asegurar que el estado `active` se actualice correctamente según la ruta activa

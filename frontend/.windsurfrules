@@ -10,6 +10,25 @@ Estas reglas aplican a todo el código dentro de `frontend/`. Complementan las r
 - No mantener estado de la aplicación en variables locales de los managers salvo `this.items` como caché de la última respuesta de la API.
 - No usar `localStorage`, `sessionStorage` ni cookies para estado de la aplicación.
 
+## Sistema de Routing
+
+- Usar el sistema de routing basado en hash (`frontend/js/core/Router.js`).
+- Las rutas se registran en `app.js` con `router.register('ruta', callback)`.
+- Navegación entre páginas con `router.navigate('ruta')` que actualiza el hash de la URL.
+- Las páginas se ubican en `frontend/pages/` y siguen el patrón `*Page.js`.
+- Cada página tiene un método `init()` que se llama al navegar a esa ruta.
+
+## Componentes
+
+- Los componentes reutilizables se ubican en `frontend/components/` con subdirectorios:
+  - `common/` — Componentes base (Button, Input, Select, Textarea, SearchBar, UnifiedModal)
+  - `layout/` — Componentes de layout (BottomNavigation)
+  - `recipes/` — Componentes específicos de recetas (RecipeCard)
+  - `forms/` — Componentes de formulario (RecipeForm)
+- Los componentes exportan una clase y una función factory `create*Component()`.
+- Los componentes usan template literals para renderizar HTML.
+- Los componentes reciben opciones por constructor (props).
+
 ## Patrón Manager
 
 - Cada feature tiene su clase `*Manager` (ej. `RecipeManager`, `MenuManager`).
@@ -28,6 +47,7 @@ Estas reglas aplican a todo el código dentro de `frontend/`. Complementan las r
 - Las funciones llamadas desde atributos `onclick` en `index.html` deben declararse en `frontend/js/app.js` y exponerse en `window.*`.
 - Estas funciones globales solo delegan al manager correspondiente; no contienen lógica propia.
 - Patrón: `function doSomething() { someManager.method(); }` seguido de `window.doSomething = doSomething;`.
+- El router también se expone en `window.router` para navegación desde el HTML.
 
 ## Módulos
 
@@ -38,22 +58,27 @@ Estas reglas aplican a todo el código dentro de `frontend/`. Complementan las r
 ## HTML y estructura del SPA
 
 - Un único `frontend/index.html`. No crear páginas HTML adicionales.
-- La navegación entre secciones se gestiona por tabs usando `TabManager` (`frontend/js/tabManager.js`).
-- Los tabs se activan con `showTab(tabName)` expuesto en `window`.
+- La navegación entre secciones se gestiona por routing basado en hash (#/recetario, #/menus).
+- La BottomNavigation se usa para navegación móvil tipo Instagram.
 - No añadir scripts inline en `index.html`; toda la lógica va en los archivos JS correspondientes.
 
 ## Renderizado
 
 - Los managers generan HTML como strings con template literals y lo asignan a `container.innerHTML`.
+- Los componentes también renderizan HTML como strings con template literals.
 - No usar frameworks de renderizado adicionales (React, Vue, etc.).
 - Las clases CSS siguen la convención Tailwind CSS ya presente en el proyecto.
+- Los colores y estilos se definen en `frontend/styles/theme.css` con variables CSS.
 
 ## Carpetas y archivos
 
-- `frontend/js/core/` — Clases de infraestructura compartida (AppState, etc.).
+- `frontend/js/core/` — Clases de infraestructura compartida (AppState, Router).
 - `frontend/js/features/<entidad>/` — Managers de cada feature nueva.
 - `frontend/js/shared/` — Utilidades compartidas entre features.
+- `frontend/components/` — Componentes reutilizables (common, layout, recipes, forms).
+- `frontend/pages/` — Páginas del SPA (RecetarioPage, MenusPage).
+- `frontend/styles/` — Hojas de estilo (styles.css, theme.css).
 - `frontend/js/apiService.js` — Único punto de salida HTTP.
 - `frontend/js/config.js` — Configuración global (API_BASE, etc.).
 - `frontend/js/utils.js` — Funciones utilitarias puras.
-- `frontend/js/app.js` — Coordinador principal: instancia managers, funciones globales, event listeners, init.
+- `frontend/js/app.js` — Coordinador principal: instancia managers, router, funciones globales, event listeners, init.

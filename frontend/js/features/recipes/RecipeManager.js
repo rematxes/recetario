@@ -132,7 +132,7 @@ export class RecipeManager {
 
     document.getElementById('modalRecipeName').textContent = recipe.name;
     document.getElementById('modalRecipeContent').innerHTML = this.renderRecipeDetails(recipe);
-    document.getElementById('recipeModal').classList.add('active');
+    document.getElementById('recipeModal').classList.remove('hidden');
   }
 
   renderRecipeDetails(recipe) {
@@ -220,21 +220,22 @@ export class RecipeManager {
     document.getElementById('editRecipeIngredients').value = recipe.ingredients || '';
     document.getElementById('editRecipeInstructions').value = recipe.instructions || '';
 
-    document.getElementById('editRecipeModal').classList.add('active');
+    document.getElementById('editRecipeModal').classList.remove('hidden');
   }
 
-  async saveRecipe(event) {
+  async saveRecipe(event, formId) {
     event.preventDefault();
 
     const isEditing = !!this.appState.get('editingRecipeId');
+    const isCreatingForm = formId === 'createRecipeForm';
 
     const recipeData = {
-      name: document.getElementById(isEditing ? 'editRecipeName' : 'recipeName').value.trim(),
-      category: document.getElementById(isEditing ? 'editRecipeCategory' : 'recipeCategory').value,
-      prepTime: parseInt(document.getElementById(isEditing ? 'editRecipePrepTime' : 'recipePrepTime').value) || 0,
-      cookTime: parseInt(document.getElementById(isEditing ? 'editRecipeCookTime' : 'recipeCookTime').value) || 0,
-      ingredients: document.getElementById(isEditing ? 'editRecipeIngredients' : 'recipeIngredients').value.trim(),
-      instructions: document.getElementById(isEditing ? 'editRecipeInstructions' : 'recipeInstructions').value.trim()
+      name: document.getElementById(isEditing ? 'editRecipeName' : (isCreatingForm ? 'createRecipeName' : 'recipeName')).value.trim(),
+      category: document.getElementById(isEditing ? 'editRecipeCategory' : (isCreatingForm ? 'createRecipeCategory' : 'recipeCategory')).value,
+      prepTime: parseInt(document.getElementById(isEditing ? 'editRecipePrepTime' : (isCreatingForm ? 'createRecipePrepTime' : 'recipePrepTime')).value) || 0,
+      cookTime: parseInt(document.getElementById(isEditing ? 'editRecipeCookTime' : (isCreatingForm ? 'createRecipeCookTime' : 'recipeCookTime')).value) || 0,
+      ingredients: document.getElementById(isEditing ? 'editRecipeIngredients' : (isCreatingForm ? 'createRecipeIngredients' : 'recipeIngredients')).value.trim(),
+      instructions: document.getElementById(isEditing ? 'editRecipeInstructions' : (isCreatingForm ? 'createRecipeInstructions' : 'recipeInstructions')).value.trim()
     };
 
     try {
@@ -245,7 +246,6 @@ export class RecipeManager {
       } else {
         await apiService.createRecipe(recipeData);
         showSuccess('Receta creada correctamente');
-        this.resetForm('recipeForm');
       }
 
       await this.loadRecipes();
@@ -305,11 +305,11 @@ export class RecipeManager {
   }
 
   closeViewModal() {
-    document.getElementById('recipeModal').classList.remove('active');
+    document.getElementById('recipeModal').classList.add('hidden');
   }
 
   closeEditModal() {
-    document.getElementById('editRecipeModal').classList.remove('active');
+    document.getElementById('editRecipeModal').classList.add('hidden');
     this.appState.set('editingRecipeId', null);
   }
 

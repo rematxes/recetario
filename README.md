@@ -18,10 +18,11 @@ Una aplicación web CRUD para gestionar recetas y generar menús semanales autom
 
 ### 📱 Diseño Móvil Optimizado
 - **Responsive**: Adaptado a pantallas táctiles
-- **Navegación tipo Instagram**: Bottom navigation para dispositivos móviles
+- **Navegación tipo Instagram**: Bottom navigation con botón FAB central
 - **Sistema de Routing**: Navegación SPA basada en hash (#/recetario, #/menus)
 - **Colores Vibrantes**: Paleta de colores moderna y atractiva
 - **Componentes Reutilizables**: Arquitectura de componentes modulares
+- **Modales Modernos**: Sistema de modales con botón de cierre [X]
 
 ### 💾 Almacenamiento Local Seguro
 - **JSON Local**: Persistencia sin base de datos
@@ -84,9 +85,9 @@ frontend/
 │   │   └── RecipeCard.js # Tarjeta unificada (grid/list/compact)
 │   └── forms/            # Componentes de formulario
 │       └── RecipeForm.js # Formulario unificado (create/edit)
-├── pages/                # Páginas del SPA
-│   ├── RecetarioPage.js  # Página de recetas
-│   └── MenusPage.js      # Página de menús
+├── pages/                # Páginas del SPA (hash routing)
+│   ├── RecetarioPage.js  # Página de recetas (route: #recetario)
+│   └── MenusPage.js      # Página de menús (route: #menus)
 ├── .windsurfrules         # Reglas de arquitectura para el agente frontend
 └── js/
     ├── app.js              # Coordinador principal: router, managers, init
@@ -94,7 +95,6 @@ frontend/
     ├── apiService.js       # Único punto de salida HTTP (no fetch() directo)
     ├── utils.js            # Funciones puras: escapeHtml, showSuccess, showError
     ├── uiHelpers.js        # Generadores de HTML compartidos (badges, etc.)
-    ├── tabManager.js       # Navegación por tabs
     ├── menuManager.js      # Gestión de menús semanales + sustitución de recetas
     ├── manualMenuManager.js # Creación manual de menús (grid 7 días)
     ├── core/
@@ -104,7 +104,10 @@ frontend/
     │   └── recipes/
     │       └── RecipeManager.js   # Manager de recetas (extiende BaseManager)
     └── shared/
-        ├── BaseManager.js       # Clase base CRUD para managers
+        ├── components/
+        │   ├── RecipeCard.js     # Tarjeta unificada (grid/list/compact)
+        │   ├── UnifiedModal.js   # Sistema de modales genérico
+        │   └── SearchBar.js      # Barra de búsqueda con filtros
         └── utils.js             # Utilidades compartidas entre features
 ```
 
@@ -232,7 +235,7 @@ npm run dev
 ## 🔧 Arquitectura Técnica
 
 ### Patrón de Diseño Frontend
-El frontend utiliza **ES6 Modules** con arquitectura modular y gestión de estado observable:
+El frontend utiliza **ES6 Modules** con arquitectura modular, routing basado en hash y gestión de estado observable:
 
 ```
 frontend/js/
@@ -240,23 +243,20 @@ frontend/js/
 ├── config.js           # Constantes centralizadas
 ├── apiService.js       # Servicio de API (único punto de salida HTTP)
 ├── core/
-│   └── AppState.js     # Estado observable con get/set/subscribe
+│   ├── AppState.js     # Estado observable con get/set/subscribe
+│   └── Router.js      # Sistema de routing basado en hash (#recetario, #menus)
 ├── features/
 │   └── recipes/
-│       └── RecipeManager.js  # Extends BaseManager
+│       └── RecipeManager.js  # Gestión de recetas
 ├── shared/
-│   ├── BaseManager.js  # Clase base con CRUD operations
 │   ├── components/
 │   │   ├── RecipeCard.js     # Componente reutilizable de tarjeta
 │   │   ├── UnifiedModal.js   # Sistema de modales genérico
-│   │   ├── SearchBar.js      # Barra de búsqueda con filtros
-│   │   └── Modal.js          # Componente modal legacy
+│   │   └── SearchBar.js      # Barra de búsqueda con filtros
 │   └── utils.js            # Utilidades compartidas
-├── manualMenuManager.js
-├── menuManager.js
-├── tabManager.js
-├── uiHelpers.js
-└── utils.js
+├── menuManager.js      # Gestión de menús semanales
+├── manualMenuManager.js # Creación manual de menús
+└── uiHelpers.js        # Generadores de HTML compartidos
 ```
 
 ### Flujo de Datos
@@ -270,18 +270,45 @@ UIHelpers ← AppState.get() ← ← ← ← ← ← ← ← ← ← ← JSON Re
 
 ### Componentes Principales
 
-#### 1. **RecipeManager** (extiende BaseManager)
+#### 1. **Router** (Sistema de Routing)
+Sistema de routing basado en hash para navegación SPA:
+- `register(path, component)`: Registra una ruta con su componente
+- `navigate(path)`: Navega a una ruta específica
+- `handleHashChange()`: Maneja cambios de URL hash
+- Rutas actuales: `#recetario`, `#menus`
+
+#### 2. **BottomNavigation** (Navegación Instagram-style)
+Componente de navegación inferior con botón FAB central:
+- Renderiza botones de navegación con estado activo resaltado
+- Botón FAB central con funcionalidad contextual según ruta activa
+- Se actualiza dinámicamente al cambiar de ruta
+
+#### 3. **RecetarioPage** (Página de Recetas)
+Página del SPA para la sección de recetas:
+- `init()`: Inicializa la página y carga recetas
+- `setupEventListeners()`: Configura listeners de eventos
+- Usa RecipeManager para gestión de recetas
+
+#### 4. **MenusPage** (Página de Menús)
+Página del SPA para la sección de menús:
+- `init()`: Inicializa la página y carga menús
+- `setupEventListeners()`: Configura listeners de eventos
+- Usa MenuManager y ManualMenuManager para gestión de menús
+
+#### 5. **RecipeManager** (Gestión de Recetas)
 Gestiona el ciclo completo de vida de las recetas usando AppState observable:
 - `loadRecipes()`: Carga inicial desde API → `appState.set('recipes', data)`
 - `renderRecipes()`: Renderizado grid, usa `appState.get('recipes')`
 - `filterRecipes()`: Búsqueda por nombre/categoría/tiempo + filtros de categoría toggle
-- `saveRecipe()`: Crear/actualizar con validación
+- `saveRecipe(event, formId)`: Crear/actualizar con validación (soporta createRecipeForm)
 - `deleteRecipe()`: Eliminación con confirmación
 - `viewRecipe()`: Modal de visualización con instrucciones formateadas
 - `editRecipe()`: Pre-carga datos en modal de edición
 - `toggleCategoryFilter()`: Activa/desactiva filtros de categoría
+- `closeViewModal()`: Cierra modal de detalle usando clase `hidden`
+- `closeEditModal()`: Cierra modal de edición usando clase `hidden`
 
-#### 2. **MenuManager**
+#### 6. **MenuManager**
 Gestiona menús semanales con visualización colapsable:
 - `loadMenus()`: Carga menús con tracking de estado expandido (`appState.get('expandedMenus')`)
 - `renderMenus()`: Genera HTML con nombres autonuméricos
@@ -291,8 +318,9 @@ Gestiona menús semanales con visualización colapsable:
 - `substituteRecipe()`: Cambio de receta con selector filtrable
 - `toggleMenu()`: Expandir/colapsar menús
 - `editName()`: Edición inline de nombre de menú
+- Usa clase `hidden` para controlar visibilidad de modales
 
-#### 3. **ManualMenuManager**
+#### 7. **ManualMenuManager**
 Flujo de creación manual paso a paso:
 - `toggleForm()`: Mostrar/ocultar formulario
 - `initGrid()`: Grid de 7 días con selección
@@ -301,21 +329,7 @@ Flujo de creación manual paso a paso:
 - `selectRecipe()`: Asignación a slot específico
 - `save()`: Persistencia del menú completo
 - `clearMenu()`: Limpia formulario manual
-
-#### 4. **BaseManager** (Clase Base)
-Clase abstracta que proporciona operaciones CRUD base para managers:
-- `loadItems()`: Carga datos desde API, usa `appState.set()`
-- `saveItem()`: Crear/actualizar con validación
-- `deleteItem()`: Eliminación con confirmación
-- `resetForm()`: Limpia formulario
-- `showAddModal()`: Muestra modal para añadir
-- `closeModal()`: Cierra modal y limpia estado
-
-#### 5. **RecipeCard** (Componente)
-Componente reutilizable para mostrar recetas:
-- `renderCompact()`: Vista compacta para selectores
-- `renderGrid()`: Vista completa para grid
-- Genera badges de tiempo y categoría automáticamente
+- Usa clase `hidden` para controlar visibilidad de modales
 
 ### Modelo de Datos Completo
 
@@ -479,17 +493,21 @@ const ApiService = {
 }
 
 // 5. MÓDULOS DE GESTIÓN
-class BaseManager { /* Operaciones CRUD base */ }
-class RecipeManager extends BaseManager { /* CRUD de recetas */ }
+class RecipeManager { /* CRUD de recetas */ }
 class MenuManager { /* Gestión de menús */ }
 class ManualMenuManager { /* Menús manuales */ }
-class TabManager { /* Navegación */ }
 
-// 6. COMPONENTES
+// 6. PÁGINAS SPA
+class RecetarioPage { /* Página de recetas */ }
+class MenusPage { /* Página de menús */ }
+
+// 7. COMPONENTES
+class BottomNavigation { /* Navegación Instagram-style */ }
 class RecipeCard { /* Componente reutilizable */ }
 
-// 7. INICIALIZACIÓN
-import { appState, recipeManager, menuManager } from './app.js';
+// 8. INICIALIZACIÓN
+import { appState, recipeManager, menuManager, router } from './app.js';
+router.start();
 ```
 
 ### Convenciones de Código
@@ -504,14 +522,16 @@ import { appState, recipeManager, menuManager } from './app.js';
 
 Para añadir nuevas funcionalidades:
 
-**Nueva categoría de receta:**
-1. Añadir a `CATEGORY_CONFIG` en app.js
-2. Añadir option en index.html (forms)
-3. Actualizar reglas de asignación si aplica
+**Nueva página del SPA:**
+1. Crear Page en `frontend/pages/<Nombre>Page.js` con `init()` y `setupEventListeners()`.
+2. Añadir sección HTML en `index.html` con `class="tab-content"`.
+3. Registrar ruta en `app.js`: `router.register('<nombre>', () => { ... })`.
+4. Añadir botón en BottomNavigation si aplica.
+5. Usar clase `hidden` para controlar visibilidad de tabs.
 
 **Nuevo campo en receta:**
 1. Añadir input en formularios HTML (`index.html`)
-2. Añadir a `recipeData` en `RecipeManager.saveRecipe()`
+2. Añadir a `recipeData` en `RecipeManager.saveRecipe(event, formId)`
 3. Actualizar `recipe.entity.js` en backend
 4. Mostrar en `RecipeManager.renderRecipeDetails()`
 5. Actualizar modelo en este README
@@ -540,7 +560,11 @@ Reglas arquitectónicas que rigen el desarrollo en el frontend:
 - **Patrón Manager**: Cada feature tiene su clase `*Manager` con métodos: `loadItems()`, `render()`, `save()`, `delete()`.
 - **Comunicación HTTP**: Todas las llamadas HTTP **solo** mediante `apiService`. No `fetch()` directo.
 - **Funciones globales**: Las funciones llamadas desde `onclick` en HTML se declaran en `app.js` y se exponen en `window`.
-- **SPA única**: Un único `index.html`. Navegación por tabs con `TabManager`.
+- **SPA única**: Un único `index.html`. Navegación por hash routing con `Router.js`.
+- **Routing**: Sistema de routing basado en hash (#/recetario, #/menus) en lugar de tabs.
+- **Visibilidad**: Usar clase `hidden` para controlar visibilidad de modales y tabs, no `active`.
+- **Páginas**: Cada sección tiene su clase `*Page` en `frontend/pages/` (RecetarioPage, MenusPage).
+- **BottomNavigation**: Navegación tipo Instagram con botón FAB central para acciones contextuales.
 - **Renderizado**: HTML como strings con template literals. No frameworks adicionales.
 
 ### Reglas Backend (`backend/.windsurfrules`)
@@ -566,16 +590,31 @@ Workflow paso a paso para añadir una nueva entidad al sistema (backend + fronte
 3. **Registrar persistencia** en `backend/server.js` (bootstrap).
 4. **Frontend**: Añadir métodos en `apiService.js`.
 5. **Frontend**: Crear el Manager en `frontend/js/features/<entidad>/`.
-6. **Frontend**: Registrar el Manager en `app.js`.
-7. **Frontend**: Añadir sección en `index.html`.
+6. **Frontend**: Crear la Page en `frontend/pages/<Entidad>Page.js`.
+7. **Frontend**: Registrar el Manager y Page en `app.js`.
+8. **Frontend**: Añadir ruta en Router.js con `router.register()`.
+9. **Frontend**: Añadir botón en BottomNavigation (si aplica).
+10. **Frontend**: Añadir sección en `index.html` con clase `tab-content`.
 
-#### `/debug-layers` — Depurar errores por capas
+#### `/add-page` — Añadir nueva página al SPA
 
-Workflow sistemático para diagnosticar bugs respetando la separación de capas:
+Workflow para añadir una nueva página al SPA con routing:
 
-1. **Identificar capa afectada**: UI → AppState → HTTP → Controller → Service → Repository.
-2. **Aplicar fix en la capa raíz**, no donde se manifiesta el síntoma.
-3. **Reglas**: No duplicar validaciones, no usar `fetch()` directo, no modificar formato JSON.
+1. **Crear Page**: Crear archivo `frontend/pages/<Nombre>Page.js` con `init()` y `setupEventListeners()`.
+2. **Añadir sección HTML**: Añadir `<div id="<nombre>-tab" class="tab-content">` en `index.html`.
+3. **Registrar ruta**: Usar `router.register('<nombre>', () => { ... })` en `app.js`.
+4. **Añadir navegación**: Actualizar BottomNavigation para incluir botón (si aplica).
+5. **Inicializar**: Llamar a `<nombre>Page.init()` en el handler de ruta.
+
+#### `/add-component` — Añadir componente reutilizable
+
+Workflow para añadir componentes reutilizables:
+
+1. **Componente común**: Crear en `frontend/components/common/` (Button, Input, etc.)
+2. **Componente layout**: Crear en `frontend/components/layout/` (si es de layout)
+3. **Componente feature**: Crear en `frontend/components/<feature>/` (si es específico)
+4. **Exportar**: Usar `export class` y `export const create*` helper.
+5. **Importar**: Usar `import { Component } from '...'` donde se necesite.
 
 ---
 

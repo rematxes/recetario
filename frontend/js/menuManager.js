@@ -245,7 +245,7 @@ export class MenuManager {
     const modal = document.getElementById('recipeSelectorModal');
     if (modal) {
       modal.style.display = 'flex';
-      modal.classList.add('active');
+      modal.classList.remove('hidden');
       document.body.classList.add('modal-open');
     } else {
       console.error('[MenuManager] recipeSelectorModal not found');
@@ -365,7 +365,7 @@ export class MenuManager {
       await apiService.updateMenu(menuId, { days: updatedDays });
       const modal = document.getElementById('recipeSelectorModal');
       if (modal) {
-        modal.classList.remove('active');
+        modal.classList.add('hidden');
         modal.style.display = 'none';
       }
       document.body.classList.remove('modal-open');
