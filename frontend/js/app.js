@@ -366,6 +366,11 @@ function initApp() {
   
   router.start();
   
+  // Initialize default page (recetario) if no hash is set
+  if (!window.location.hash) {
+    router.navigate('recetario');
+  }
+  
   // Initialize BottomNavigation
   const bottomNavContainer = document.getElementById('bottomNavigation');
   if (bottomNavContainer) {

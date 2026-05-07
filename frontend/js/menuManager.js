@@ -133,6 +133,8 @@ export class MenuManager {
     }[type];
 
     const hasRecipe = meal?.recipeId;
+    const clickHandler = hasRecipe ? `onclick="window.recipeManager.viewRecipe('${meal.recipeId}')"` : '';
+    const cursorClass = hasRecipe ? 'cursor-pointer hover:bg-gray-100' : '';
 
     return `
       <div class="bg-white rounded-lg p-3 border-2 border-${config.color}-400 shadow-sm">
@@ -155,20 +157,14 @@ export class MenuManager {
           ` : ''}
         </div>
         
-        <div class="font-medium text-gray-900 mb-3 p-2 bg-gray-50 rounded border border-gray-200">
-          ${hasRecipe ? escapeHtml(meal.recipeName) : 'No asignado'}
-        </div>
-        
-        <div class="flex gap-2">
-          ${hasRecipe ? `
-            <button onclick="window.recipeManager.viewRecipe('${meal.recipeId}')" 
-              class="flex-1 px-2 py-1 bg-blue-500 text-white rounded text-xs hover:bg-blue-600 font-medium">
-              <i class="fas fa-eye mr-1"></i>Ver
-            </button>
-          ` : ''}
+        <div class="flex justify-between items-center mb-3">
+          <div class="font-medium text-gray-900 p-2 bg-gray-50 rounded border border-gray-200 ${cursorClass} flex-1" ${clickHandler}>
+            ${hasRecipe ? escapeHtml(meal.recipeName) : 'No asignado'}
+          </div>
+          
           <button onclick="window.menuManager.substituteRecipe('${menuId}', ${dayIndex}, '${type}')" 
-            class="flex-1 px-2 py-1 bg-yellow-500 text-white rounded text-xs hover:bg-yellow-600 font-medium">
-            <i class="fas fa-exchange-alt mr-1"></i>Cambiar
+            class="w-10 h-10 bg-yellow-500 text-white rounded text-xs hover:bg-yellow-600 font-medium flex items-center justify-center ml-2 flex-shrink-0">
+            <i class="fas fa-exchange-alt"></i>
           </button>
         </div>
       </div>
