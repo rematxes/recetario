@@ -6,7 +6,7 @@ Una aplicación web CRUD para gestionar recetas y generar menús semanales autom
 
 ### 🍳 Gestión Completa de Recetas
 - **CRUD Completo**: Crear, leer, actualizar y eliminar recetas
-- **Categorías**: General, Desayuno, Comida, Cena, Picoteo, Dulce
+- **Categorías**: General, Comida, Cena, Picoteo, Dulce
 - **Tiempos Detallados**: Preparación, cocción y total
 - **Búsqueda Avanzada**: Por nombre, categoría o tiempo
 
@@ -29,19 +29,68 @@ Una aplicación web CRUD para gestionar recetas y generar menús semanales autom
 
 ## 📋 Estructura del Proyecto
 
+### Backend - Arquitectura Modular (Layered Architecture)
 ```
-windsurf-project/
-├── backend/
-│   ├── server.js          # Servidor Node.js/Express
-│   └── data/              # Directorio de datos JSON
-│       ├── recipes.json   # Base de datos de recetas
-│       └── menus.json     # Base de datos de menús
-├── frontend/
-│   ├── index.html         # Interfaz principal (responsive)
-│   └── app.js            # Lógica del frontend
-├── DEPLOYMENT.md          # Guía completa de despliegue
-├── package.json           # Dependencias del proyecto
-└── README.md             # Este archivo
+backend/
+├── server.js              # Punto de entrada y bootstrap de repositorios
+├── .windsurfrules         # Reglas de arquitectura para el agente backend
+├── src/
+│   ├── app.js             # Configuración Express y registro de rutas
+│   ├── config/
+│   │   └── index.js       # Configuración centralizada (puerto, host, etc.)
+│   ├── recipes/           # Módulo Recetas (5 archivos obligatorios)
+│   │   ├── recipe.entity.js       # Entidad, validate() y fromRequest()
+│   │   ├── recipe.repository.js   # Extends JsonRepository
+│   │   ├── recipe.service.js      # Lógica de negocio
+│   │   ├── recipe.controller.js   # Handlers HTTP (solo delega)
+│   │   └── recipe.routes.js       # Definición de rutas REST
+│   ├── menus/             # Módulo Menús (mismo patrón de 5 archivos)
+│   │   ├── menu.entity.js
+│   │   ├── menu.repository.js
+│   │   ├── menu.service.js
+│   │   ├── menu.controller.js
+│   │   └── menu.routes.js
+│   └── shared/            # Utilidades compartidas
+│       ├── errors/
+│       │   └── AppError.js          # Clase de errores con código HTTP
+│       ├── middleware/
+│       │   └── errorHandler.js      # Middleware global de errores
+│       └── repositories/
+│           └── JsonRepository.js    # Clase base para persistencia JSON
+└── data/
+    ├── recipes.json       # Persistencia JSON de recetas
+    └── menus.json         # Persistencia JSON de menús
+```
+
+### Frontend - Arquitectura ES6 Modules + SPA
+```
+frontend/
+├── index.html             # SPA única (no se crean páginas adicionales)
+├── css/
+│   └── styles.css         # Sistema de diseño: modales, filtros de categoría, etc.
+├── .windsurfrules         # Reglas de arquitectura para el agente frontend
+└── js/
+    ├── app.js              # Coordinador principal: instancia managers, funciones globales, init
+    ├── config.js           # Constantes centralizadas (API_BASE, etc.)
+    ├── apiService.js       # Único punto de salida HTTP (no fetch() directo)
+    ├── utils.js            # Funciones puras: escapeHtml, showSuccess, showError
+    ├── uiHelpers.js        # Generadores de HTML compartidos (badges, etc.)
+    ├── tabManager.js       # Navegación por tabs
+    ├── menuManager.js      # Gestión de menús semanales + sustitución de recetas
+    ├── manualMenuManager.js # Creación manual de menús (grid 7 días)
+    ├── core/
+    │   └── AppState.js     # Estado observable global (get/set/subscribe)
+    ├── features/
+    │   └── recipes/
+    │       └── RecipeManager.js   # Manager de recetas (extiende BaseManager)
+    └── shared/
+        ├── BaseManager.js       # Clase base CRUD para managers
+        ├── components/
+        │   ├── RecipeCard.js    # Componente reutilizable de tarjeta de receta
+        │   ├── UnifiedModal.js  # Sistema de modales genérico
+        │   ├── SearchBar.js     # Barra de búsqueda con filtros de categoría
+        │   └── Modal.js         # Componente modal legacy
+        └── utils.js             # Utilidades compartidas entre features
 ```
 
 ## 🛠️ Instalación Rápida
@@ -120,10 +169,9 @@ npm run dev
 {
   "id": "uuid",
   "name": "Nombre de la receta",
-  "description": "Descripción opcional",
   "ingredients": "Ingrediente 1\nIngrediente 2\n...",
   "instructions": "Paso 1\nPaso 2\n...",
-  "category": "general|breakfast|lunch|dinner|dessert",
+  "category": "general|comida|cena|picoteo|dulce",
   "prepTime": 15,
   "cookTime": 30,
   "createdAt": "2024-01-01T00:00:00.000Z",
@@ -168,61 +216,91 @@ npm run dev
 
 ## 🔧 Arquitectura Técnica
 
-### Patrón de Diseño
-El frontend utiliza el **Module Pattern** con una arquitectura clara de separación de responsabilidades:
+### Patrón de Diseño Frontend
+El frontend utiliza **ES6 Modules** con arquitectura modular y gestión de estado observable:
 
 ```
-frontend/app.js
-├── CONFIG              # Constantes y configuración
-├── AppState           # Estado global de la aplicación
-├── Utility Functions  # Funciones auxiliares
-├── ApiService         # Capa de acceso a datos
-├── UIHelpers          # Generadores de HTML
-├── RecipeManager      # Gestión de recetas (CRUD)
-├── MenuManager        # Gestión de menús semanales
-├── ManualMenuManager  # Creación manual de menús
-├── TabManager         # Navegación entre pestañas
-└── Initialization     # Punto de entrada
+frontend/js/
+├── app.js              # Coordinador principal, expone funciones globales
+├── config.js           # Constantes centralizadas
+├── apiService.js       # Servicio de API (único punto de salida HTTP)
+├── core/
+│   └── AppState.js     # Estado observable con get/set/subscribe
+├── features/
+│   └── recipes/
+│       └── RecipeManager.js  # Extends BaseManager
+├── shared/
+│   ├── BaseManager.js  # Clase base con CRUD operations
+│   ├── components/
+│   │   ├── RecipeCard.js     # Componente reutilizable de tarjeta
+│   │   ├── UnifiedModal.js   # Sistema de modales genérico
+│   │   ├── SearchBar.js      # Barra de búsqueda con filtros
+│   │   └── Modal.js          # Componente modal legacy
+│   └── utils.js            # Utilidades compartidas
+├── manualMenuManager.js
+├── menuManager.js
+├── tabManager.js
+├── uiHelpers.js
+└── utils.js
 ```
 
 ### Flujo de Datos
 ```
 Usuario → Event Handler → Manager → ApiService → Backend
-                                           ↓
-UIHelpers ← AppState ← ← ← ← ← ← ← ← ← ← ← JSON Response
+                             ↓                        ↓
+UIHelpers ← AppState.get() ← ← ← ← ← ← ← ← ← ← ← JSON Response
+                ↑
+         AppState.set() → Notifica suscriptores
 ```
 
 ### Componentes Principales
 
-#### 1. **RecipeManager**
-Gestiona el ciclo completo de vida de las recetas:
-- `loadRecipes()`: Carga inicial desde API
-- `renderRecipes()`: Renderizado condicional (grid/lista)
-- `filterRecipes()`: Búsqueda por nombre/descripción/categoría/tiempo
+#### 1. **RecipeManager** (extiende BaseManager)
+Gestiona el ciclo completo de vida de las recetas usando AppState observable:
+- `loadRecipes()`: Carga inicial desde API → `appState.set('recipes', data)`
+- `renderRecipes()`: Renderizado grid, usa `appState.get('recipes')`
+- `filterRecipes()`: Búsqueda por nombre/categoría/tiempo + filtros de categoría toggle
 - `saveRecipe()`: Crear/actualizar con validación
 - `deleteRecipe()`: Eliminación con confirmación
-- `viewRecipe()`: Modal de visualización detallada
-- `editRecipe()`: Modal de edición con pre-carga
+- `viewRecipe()`: Modal de visualización con instrucciones formateadas
+- `editRecipe()`: Pre-carga datos en modal de edición
+- `toggleCategoryFilter()`: Activa/desactiva filtros de categoría
 
 #### 2. **MenuManager**
 Gestiona menús semanales con visualización colapsable:
-- `loadMenus()`: Carga menús con tracking de estado expandido
+- `loadMenus()`: Carga menús con tracking de estado expandido (`appState.get('expandedMenus')`)
 - `renderMenus()`: Genera HTML con nombres autonuméricos
 - `renderDayCard()`: Tarjetas de día con comida/cena
-- `renderMealCard()**: Visualización de receta en menú con 3 tiempos
-- `generateMenu()**: Generación automática aleatoria
-- `substituteRecipe()**: Cambio de receta con filtros de categoría
-- `toggleMenu()**: Expandir/colapsar menús
-- `editName()**: Edición inline de nombre de menú
+- `renderMealCard()`: Visualización de receta en menú con 3 tiempos
+- `generateMenu()`: Generación automática aleatoria
+- `substituteRecipe()`: Cambio de receta con selector filtrable
+- `toggleMenu()`: Expandir/colapsar menús
+- `editName()`: Edición inline de nombre de menú
 
 #### 3. **ManualMenuManager**
 Flujo de creación manual paso a paso:
-- `toggleForm()**: Mostrar/ocultar formulario
-- `initGrid()**: Grid de 7 días con selección
-- `openRecipeSelector()**: Modal de selección con filtros
-- `renderRecipeSelector()**: Lista filtrada por tipo de comida
-- `selectRecipe()**: Asignación a slot específico
-- `save()**: Persistencia del menú completo
+- `toggleForm()`: Mostrar/ocultar formulario
+- `initGrid()`: Grid de 7 días con selección
+- `openRecipeSelector()`: Modal de selección con filtros de categoría
+- `renderRecipeSelector()`: Lista filtrada por tipo de comida + filtros toggle
+- `selectRecipe()`: Asignación a slot específico
+- `save()`: Persistencia del menú completo
+- `clearMenu()`: Limpia formulario manual
+
+#### 4. **BaseManager** (Clase Base)
+Clase abstracta que proporciona operaciones CRUD base para managers:
+- `loadItems()`: Carga datos desde API, usa `appState.set()`
+- `saveItem()`: Crear/actualizar con validación
+- `deleteItem()`: Eliminación con confirmación
+- `resetForm()`: Limpia formulario
+- `showAddModal()`: Muestra modal para añadir
+- `closeModal()`: Cierra modal y limpia estado
+
+#### 5. **RecipeCard** (Componente)
+Componente reutilizable para mostrar recetas:
+- `renderCompact()`: Vista compacta para selectores
+- `renderGrid()`: Vista completa para grid
+- Genera badges de tiempo y categoría automáticamente
 
 ### Modelo de Datos Completo
 
@@ -231,8 +309,7 @@ Flujo de creación manual paso a paso:
 interface Recipe {
   id: string;           // UUID v4
   name: string;         // Nombre de la receta
-  description: string;  // Descripción breve
-  category: "general" | "desayuno" | "comida" | "cena" | "picoteo" | "dulce";
+  category: "general" | "comida" | "cena" | "picoteo" | "dulce";
   prepTime: number;     // Tiempo preparación (minutos)
   cookTime: number;     // Tiempo cocción (minutos)
   ingredients: string;    // Separados por saltos de línea
@@ -276,7 +353,6 @@ interface Meal {
 | Categoría | Icono | Color | Comida | Cena |
 |-----------|-------|-------|--------|------|
 | General | ☀️🌙 | Gris | ✅ | ✅ |
-| Desayuno | ☕ | Amarillo | ❌ | ❌ |
 | Comida | ☀️ | Naranja | ✅ | ❌ |
 | Cena | 🌙 | Índigo | ❌ | ✅ |
 | Picoteo | 🍪 | Verde | ❌ | ❌ |
@@ -295,27 +371,49 @@ Cada receta almacena 3 tiempos:
 3. **Total** (⏳ Verde): Suma automática (prep + cocción)
 
 Visualización consistente en:
-- Vista de recetas (grid/lista)
+- Vista de recetas (grid)
 - Modal de detalle
 - Menús semanales (badges individuales)
 
-### Gestión de Estado
+### Gestión de Estado - AppState Observable
 
-**AppState** centraliza el estado:
+**AppState** es una clase observable que proporciona acceso reactivo al estado global:
+
 ```javascript
-AppState = {
-  recipes: [],           // Cache de recetas
-  menus: [],             // Cache de menús
-  currentView: 'grid',     // 'grid' | 'list'
-  expandedMenus: Set,    // IDs de menús expandidos
-  editingRecipeId: null, // ID en edición
-  manualMenuForm: {      // Estado form manual
-    isExpanded: false,
-    selectedDay: null,
-    selectedMeal: null,
-    selectorViewMode: 'grid',
-    data: {}             // Datos temporales
+// Core: AppState.js
+class AppState {
+  constructor() {
+    this.state = new Map();      // Almacena el estado
+    this.subscribers = new Map(); // Callbacks por key
   }
+  
+  get(key) { return this.state.get(key); }
+  
+  set(key, value) {
+    this.state.set(key, value);
+    this.notify(key, value);  // Notifica suscriptores
+  }
+  
+  subscribe(key, callback) {
+    // Suscripción a cambios de estado
+  }
+}
+
+// Uso en Managers:
+const recipes = this.appState.get('recipes');
+this.appState.set('recipes', updatedRecipes);
+```
+
+**Estado Global:**
+```javascript
+{
+  recipes: [],              // Cache de recetas
+  menus: [],                // Cache de menús
+  expandedMenus: Set,       // IDs de menús expandidos
+  editingRecipeId: null,    // ID en edición
+  activeCategoryFilters: [], // Filtros toggle activos
+  selectorCategoryFilters: [], // Filtros en selector modal
+  // ... más estado según necesidad
 }
 ```
 
@@ -349,8 +447,10 @@ AppState = {
 const CONFIG = { API_BASE, DAYS_OF_WEEK, MEAL_TYPES, VIEWS }
 const CATEGORY_CONFIG = { /* definiciones visuales */ }
 
-// 2. ESTADO
-const AppState = { /* estado global */ }
+// 2. ESTADO (Observable)
+import { AppState } from './core/AppState.js';
+const appState = new AppState();
+// appState.get('key'), appState.set('key', value), appState.subscribe('key', callback)
 
 // 3. UTILIDADES
 function escapeHtml(text) { /* sanitización */ }
@@ -364,13 +464,17 @@ const ApiService = {
 }
 
 // 5. MÓDULOS DE GESTIÓN
-const RecipeManager = { /* CRUD de recetas */ }
-const MenuManager = { /* Gestión de menús */ }
-const ManualMenuManager = { /* Menús manuales */ }
-const TabManager = { /* Navegación */ }
+class BaseManager { /* Operaciones CRUD base */ }
+class RecipeManager extends BaseManager { /* CRUD de recetas */ }
+class MenuManager { /* Gestión de menús */ }
+class ManualMenuManager { /* Menús manuales */ }
+class TabManager { /* Navegación */ }
 
-// 6. INICIALIZACIÓN
-document.addEventListener('DOMContentLoaded', initApp)
+// 6. COMPONENTES
+class RecipeCard { /* Componente reutilizable */ }
+
+// 7. INICIALIZACIÓN
+import { appState, recipeManager, menuManager } from './app.js';
 ```
 
 ### Convenciones de Código
@@ -391,18 +495,158 @@ Para añadir nuevas funcionalidades:
 3. Actualizar reglas de asignación si aplica
 
 **Nuevo campo en receta:**
-1. Añadir input en formularios HTML
-2. Añadir a `recipeData` en `saveRecipe()`
-3. Mostrar en `viewRecipe()` y renderizados
-4. Actualizar modelo en este README
+1. Añadir input en formularios HTML (`index.html`)
+2. Añadir a `recipeData` en `RecipeManager.saveRecipe()`
+3. Actualizar `recipe.entity.js` en backend
+4. Mostrar en `RecipeManager.renderRecipeDetails()`
+5. Actualizar modelo en este README
 
 **Nuevo endpoint API:**
-1. Añadir ruta en `backend/server.js`
-2. Añadir método en `ApiService`
-3. Crear manager function que lo use
-4. Conectar a UI event handler
+1. Añadir ruta en `backend/src/<module>/<module>.routes.js`
+2. Implementar controller en `<module>.controller.js`
+3. Añadir lógica en `<module>.service.js`
+4. Añadir método en `frontend/js/apiService.js`
+5. Crear manager function que lo use
+6. Conectar a UI event handler
 
-## 📊 Performance
+## 🤖 Reglas y Workflows de Cascade (Agente AI)
+
+Este proyecto incluye reglas de arquitectura y workflows para el agente AI (Cascade), ubicados en:
+- **Frontend rules**: `frontend/.windsurfrules`
+- **Backend rules**: `backend/.windsurfrules`
+- **Workflows**: `.windsurf/workflows/`
+
+### Reglas Frontend (`frontend/.windsurfrules`)
+
+Reglas arquitectónicas que rigen el desarrollo en el frontend:
+
+- **Módulos ES6**: Usar exclusivamente `import/export`. No usar `require()`.
+- **Estado global**: Usar `AppState` (singleton) con `get()` y `set()`. No usar `localStorage`.
+- **Patrón Manager**: Cada feature tiene su clase `*Manager` con métodos: `loadItems()`, `render()`, `save()`, `delete()`.
+- **Comunicación HTTP**: Todas las llamadas HTTP **solo** mediante `apiService`. No `fetch()` directo.
+- **Funciones globales**: Las funciones llamadas desde `onclick` en HTML se declaran en `app.js` y se exponen en `window`.
+- **SPA única**: Un único `index.html`. Navegación por tabs con `TabManager`.
+- **Renderizado**: HTML como strings con template literals. No frameworks adicionales.
+
+### Reglas Backend (`backend/.windsurfrules`)
+
+Reglas arquitectónicas que rigen el desarrollo en el backend:
+
+- **Patrón de 5 archivos por entidad**: `entity`, `repository`, `service`, `controller`, `routes`.
+- **Entity**: Exponer `static validate(data)` y `static fromRequest(data)`. No asignar `id`, `createdAt`, `updatedAt`.
+- **Repository**: Extender `JsonRepository`. No escribir al FS directamente.
+- **Service**: Flujo estándar: `fromRequest()` → `validate()` → `repository.create()`. Usar `AppError`.
+- **Controller**: Solo extrae datos de `req` y delega. Nunca lógica de negocio. Siempre `try/catch` + `next(error)`.
+- **Routes**: Registrar bajo `/api/<entidad>`, **antes** del middleware de archivos estáticos.
+- **Módulos CommonJS**: Usar exclusivamente `require()` y `module.exports`.
+
+### Workflows Disponibles
+
+#### `/add-crud-entity` — Añadir nueva entidad CRUD completa
+
+Workflow paso a paso para añadir una nueva entidad al sistema (backend + frontend):
+
+1. **Backend**: Crear entity, repository, service, controller y routes.
+2. **Registrar rutas** en `backend/src/app.js`.
+3. **Registrar persistencia** en `backend/server.js` (bootstrap).
+4. **Frontend**: Añadir métodos en `apiService.js`.
+5. **Frontend**: Crear el Manager en `frontend/js/features/<entidad>/`.
+6. **Frontend**: Registrar el Manager en `app.js`.
+7. **Frontend**: Añadir sección en `index.html`.
+
+#### `/debug-layers` — Depurar errores por capas
+
+Workflow sistemático para diagnosticar bugs respetando la separación de capas:
+
+1. **Identificar capa afectada**: UI → AppState → HTTP → Controller → Service → Repository.
+2. **Aplicar fix en la capa raíz**, no donde se manifiesta el síntoma.
+3. **Reglas**: No duplicar validaciones, no usar `fetch()` directo, no modificar formato JSON.
+
+---
+
+## � Seguridad y Autenticación
+
+### Sistema de Login
+
+La aplicación incluye un sistema de autenticación seguro que protege todas las rutas de la API.
+
+**Características:**
+- **Contraseñas hasheadas**: Utiliza bcryptjs para hashear contraseñas (nunca se almacenan en texto plano)
+- **Tokens JWT**: Sesiones válidas por 24 horas (configurable en `.env`)
+- **Protección de rutas**: Todas las rutas API (`/api/recipes`, `/api/menus`) requieren autenticación
+- **Rate limiting**: 5 intentos de login por IP cada 15 minutos para prevenir ataques de fuerza bruta
+- **Headers de seguridad**: Helmet.js para headers HTTP seguros (CSP, HSTS, etc.)
+- **Persistencia de sesión**: Token JWT guardado en localStorage
+- **Redirección automática**: Al expirar el token, redirige automáticamente al login
+
+### Configuración de Usuarios
+
+El sistema soporta 2 usuarios hardcoded (Sara y Sergio). Para configurar sus contraseñas:
+
+#### 1. Generar hashes de contraseña
+
+Usa el script auxiliar para generar los hashes bcrypt:
+
+```bash
+node scripts/generate-hash.js "contraseña_de_sara"
+node scripts/generate-hash.js "contraseña_de_sergio"
+```
+
+Copia los hashes generados (son cadenas largas que comienzan con `$2a$10$...`).
+
+#### 2. Configurar archivo .env
+
+Edita el archivo `.env` en la raíz del proyecto:
+
+```env
+# JWT Configuration
+JWT_SECRET=tu_clave_secreta_muy_larga_y_aleatoria_cambia_esto
+
+# User Password Hashes
+SARA_PASSWORD_HASH=hash_generado_para_sara
+SERGIO_PASSWORD_HASH=hash_generado_para_sergio
+```
+
+**Importante:**
+- Cambia `JWT_SECRET` por una clave larga y aleatoria para producción
+- Nunca compartas el archivo `.env` ni lo subas a un repositorio público
+- Los hashes de contraseña deben generarse con el script, no manualmente
+
+#### 3. Reiniciar el servidor
+
+Después de configurar el `.env`, reinicia el servidor:
+
+```bash
+npm start
+```
+
+### Mantenimiento de Contraseñas
+
+Para cambiar una contraseña:
+
+1. Genera un nuevo hash:
+   ```bash
+   node scripts/generate-hash.js "nueva_contraseña"
+   ```
+
+2. Actualiza el valor correspondiente en `.env` (`SARA_PASSWORD_HASH` o `SERGIO_PASSWORD_HASH`)
+
+3. Reinicia el servidor
+
+**Nota:** Los tokens JWT existentes seguirán siendo válidos hasta que expiren (24 horas por defecto). Si necesitas invalidar todos los tokens inmediatamente, cambia el `JWT_SECRET`.
+
+### Para Publicación en Internet
+
+Si planeas publicar la aplicación en internet:
+
+1. **HTTPS obligatorio**: Usa un reverse proxy (nginx) con certificados Let's Encrypt
+2. **JWT_SECRET robusto**: Usa una clave de al menos 32 caracteres generada aleatoriamente
+3. **Contraseñas fuertes**: Usa contraseñas de al menos 12 caracteres con mayúsculas, minúsculas, números y símbolos
+4. **Actualizaciones de seguridad**: Mantén las dependencias actualizadas (`npm audit fix`)
+
+---
+
+## �📊 Performance
 
 ### Optimizaciones Implementadas
 - **Lazy loading**: Menús colapsables renderizan solo al expandir

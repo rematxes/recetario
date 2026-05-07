@@ -1,0 +1,61 @@
+# Agente Backend — Gestor de Recetas y Menús
+
+Estas reglas aplican a todo el código dentro de `backend/`. Complementan las reglas globales del proyecto.
+
+## Patrón obligatorio por entidad
+
+Toda entidad nueva debe tener exactamente estos 5 archivos dentro de `backend/src/<entidad>/`:
+
+1. `<entidad>.entity.js` — Clase con constructor, `static validate(data)` y `static fromRequest(data)`
+2. `<entidad>.repository.js` — Clase que extiende `JsonRepository`; añade métodos de consulta específicos
+3. `<entidad>.service.js` — Lógica de negocio: instancia el repository, implementa `create`, `getAll`, `getById`, `update`, `delete`
+4. `<entidad>.controller.js` — Solo recibe petición HTTP y delega al service; nunca contiene lógica de negocio
+5. `<entidad>.routes.js` — Define las rutas REST estándar apuntando a los métodos del controller
+
+## Entity
+
+- Debe exponer `static validate(data)` que retorna un array de strings de error (vacío si no hay errores).
+- Debe exponer `static fromRequest(data)` que normaliza y sanitiza los datos del body HTTP antes de pasarlos al service.
+- No asignar `id`, `createdAt` ni `updatedAt` dentro de la entidad; esos campos los gestiona `JsonRepository`.
+
+## Repository
+
+- Siempre extender `JsonRepository` de `backend/src/shared/repositories/JsonRepository.js`.
+- Instanciar pasando la ruta absoluta al archivo JSON de `backend/data/`.
+- Usar los métodos heredados: `create(data)`, `readAll()`, `findById(id)`, `update(id, data)`, `delete(id)`, `filter(fn)`.
+- Los métodos adicionales de consulta específicos del dominio van en el repository, nunca en el service.
+- No escribir directamente al sistema de archivos fuera de los métodos de `JsonRepository`.
+
+## Service
+
+- Instanciar el repository al inicio del módulo (singleton).
+- Flujo estándar de `create`: `Entity.fromRequest(data)` → `Entity.validate(data)` → lanzar error si hay errores → `repository.create(data)`.
+- Usar `AppError` de `backend/src/shared/errors/` para errores de negocio con código HTTP apropiado.
+- No usar `req` ni `res` en el service; trabaja solo con datos planos.
+
+## Controller
+
+- Cada método público sigue el patrón: `async method(req, res, next) { try { ... } catch (error) { next(error); } }`.
+- Nunca contiene `if/else` de lógica de negocio; solo extrae datos de `req` y devuelve respuesta.
+- Respuestas estándar: `201` para creación, `200` para lectura/actualización, `204` para borrado.
+- Pasar SIEMPRE los errores a `next(error)` para que el `errorHandler` middleware los gestione.
+
+## Routes
+
+- Registrar las rutas bajo `/api/<entidad>` en `backend/src/app.js`, **antes** del middleware de archivos estáticos.
+- Seguir convenciones REST: `GET /`, `POST /`, `GET /:id`, `PUT /:id`, `DELETE /:id`.
+- Si hay rutas especiales (ej. `/generate`), añadirlas en el archivo de routes de la entidad correspondiente.
+
+## Server bootstrap
+
+- Al crear una nueva entidad con persistencia JSON:
+  1. Definir la constante de ruta del archivo en `backend/server.js`.
+  2. Instanciar el repository.
+  3. Llamar a `ensureFile()` antes de `start()`.
+- Seguir exactamente el mismo patrón que los repositorios existentes (`recipeRepo`, `menuRepo`).
+
+## Módulos
+
+- Usar exclusivamente CommonJS: `const x = require(...)` y `module.exports = ...`.
+- No usar `import`/`export` en ningún archivo de `backend/`.
+- No instalar dependencias npm sin justificación explícita.

@@ -1,0 +1,44 @@
+# Agente General — Gestor de Recetas y Menús
+
+## Arquitectura obligatoria
+
+- El proyecto es una aplicación full-stack: **backend Node.js/Express** en `backend/` y **frontend SPA ES6** en `frontend/`. No colocar código de una capa en la carpeta de la otra.
+- El **único punto de comunicación** entre frontend y backend es `frontend/js/apiService.js`. No realizar `fetch()` directamente fuera de los métodos de `ApiService`.
+- La **única forma de persistir datos** es mediante `JsonRepository` (`backend/src/shared/repositories/JsonRepository.js`) escribiendo en `backend/data/*.json`. No crear otras formas de almacenamiento (bases de datos, localStorage, etc.) sin decisión explícita.
+- El servidor escucha en `0.0.0.0:3000` (configurable en `backend/src/config/`). Si se cambia el puerto, actualizar también `CONFIG.API_BASE` en `frontend/js/config.js`.
+
+## Módulos y estilo de código
+
+- **Backend**: usar CommonJS (`require` / `module.exports`). No usar `import`/`export` en `backend/`.
+- **Frontend**: usar ES6 modules (`import` / `export`). No usar `require()` en `frontend/`.
+- No mezclar los dos sistemas de módulos en ningún archivo.
+
+## Separación de capas (estricta)
+
+- El frontend **no importa** ningún módulo de `backend/` y viceversa.
+- Toda la lógica de negocio reside en los **Services** del backend. Los Controllers solo reciben la petición HTTP y delegan; nunca contienen lógica de negocio.
+- La validación de entidades ocurre en el **Service** (que llama a `Entity.validate()`), no en el controller ni en el repository.
+
+## Convenciones de nombres
+
+- Archivos backend por entidad: `<entidad>.entity.js`, `<entidad>.repository.js`, `<entidad>.service.js`, `<entidad>.controller.js`, `<entidad>.routes.js`.
+- Carpeta por entidad en backend: `backend/src/<entidad>/`.
+- Archivos frontend por feature: `<Entidad>Manager.js` dentro de `frontend/js/features/<entidad>/`.
+- Rutas API REST: `/api/<entidad>` (plural o singular según convenio ya establecido: `/api/recipes`, `/api/menus`).
+
+## Datos estructurales
+
+- Los **IDs** (UUID) los genera `JsonRepository.create()`. No generar IDs en entidades, services ni controllers.
+- Los **timestamps** (`createdAt`, `updatedAt`) los gestiona `JsonRepository`. No asignarlos manualmente fuera del repositorio.
+
+## Arranque del servidor
+
+- El bootstrapping ocurre en `backend/server.js`: instanciar repositorios, llamar a `ensureFile()` en cada uno y luego llamar a `start()`.
+- Al añadir una nueva entidad con persistencia JSON, registrar su archivo en `backend/server.js` siguiendo el mismo patrón.
+
+## Lo que NO está permitido sin decisión explícita
+
+- Añadir nuevas dependencias npm sin justificación.
+- Cambiar el formato de los archivos JSON de persistencia (array plano de objetos).
+- Crear páginas HTML adicionales (el SPA usa un único `frontend/index.html`).
+- Exponer datos sensibles o claves en el código fuente.

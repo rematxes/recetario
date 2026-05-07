@@ -26,7 +26,6 @@ export const CONFIG = {
 
 export const CATEGORY_CONFIG = {
   general: { label: 'General', color: 'gradient', icons: ['fa-sun', 'fa-moon'], gradient: 'from-red-500 to-indigo-500' },
-  desayuno: { label: 'Desayuno', color: 'yellow', icon: 'fa-coffee' },
   comida: { label: 'Comida', color: 'red', icon: 'fa-sun' },
   cena: { label: 'Cena', color: 'indigo', icon: 'fa-moon' },
   picoteo: { label: 'Picoteo', color: 'green', icon: 'fa-cookie' },

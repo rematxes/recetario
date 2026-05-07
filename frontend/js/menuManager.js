@@ -25,7 +25,8 @@ export class MenuManager {
    */
   async loadMenus() {
     try {
-      this.appState.menus = await apiService.getAllMenus();
+      const menus = await apiService.getAllMenus();
+      this.appState.set('menus', menus);
       this.renderMenus();
     } catch (error) {
       showError('Error al cargar menús');
@@ -39,7 +40,7 @@ export class MenuManager {
   renderMenus() {
     const container = document.getElementById('menusList');
 
-    if (this.appState.menus.length === 0) {
+    if (this.appState.get('menus').length === 0) {
       container.innerHTML = `
         <div class="text-center py-12 text-gray-500">
           <i class="fas fa-calendar-alt text-4xl mb-4"></i>
@@ -50,7 +51,7 @@ export class MenuManager {
       return;
     }
 
-    container.innerHTML = this.appState.menus.map((menu, index) => this.renderMenuCard(menu, index)).join('');
+    container.innerHTML = this.appState.get('menus').map((menu, index) => this.renderMenuCard(menu, index)).join('');
   }
 
   /**
@@ -66,7 +67,7 @@ export class MenuManager {
 
     const menuName = menu.name || `Menú ${index + 1}`;
     const populatedDays = menu.days.filter(d => d.meals?.comida || d.meals?.cena).length;
-    const isExpanded = this.appState.expandedMenus.has(menu.id);
+    const isExpanded = this.appState.get('expandedMenus').has(menu.id);
 
     return `
       <div class="border rounded-lg overflow-hidden">
@@ -181,12 +182,15 @@ export class MenuManager {
     const content = document.getElementById(`menu-content-${menuId}`);
     const chevron = document.getElementById(`menu-chevron-${menuId}`);
 
-    if (this.appState.expandedMenus.has(menuId)) {
-      this.appState.expandedMenus.delete(menuId);
+    const expandedMenus = this.appState.get('expandedMenus');
+    if (expandedMenus.has(menuId)) {
+      expandedMenus.delete(menuId);
+      this.appState.set('expandedMenus', expandedMenus);
       content.classList.add('hidden');
       chevron.style.transform = 'rotate(0deg)';
     } else {
-      this.appState.expandedMenus.add(menuId);
+      expandedMenus.add(menuId);
+      this.appState.set('expandedMenus', expandedMenus);
       content.classList.remove('hidden');
       chevron.style.transform = 'rotate(180deg)';
     }
@@ -217,11 +221,39 @@ export class MenuManager {
    * Opens recipe selector for substitution
    */
   openSubstitutionSelector(menuId, dayIndex, mealType) {
+    console.log('[MenuManager] openSubstitutionSelector called', menuId, dayIndex, mealType);
     this.substitutionState = { menuId, dayIndex, mealType, viewMode: 'grid' };
     document.getElementById('recipeSelectorSearch').value = '';
+
+    // Set default category filters based on meal type
+    const defaultFilters = mealType === 'comida'
+      ? { comida: true, cena: false, general: true, picoteo: false, dulce: false }
+      : { comida: false, cena: true, general: true, picoteo: false, dulce: false };
+
+    this.appState.set('selectorCategoryFilters', defaultFilters);
+
+    // Update UI buttons to reflect the filters
+    Object.keys(defaultFilters).forEach(category => {
+      const btn = document.getElementById(`selector-filter-${category}`);
+      if (btn) {
+        btn.classList.toggle('active', defaultFilters[category]);
+      }
+    });
+
     this.renderSubstitutionSelector();
-    document.getElementById('recipeSelectorModal').classList.remove('hidden');
-    this.appState.expandedMenus.add(menuId);
+    
+    const modal = document.getElementById('recipeSelectorModal');
+    if (modal) {
+      modal.style.display = 'flex';
+      modal.classList.add('active');
+      document.body.classList.add('modal-open');
+    } else {
+      console.error('[MenuManager] recipeSelectorModal not found');
+    }
+    
+    const expandedMenus = this.appState.get('expandedMenus');
+    expandedMenus.add(menuId);
+    this.appState.set('expandedMenus', expandedMenus);
   }
 
   /**
@@ -230,15 +262,19 @@ export class MenuManager {
   renderSubstitutionSelector() {
     const container = document.getElementById('recipeSelectorResults');
     const searchTerm = document.getElementById('recipeSelectorSearch').value.toLowerCase().trim();
-    const { mealType } = this.substitutionState;
 
-    let recipes = this.appState.recipes.filter(recipe => {
-      if (mealType === 'comida') {
-        return ['comida', 'general'].includes(recipe.category);
-      } else if (mealType === 'cena') {
-        return ['cena', 'general'].includes(recipe.category);
-      }
-      return true;
+    const selectorFilters = this.appState.get('selectorCategoryFilters') || {
+      comida: true,
+      cena: true,
+      general: true,
+      picoteo: true,
+      dulce: true
+    };
+
+    let recipes = this.appState.get('recipes').filter(recipe => {
+      // Check category filters (like main recipe search)
+      const category = recipe.category || 'general';
+      return selectorFilters[category];
     });
 
     if (searchTerm) {
@@ -252,10 +288,10 @@ export class MenuManager {
     }
 
     // Apply sorting
-    recipes = this.recipeManager.sortRecipes(recipes, this.appState.selectorSortOrder);
+    recipes = this.recipeManager.sortRecipes(recipes, this.appState.get('selectorSortOrder'));
 
     if (recipes.length === 0) {
-      container.innerHTML = '<p class="text-gray-500 text-center py-8">No hay recetas disponibles para esta comida</p>';
+      container.innerHTML = '<p class="text-gray-500 text-center py-8">No hay recetas disponibles con los filtros seleccionados</p>';
       return;
     }
 
@@ -269,7 +305,6 @@ export class MenuManager {
             <h4 class="font-bold text-lg text-gray-900">${escapeHtml(recipe.name)}</h4>
             ${UIHelpers.getCategoryBadge(recipe.category)}
           </div>
-          <p class="text-gray-700 text-sm mb-3 bg-gray-50 p-2 rounded">${escapeHtml(recipe.description || 'Sin descripción')}</p>
           <div class="flex flex-wrap gap-2 text-xs bg-white p-2 rounded border border-gray-200">
             ${UIHelpers.getTimeBadges(recipe)}
           </div>
@@ -303,11 +338,12 @@ export class MenuManager {
    * Handles recipe selection for substitution
    */
   async selectSubstitutionRecipe(recipeId) {
-    const recipe = this.appState.recipes.find(r => r.id === recipeId);
+    const recipe = this.appState.get('recipes').find(r => r.id === recipeId);
     if (!recipe) return;
 
     const { menuId, dayIndex, mealType } = this.substitutionState;
-    const menu = this.appState.menus.find(m => m.id === menuId);
+    const menus = this.appState.get('menus');
+    const menu = menus.find(m => m.id === menuId);
     if (!menu) return;
 
     const updatedDays = [...menu.days];
@@ -327,8 +363,15 @@ export class MenuManager {
 
     try {
       await apiService.updateMenu(menuId, { days: updatedDays });
-      document.getElementById('recipeSelectorModal').classList.add('hidden');
-      this.appState.expandedMenus.add(menuId);
+      const modal = document.getElementById('recipeSelectorModal');
+      if (modal) {
+        modal.classList.remove('active');
+        modal.style.display = 'none';
+      }
+      document.body.classList.remove('modal-open');
+      const expandedMenus = this.appState.get('expandedMenus');
+      expandedMenus.add(menuId);
+      this.appState.set('expandedMenus', expandedMenus);
       await this.loadMenus();
 
       setTimeout(() => {
@@ -381,7 +424,8 @@ export class MenuManager {
     const newName = prompt('Editar nombre del menú:', currentName);
     if (newName === null || newName.trim() === '') return;
 
-    const menu = this.appState.menus.find(m => m.id === menuId);
+    const menus = this.appState.get('menus');
+    const menu = menus.find(m => m.id === menuId);
     if (!menu) return;
 
     try {
@@ -401,10 +445,11 @@ export class MenuManager {
    * Deletes a menu
    */
   async deleteMenu(menuId) {
-    const menuIndex = this.appState.menus.findIndex(m => m.id === menuId);
+    const menus = this.appState.get('menus');
+    const menuIndex = menus.findIndex(m => m.id === menuId);
     if (menuIndex === -1) return;
 
-    const menu = this.appState.menus[menuIndex];
+    const menu = menus[menuIndex];
     const menuName = menu?.name || 'este menú';
 
     if (!confirm(`¿Eliminar "${menuName}"?\n\nEsta acción no se puede deshacer.`)) {
@@ -413,12 +458,14 @@ export class MenuManager {
 
     try {
       await apiService.deleteMenu(menuId);
-      this.appState.expandedMenus.delete(menuId);
+      const expandedMenus = this.appState.get('expandedMenus');
+      expandedMenus.delete(menuId);
+      this.appState.set('expandedMenus', expandedMenus);
       showSuccess('Menú eliminado correctamente');
 
       // Determine which menu to focus after deletion (next or previous)
-      const nextMenuId = this.appState.menus[menuIndex + 1]?.id ||
-                         this.appState.menus[menuIndex - 1]?.id ||
+      const nextMenuId = menus[menuIndex + 1]?.id ||
+                         menus[menuIndex - 1]?.id ||
                          null;
 
       await this.loadMenus();
