@@ -24,6 +24,7 @@ export class SearchBar {
     this.showFilters = options.showFilters !== false;
     this.showSort = options.showSort !== false;
     this.initialFilters = options.initialFilters || null;
+    this.resultCount = options.resultCount || 0;
     
     // Callbacks
     this.onSearch = options.onSearch || (() => {});
@@ -96,6 +97,7 @@ export class SearchBar {
     if (this.showSort) {
       sortHtml = `
         <div class="search-sort">
+          <span class="search-sort__count">${this.resultCount} recetas</span>
           <span class="search-sort__label">Ordenar:</span>
           <select id="${sortId}" class="search-sort__select">
             ${this.sortOptions.map(opt => `
@@ -155,6 +157,17 @@ export class SearchBar {
     window.searchBarInstances[this.containerId] = this;
   }
   
+  /**
+   * Updates the result count display
+   */
+  updateResultCount(count) {
+    this.resultCount = count;
+    const countElement = this.container?.querySelector('.search-sort__count');
+    if (countElement) {
+      countElement.textContent = `${count} receta${count !== 1 ? 's' : ''}`;
+    }
+  }
+
   /**
    * Toggle category filter
    */

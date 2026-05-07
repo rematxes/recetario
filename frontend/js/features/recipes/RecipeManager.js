@@ -34,6 +34,12 @@ export class RecipeManager {
     const filtered = this.filterRecipes(searchTerm);
     const sorted = this.sortRecipes(filtered, this.appState.get('recipeSortOrder'));
 
+    // Update recipe count display
+    const countElement = document.getElementById('recipeCount');
+    if (countElement) {
+      countElement.textContent = `${sorted.length} receta${sorted.length !== 1 ? 's' : ''}`;
+    }
+
     if (sorted.length === 0) {
       this.renderEmpty(container, searchTerm);
       return;
@@ -133,6 +139,7 @@ export class RecipeManager {
     document.getElementById('modalRecipeName').textContent = recipe.name;
     document.getElementById('modalRecipeContent').innerHTML = this.renderRecipeDetails(recipe);
     document.getElementById('recipeModal').classList.remove('hidden');
+    document.body.classList.add('modal-open');
   }
 
   renderRecipeDetails(recipe) {
@@ -221,6 +228,7 @@ export class RecipeManager {
     document.getElementById('editRecipeInstructions').value = recipe.instructions || '';
 
     document.getElementById('editRecipeModal').classList.remove('hidden');
+    document.body.classList.add('modal-open');
   }
 
   async saveRecipe(event, formId) {
@@ -306,10 +314,12 @@ export class RecipeManager {
 
   closeViewModal() {
     document.getElementById('recipeModal').classList.add('hidden');
+    document.body.classList.remove('modal-open');
   }
 
   closeEditModal() {
     document.getElementById('editRecipeModal').classList.add('hidden');
+    document.body.classList.remove('modal-open');
     this.appState.set('editingRecipeId', null);
   }
 
