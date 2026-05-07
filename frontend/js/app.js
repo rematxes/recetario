@@ -20,8 +20,8 @@ import { TabManager } from './tabManager.js';
 import { UnifiedModal, ModalManager } from './shared/components/UnifiedModal.js';
 import { SearchBar, createSearchBar } from './shared/components/SearchBar.js';
 import { createBottomNavigation } from '../components/layout/BottomNavigation.js';
-import { RecetarioPage } from '../../pages/RecetarioPage.js';
-import { MenusPage } from '../../pages/MenusPage.js';
+import { RecetarioPage } from '../pages/RecetarioPage.js';
+import { MenusPage } from '../pages/MenusPage.js';
 
 console.log('[APP] Module loaded, initializing...');
 

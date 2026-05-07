@@ -6,10 +6,10 @@
  * Page component for the menus section
  */
 
-import { appState } from '../js/core/AppState.js';
-import { RecipeManager } from '../js/features/recipes/RecipeManager.js';
-import { MenuManager } from '../js/menuManager.js';
-import { ManualMenuManager } from '../js/manualMenuManager.js';
+import { appState } from '../../js/core/AppState.js';
+import { RecipeManager } from '../../js/features/recipes/RecipeManager.js';
+import { MenuManager } from '../../js/menuManager.js';
+import { ManualMenuManager } from '../../js/manualMenuManager.js';
 
 export class MenusPage {
   constructor(appState, recipeManager, menuManager, manualMenuManager) {

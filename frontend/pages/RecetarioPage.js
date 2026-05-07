@@ -6,8 +6,8 @@
  * Page component for the recipes section
  */
 
-import { appState } from '../js/core/AppState.js';
-import { RecipeManager } from '../js/features/recipes/RecipeManager.js';
+import { appState } from '../../js/core/AppState.js';
+import { RecipeManager } from '../../js/features/recipes/RecipeManager.js';
 
 export class RecetarioPage {
   constructor(appState, recipeManager) {

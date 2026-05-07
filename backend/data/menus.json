@@ -8,11 +8,11 @@
         "dayName": "Lunes",
         "meals": {
           "comida": {
-            "recipeId": "94438467-d48b-46da-a515-f1d1e020c095",
-            "recipeName": "Rissoto setas",
-            "prepTime": 20,
-            "cookTime": 35,
-            "totalTime": 55
+            "recipeId": "4803bac4-4c00-4830-a37a-efbb8f54d221",
+            "recipeName": "Huevos rellenos",
+            "prepTime": 15,
+            "cookTime": 20,
+            "totalTime": 35
           },
           "cena": {
             "recipeId": "d004",
@@ -145,7 +145,7 @@
       }
     ],
     "name": "Menu Prueba SEH",
-    "updatedAt": "2026-05-07T10:33:41.819Z"
+    "updatedAt": "2026-05-07T11:53:39.127Z"
   },
   {
     "id": "af150167-11ba-48ad-abdf-9099f5e47731",
