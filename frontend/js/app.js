@@ -12,12 +12,16 @@
 import { CONFIG } from './config.js';
 import { showSuccess, showError } from './utils.js';
 import { appState } from './core/AppState.js';
+import { router } from './core/Router.js';
 import { RecipeManager } from './features/recipes/RecipeManager.js';
 import { MenuManager } from './menuManager.js';
 import { ManualMenuManager } from './manualMenuManager.js';
 import { TabManager } from './tabManager.js';
 import { UnifiedModal, ModalManager } from './shared/components/UnifiedModal.js';
 import { SearchBar, createSearchBar } from './shared/components/SearchBar.js';
+import { createBottomNavigation } from '../components/layout/BottomNavigation.js';
+import { RecetarioPage } from '../../pages/RecetarioPage.js';
+import { MenusPage } from '../../pages/MenusPage.js';
 
 console.log('[APP] Module loaded, initializing...');
 
@@ -29,6 +33,10 @@ const recipeManager = new RecipeManager(appState);
 const menuManager = new MenuManager(appState, recipeManager);
 const manualMenuManager = new ManualMenuManager(appState, recipeManager);
 const tabManager = new TabManager(recipeManager, menuManager);
+
+// Initialize pages
+const recetarioPage = new RecetarioPage(appState, recipeManager);
+const menusPage = new MenusPage(appState, recipeManager, menuManager, manualMenuManager);
 
 console.log('[APP] Managers initialized');
 
@@ -183,6 +191,9 @@ window.menuManager = menuManager;
 window.manualMenuManager = manualMenuManager;
 window.tabManager = tabManager;
 
+// Expose router
+window.router = router;
+
 // Expose UI components for global access
 window.UnifiedModal = UnifiedModal;
 window.ModalManager = ModalManager;
@@ -261,6 +272,39 @@ function initApp() {
 
   // Show main app directly (no authentication)
   document.getElementById('mainApp').classList.remove('hidden');
+  
+  // Setup routing
+  router.register('recetario', () => {
+    showTab('recipes');
+    recetarioPage.init();
+  });
+  
+  router.register('menus', () => {
+    showTab('menus');
+    menusPage.init();
+  });
+  
+  router.start();
+  
+  // Initialize BottomNavigation
+  const bottomNavContainer = document.getElementById('bottomNavigation');
+  if (bottomNavContainer) {
+    const bottomNav = createBottomNavigation([
+      {
+        icon: 'fas fa-book',
+        label: 'Recetas',
+        active: true,
+        onClick: "router.navigate('recetario')"
+      },
+      {
+        icon: 'fas fa-calendar-week',
+        label: 'Menús',
+        active: false,
+        onClick: "router.navigate('menus')"
+      }
+    ]);
+    bottomNavContainer.innerHTML = bottomNav.render();
+  }
   
   const recipesTab = document.getElementById('recipes-tab');
   const menusTab = document.getElementById('menus-tab');
